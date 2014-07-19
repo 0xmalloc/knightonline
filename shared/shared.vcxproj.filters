@@ -1,0 +1,153 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Networking">
+      <UniqueIdentifier>{51f0e4fb-9b31-4d89-a89b-ea51966096ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Database">
+      <UniqueIdentifier>{37b7392e-0be1-4d29-afe1-83b6d725f2e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Threading">
+      <UniqueIdentifier>{4c5699fd-e906-4da1-981c-b126ca09c4af}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="CircularBuffer.cpp">
+      <Filter>Networking</Filter>
+    </ClCompile>
+    <ClCompile Include="JvCryption.cpp">
+      <Filter>Networking</Filter>
+    </ClCompile>
+    <ClCompile Include="KOSocket.cpp">
+      <Filter>Networking</Filter>
+    </ClCompile>
+    <ClCompile Include="Socket.cpp">
+      <Filter>Networking</Filter>
+    </ClCompile>
+    <ClCompile Include="SocketMgr.cpp">
+      <Filter>Networking</Filter>
+    </ClCompile>
+    <ClCompile Include="SocketMgrWin32.cpp">
+      <Filter>Networking</Filter>
+    </ClCompile>
+    <ClCompile Include="SocketOpsWin32.cpp">
+      <Filter>Networking</Filter>
+    </ClCompile>
+    <ClCompile Include="SocketWin32.cpp">
+      <Filter>Networking</Filter>
+    </ClCompile>
+    <ClCompile Include="database\OdbcCommand.cpp">
+      <Filter>Database</Filter>
+    </ClCompile>
+    <ClCompile Include="database\OdbcConnection.cpp">
+      <Filter>Database</Filter>
+    </ClCompile>
+    <ClCompile Include="database\OdbcParameter.cpp">
+      <Filter>Database</Filter>
+    </ClCompile>
+    <ClCompile Include="tstring.cpp" />
+    <ClCompile Include="lzf.cpp" />
+    <ClCompile Include="Ini.cpp" />
+    <ClCompile Include="DebugUtils.cpp" />
+    <ClCompile Include="crc32.cpp" />
+    <ClCompile Include="database\OdbcRecordset.cpp">
+      <Filter>Database</Filter>
+    </ClCompile>
+    <ClCompile Include="SMDFile.cpp" />
+    <ClCompile Include="TimeThread.cpp" />
+    <ClCompile Include="Condition.cpp">
+      <Filter>Threading</Filter>
+    </ClCompile>
+    <ClCompile Include="RWLock.cpp">
+      <Filter>Threading</Filter>
+    </ClCompile>
+    <ClCompile Include="Mutex.cpp">
+      <Filter>Threading</Filter>
+    </ClCompile>
+    <ClCompile Include="ReferenceObject.cpp">
+      <Filter>Threading</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="Thread.cpp">
+      <Filter>Threading</Filter>
+    </ClCompile>
+    <ClCompile Include="signal_handler.cpp" />
+    <ClCompile Include="globals.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="CircularBuffer.h">
+      <Filter>Networking</Filter>
+    </ClInclude>
+    <ClInclude Include="KOSocket.h">
+      <Filter>Networking</Filter>
+    </ClInclude>
+    <ClInclude Include="KOSocketMgr.h">
+      <Filter>Networking</Filter>
+    </ClInclude>
+    <ClInclude Include="ListenSocketWin32.h">
+      <Filter>Networking</Filter>
+    </ClInclude>
+    <ClInclude Include="Network.h">
+      <Filter>Networking</Filter>
+    </ClInclude>
+    <ClInclude Include="Packet.h">
+      <Filter>Networking</Filter>
+    </ClInclude>
+    <ClInclude Include="Socket.h">
+      <Filter>Networking</Filter>
+    </ClInclude>
+    <ClInclude Include="SocketDefines.h">
+      <Filter>Networking</Filter>
+    </ClInclude>
+    <ClInclude Include="SocketMgr.h">
+      <Filter>Networking</Filter>
+    </ClInclude>
+    <ClInclude Include="SocketMgrWin32.h">
+      <Filter>Networking</Filter>
+    </ClInclude>
+    <ClInclude Include="SocketOps.h">
+      <Filter>Networking</Filter>
+    </ClInclude>
+    <ClInclude Include="database\OdbcCommand.h">
+      <Filter>Database</Filter>
+    </ClInclude>
+    <ClInclude Include="database\OdbcConnection.h">
+      <Filter>Database</Filter>
+    </ClInclude>
+    <ClInclude Include="database\OdbcParameter.h">
+      <Filter>Database</Filter>
+    </ClInclude>
+    <ClInclude Include="Ini.h" />
+    <ClInclude Include="DebugUtils.h" />
+    <ClInclude Include="database\OdbcRecordset.h">
+      <Filter>Database</Filter>
+    </ClInclude>
+    <ClInclude Include="DateTime.h" />
+    <ClInclude Include="globals.h" />
+    <ClInclude Include="SMDFile.h" />
+    <ClInclude Include="STLMap.h" />
+    <ClInclude Include="TimeThread.h" />
+    <ClInclude Include="crc32.h" />
+    <ClInclude Include="Condition.h">
+      <Filter>Threading</Filter>
+    </ClInclude>
+    <ClInclude Include="RWLock.h">
+      <Filter>Threading</Filter>
+    </ClInclude>
+    <ClInclude Include="Mutex.h">
+      <Filter>Threading</Filter>
+    </ClInclude>
+    <ClInclude Include="lzf.h" />
+    <ClInclude Include="ReferenceObject.h">
+      <Filter>Threading</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="Thread.h">
+      <Filter>Threading</Filter>
+    </ClInclude>
+    <ClInclude Include="Atomic.h">
+      <Filter>Threading</Filter>
+    </ClInclude>
+    <ClInclude Include="signal_handler.h" />
+  </ItemGroup>
+</Project>
