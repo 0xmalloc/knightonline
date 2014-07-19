@@ -547,7 +547,8 @@ uint32 CGameServerDlg::Timer_TempleEventTimer(void * lpParam)
 	while (g_bRunning)
 	{
 		g_pMain->TempleEventTimer();
-		sleep(6 * SECOND);
+		//sleep(6 * SECOND);
+		sleep(SECOND);
 	}
 	return 0;
 }
