@@ -39,3 +39,5 @@ Icon
 # Files that might appear on external disk
 .Spotlight-V100
 .Trashes
+AIServer/NpcTable.h.dump.h
+ipch/shared-e8e507cc/shared-a6a5c463.ipch

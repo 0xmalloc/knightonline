@@ -380,9 +380,10 @@ bool CUser::CanChangeZone(C3DMap * pTargetMap, WarpListResponse & errorReason)
 		}
 	}
 
-	// Ensure the user meets the zone's level requirements
-	if (GetLevel() < pTargetMap->GetMinLevelReq()
-		|| GetLevel() > pTargetMap->GetMaxLevelReq())
+	uint8 tmp_level = GetLevel();
+	uint8 min_level = pTargetMap->GetMinLevelReq();
+	uint8 max_level = pTargetMap->GetMaxLevelReq();
+	if(tmp_level < min_level || tmp_level > max_level)
 	{
 		// TODO: Implement overrides for zone-specific behaviour (e.g. wars)
 		errorReason = WarpListMinLevel;

@@ -297,6 +297,7 @@ void CUser::ReqSkillDataLoad(Packet & pkt)
 	if (!g_DBAgent.LoadSkillShortcut(result, this))
 		result << uint16(0);
 
+	return;   //added by zealot    use local mode 
 	Send(&result);
 }
 

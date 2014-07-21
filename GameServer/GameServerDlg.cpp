@@ -547,8 +547,8 @@ uint32 CGameServerDlg::Timer_TempleEventTimer(void * lpParam)
 	while (g_bRunning)
 	{
 		g_pMain->TempleEventTimer();
-		//sleep(6 * SECOND);
-		sleep(SECOND);
+		sleep(6 * SECOND);
+		//sleep(SECOND);
 	}
 	return 0;
 }
@@ -1868,7 +1868,6 @@ void CGameServerDlg::ResetBattleZone()
 
 void CGameServerDlg::TempleEventTimer()
 {
-	return;
 	uint32 nHour = g_localTime.tm_hour;
 	uint32 nMinute = g_localTime.tm_min;
 

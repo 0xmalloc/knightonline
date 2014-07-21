@@ -275,6 +275,7 @@ enum ItemFlag
 {
 	ITEM_FLAG_NONE		= 0,
 	ITEM_FLAG_RENTED	= 1,
+	ITEM_FLAG_DUPLICATE = 3,
 	ITEM_FLAG_SEALED	= 4,
 	ITEM_FLAG_NOT_BOUND	= 7,
 	ITEM_FLAG_BOUND		= 8
@@ -291,7 +292,9 @@ struct	_ITEM_DATA
 	uint64		nSerialNum;
 
 	INLINE bool isSealed() { return bFlag == ITEM_FLAG_SEALED; }
+	INLINE bool isBound() { return bFlag == ITEM_FLAG_BOUND; }
 	INLINE bool isRented() { return bFlag == ITEM_FLAG_RENTED; }
+	INLINE bool isDuplicate() { return bFlag == ITEM_FLAG_DUPLICATE; }
 };
 
 enum HairData
@@ -307,9 +310,11 @@ struct _MERCH_DATA
 	uint32 nNum;
 	int16 sDuration;
 	uint16 sCount;
+	uint16 bCount;
 	uint64 nSerialNum;
 	uint32 nPrice;
 	uint8 bOriginalSlot;
+	bool IsSoldOut;
 };
 
 enum AuthorityTypes

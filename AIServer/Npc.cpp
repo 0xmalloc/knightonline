@@ -517,7 +517,7 @@ time_t CNpc::NpcMoving()
 	{
 		m_NpcState = NPC_STANDING;
 		//return m_sStandTime;
-		return myrand(m_sStandTime/10, m_sStandTime*2); // add + rand by zealotyin
+		return myrand(m_sStandTime/1.5, m_sStandTime*1.5); // add + rand by zealotyin
 	}
 
 	SendMoveResult(m_fPrevX, m_fPrevY, m_fPrevZ, (float)(m_fSecForRealMoveMetor / ((double)m_sSpeed / 1000)));
@@ -551,7 +551,7 @@ time_t CNpc::NpcStanding()
 	{
 		m_iAniFrameCount = 0;
 		m_NpcState = NPC_MOVING;
-		return  myrand(m_sStandTime, m_sStandTime*3); // add + rand by zealotyin
+		return  myrand(m_sStandTime/1.5, m_sStandTime*1.5); // add + rand by zealotyin
 	}	
 
 	m_NpcState = NPC_STANDING;
