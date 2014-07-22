@@ -5246,3 +5246,25 @@ uint32 CUser::GetEventTrigger()
 
 	return 0;
 }
+
+
+bool CUser::GetStartPositionRandom_CHAOS(short & x, short & z)
+{
+	const static int  position_num = 10;
+	const static short addr[position_num][2] = {
+		{174,146},
+		{174,129},
+		{174,112},
+		{77,146},
+		{77,130},
+		{77,112},
+		{142,184},
+		{110,184},
+		{126,97},
+		{112,159},
+	};
+	int nRandom = myrand(0, position_num - 1);
+	x = addr[nRandom][0];
+	z = addr[nRandom][1];
+	return true;
+}

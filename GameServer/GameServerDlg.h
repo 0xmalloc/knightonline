@@ -114,7 +114,7 @@ public:
 	void SendAllUserInfo();
 	void DeleteAllNpcList(int flag = 0);
 	CNpc*  FindNpcInZone(uint16 sPid, uint8 byZone);
-	void TempleEventTimer();
+	void TempleEventTimer(uint32 interval);
 	void TempleEventStart();
 	void TempleEventCreateRooms();
 	void TempleEventTeleportUsers();
@@ -391,7 +391,7 @@ public:
 	uint8	m_nPVPMonumentNation[MAX_ZONE_ID];
 	int32	m_nGameMasterRHitDamage;
 
-	uint16	m_nTempleEventRemainSeconds;
+	int32   m_event_trigger_time;
 	uint16	m_nTempleEventFinishRemainSeconds;
 
 	uint8	m_bMaxRegenePoint;
@@ -404,7 +404,7 @@ public:
 
 	// Bifrost
 	uint8   m_nBifrostTime[BIFROST_EVENT_COUNT];
-
+	uint16	m_nTempleEventRemainSeconds;
 	uint8 m_BifrostVictory;
 	uint16 m_sBifrostRemainingTime;
 	uint16 m_sBifrostTime;

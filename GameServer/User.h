@@ -1004,6 +1004,7 @@ public:
 	void ReqChangeCape(Packet & pkt);
 	void ReqSealItem(Packet & pkt);
 
+	bool GetStartPositionRandom_CHAOS(short & x, short & z);
 	//private:
 	static ChatCommandTable s_commandTable;
 	GameState m_state;

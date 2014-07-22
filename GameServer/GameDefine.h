@@ -36,11 +36,11 @@
 #define ELMORAD_MAN			12	// El Morad Male (El Morad - ALL CLASSES)
 #define ELMORAD_WOMAN		13	// El Morad Female (El Morad - ALL CLASSES)
 
-// Ÿ�ݺ� ����� //
-#define GREAT_SUCCESS			0X01		// �뼺��
-#define SUCCESS					0X02		// ����
-#define NORMAL					0X03		// ����
-#define	FAIL					0X04		// ���� 
+
+#define GREAT_SUCCESS			0X01		
+#define SUCCESS					0X02		
+#define NORMAL					0X03		
+#define	FAIL					0X04		
 
 enum ItemMovementType
 {
@@ -109,10 +109,10 @@ enum ItemSlotType
 
 ////////////////////////////////////////////////////////////
 // User Status //
-#define USER_STANDING			0X01		// �� �ִ�.
-#define USER_SITDOWN			0X02		// �ɾ� �ִ�.
-#define USER_DEAD				0x03		// ��Ŷ�
-//#define USER_BLINKING			0x04		// ��� ��Ƴ���!!!
+#define USER_STANDING			0X01		
+#define USER_SITDOWN			0X02		
+#define USER_DEAD				0x03		
+//#define USER_BLINKING			0x04		
 
 ////////////////////////////////////////////////////////////
 // Durability Type
