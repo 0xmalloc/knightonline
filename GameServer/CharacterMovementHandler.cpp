@@ -284,8 +284,14 @@ bool CUser::CanChangeZone(C3DMap * pTargetMap, WarpListResponse & errorReason)
 	return true;
 }
 
+/*
+*  exception check 
+*/
 bool CUser::CanLevelQualify(uint8 sLevel)
 {
+	//temporary cancel the logic
+	return true;
+
 	int16 nStatTotal = 300 + (sLevel - 1) * 3;
 	uint8 nSkillTotal = 100 + (sLevel - 9) * 2; // 300 100?
 

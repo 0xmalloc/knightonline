@@ -269,7 +269,8 @@ void CAISocket::RecvNpcAttack(Packet & pkt)
 			TO_USER(pTarget)->ItemWoreOut(DEFENCE, sDamage);
 	}
 
-	Packet result(WIZ_ATTACK, uint8(DIRECT_ATTACK));
+	//Packet result(WIZ_ATTACK, uint8(DIRECT_ATTACK));
+	Packet result(WIZ_ATTACK, uint8(LONG_ATTACK));  //fixed by zealotyin
 	result << bResult << sAttackerID << sTargetID;
 	pAttacker->SendToRegion(&result);
 }

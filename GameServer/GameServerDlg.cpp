@@ -2253,7 +2253,7 @@ void CGameServerDlg::TempleEventTimer()
 			} 
 		}
 
-#if 0 // Temporarily disabled
+
 		for (int i = 0; i < BORDER_DEFENSE_WAR_EVENT_COUNT; i++)
 		{
 			if (nHour == m_nBorderDefenseWarTime[i] && nMinute == 32) 
@@ -2265,7 +2265,7 @@ void CGameServerDlg::TempleEventTimer()
 				break;
 			}  
 		}
-#endif
+
 	}
 	else if (pTempleEvent.ActiveEvent != -1)
 	{
@@ -2274,7 +2274,7 @@ void CGameServerDlg::TempleEventTimer()
 			for(int i = 0; i < CHAOS_EVENT_COUNT; i++)
 			{
 				if (nHour == m_nChaosTime[i] 
-				&& nMinute == 11 
+				&& nMinute == 10 
 					&& !pTempleEvent.isActive) {
 						m_nTempleEventRemainSeconds = 0;
 						pTempleEvent.LastEventRoom = 1;
@@ -2285,20 +2285,20 @@ void CGameServerDlg::TempleEventTimer()
 						break;
 				}
 				else if (nHour == m_nChaosTime[i] 
-				&& nMinute == 12 
+				&& nMinute == 11 
 					&& !pTempleEvent.isAttackable) {
 						pTempleEvent.isAttackable = true;
 						break;
 				}
 				else if (nHour == m_nChaosTime[i] 
-				&& nMinute == 32
+				&& nMinute == 30
 					&& pTempleEvent.isActive) {
 						TempleEventFinish();
 						break;
 				}
 			}
 		}
-#if 0 // Temporarily disabled
+
 		else if (pTempleEvent.ActiveEvent == TEMPLE_EVENT_BORDER_DEFENCE_WAR)
 		{
 			for(int i = 0; i < BORDER_DEFENSE_WAR_EVENT_COUNT; i++)
@@ -2315,7 +2315,7 @@ void CGameServerDlg::TempleEventTimer()
 					break;
 				} 
 				else if (nHour == (m_nBorderDefenseWarTime[i] + 1) 
-					&& nMinute == 2
+					&& nMinute == 58
 					&& pTempleEvent.isActive)
 				{
 					TempleEventFinish();
@@ -2323,7 +2323,7 @@ void CGameServerDlg::TempleEventTimer()
 				}
 			}
 		}
-#endif
+
 	}
 }
 
