@@ -2314,7 +2314,8 @@ void CGameServerDlg::TempleEventTimer()
 					TempleEventTeleportUsers();
 					break;
 				} 
-				else if (nHour == (m_nBorderDefenseWarTime[i] + 1) 
+				else if (nHour == (m_nBorderDefenseWarTime[i]) 
+				//else if (nHour == (m_nBorderDefenseWarTime[i] + 1) 
 					&& nMinute == 58
 					&& pTempleEvent.isActive)
 				{
