@@ -294,7 +294,7 @@ void CUser::ReqSkillDataLoad(Packet & pkt)
 	Packet result(WIZ_SKILLDATA, uint8(SKILL_DATA_LOAD));
 	if (!g_DBAgent.LoadSkillShortcut(result, this))
 		result << uint16(0);
-
+	
 	Send(&result);
 }
 

@@ -10,6 +10,17 @@ void CUser::QuestDataRequest()
 		result	<< itr->first << itr->second;
 	Send(&result);
 
+	// 发送未完成的进度给用户
+	foreach (itr, m_questMap)
+	{
+		if(2 != itr->second && itr->first < QUEST_KILL_GROUP1 ){
+			//SaveEvent(itr->first, itr->second);
+			SaveEvent(itr->first, 1); //只发送1  开始标志 不能发3  打怪结束标志
+		}
+
+	}
+
+
 	// NOTE: To activate Seed/Max (the kid that gets eaten by a worm), we need to send:
 	// sub opcode  = 2
 	// quest ID    = 500 (says something about beginner weapons), 
@@ -37,30 +48,35 @@ void CUser::QuestDataRequest()
 
 void CUser::QuestV2PacketProcess(Packet & pkt)
 {
-	if (m_sEventNid < 0)
-		return;
 
-	uint8 opcode = pkt.read<uint8>();
+
+	uint8 opcode = pkt.read<uint8>();// 6  接任务   5 放弃任务
 	uint32 nQuestID = pkt.read<uint32>();
 
 	CNpc *pNpc = g_pMain->GetNpcPtr(m_sEventNid);
 	_QUEST_HELPER * pQuestHelper = g_pMain->m_QuestHelperArray.GetData(nQuestID);
+
+	if(5 != opcode){ // 放弃任务时    
+		if(pQuestHelper == nullptr
+			|| pNpc == nullptr || pNpc->isDead() //不关心NPC死活  我就是要放弃任务 // Does the quest NPC exist, and is it alive? 
+			|| GetZoneID() != pQuestHelper->bZone     //不关注当前人物在哪个zone
+			|| pQuestHelper->sNpcId != pNpc->GetProtoID()  //// Are we even talking to this NPC?
+			|| m_sEventNid < 0 
+			|| !isInRange(pNpc, MAX_NPC_RANGE)   //不关注有没有点npc (m_sEventNid)   不关注是否在npc的可点区域  	// Are we in range of this NPC?		
+			)  
+			return;
+	}
+
 	// Does this quest helper exist?
 	if (pQuestHelper == nullptr
-		// Does the quest NPC exist, and is it alive? 
-			|| pNpc == nullptr || pNpc->isDead()
-			// Are we even talking to this NPC?
-			|| pQuestHelper->sNpcId != pNpc->GetProtoID()
-			// Are we in range of this NPC?
-			|| !isInRange(pNpc, MAX_NPC_RANGE)
 			// Is this quest for this player's nation? NOTE: 3 indicates both (why not 0, I don't know)
 			|| (pQuestHelper->bNation != 3 && pQuestHelper->bNation != GetNation())
 			// Is the player's level high enough to do this quest?
 			|| (pQuestHelper->bLevel > GetLevel())
 			// Are we the correct class? NOTE: 5 indicates any class.
-			|| (pQuestHelper->bClass != 5 && !JobGroupCheck(pQuestHelper->bClass))
-			// Are we in the correct zone? NOTE: This isn't checked officially, may be for good reason.
-			|| GetZoneID() != pQuestHelper->bZone)
+			|| (pQuestHelper->bClass != 5 && !JobGroupCheck(pQuestHelper->bClass)))
+			// do net check Zone while giveup task 
+			//|| GetZoneID() != pQuestHelper->bZone)
 			return;
 
 	// If we're the same min. level as the quest requires, 
@@ -69,6 +85,7 @@ void CUser::QuestV2PacketProcess(Packet & pkt)
 		&& pQuestHelper->nExp > m_iExp)
 		return;
 
+	printf("quest opcode num:%d\n",opcode);
 	switch (opcode)
 	{
 	case 3:
@@ -105,6 +122,8 @@ void CUser::QuestV2PacketProcess(Packet & pkt)
 		if (!CheckExistEvent(pQuestHelper->sEventDataIndex, 3))
 			SaveEvent(pQuestHelper->sEventDataIndex, 1);
 		break;
+	default:
+		printf("uncatched num:%d\n",opcode);
 	}
 }
 
@@ -118,6 +137,7 @@ void CUser::SaveEvent(uint16 sQuestID, uint8 bQuestState)
 		return;
 
 	m_questMap[sQuestID] = bQuestState;
+
 
 	// Don't need to handle special/kill quests any further
 	if (sQuestID >= QUEST_KILL_GROUP1)
@@ -189,16 +209,26 @@ void CUser::QuestV2MonsterCountAdd(uint16 sNpcID)
 		for (int i = 0; i < QUEST_MOBS_PER_GROUP; i++)
 		{
 			if (pQuestMonster->sNum[group][i] != sNpcID)
-				continue;
-
-			if (m_bKillCounts[group] + 1 > pQuestMonster->sCount[group])
-				return;
+				continue;		
 
 			m_bKillCounts[group]++;
 			SaveEvent(QUEST_KILL_GROUP1 + group, m_bKillCounts[group]);
+
 			Packet result(WIZ_QUEST, uint8(9));
 			result << uint8(2) << uint16(sQuestNum) << uint8(1) << uint16(m_bKillCounts[group]);
 			Send(&result);
+
+			if (m_bKillCounts[group] >=  pQuestMonster->sCount[group]){ //满足完成条件
+				uint8 bQuestState = 3;
+				SaveEvent(sQuestNum, bQuestState); //固定数
+				Quest_Moster_Couner_Map::iterator itr  = m_quest_moster_map.find(sQuestNum);
+				if(itr == m_quest_moster_map.end()){
+					m_quest_moster_map.insert(std::make_pair(sQuestNum,m_bKillCounts[group]));
+				}else{
+					itr->second = m_bKillCounts[group];
+				}
+			}
+
 			return;
 		}
 	}
@@ -206,6 +236,23 @@ void CUser::QuestV2MonsterCountAdd(uint16 sNpcID)
 
 uint8 CUser::QuestV2CheckMonsterCount(uint16 sQuestID)
 {
+	if (sQuestID >= QUEST_KILL_GROUP1){
+		QuestMap::iterator itr = m_questMap.find(sQuestID);
+
+		// If it doesn't exist, it doesn't exist. 
+		if (itr == m_questMap.end())
+			return 0;
+
+		return itr->second;	
+	}
+		
+	Quest_Moster_Couner_Map::iterator itr  = m_quest_moster_map.find(sQuestID);
+	if(itr == m_quest_moster_map.end()){
+		return 0;
+	}else{
+		return itr->second;
+	}
+	/*
 	// Attempt to find a quest with that ID in the map
 	QuestMap::iterator itr = m_questMap.find(sQuestID);
 
@@ -213,11 +260,12 @@ uint8 CUser::QuestV2CheckMonsterCount(uint16 sQuestID)
 	if (itr == m_questMap.end())
 		return 0;
 
-	return itr->second;
+	return itr->second;*/
 }
 
 void CUser::QuestV2MonsterDataDeleteAll()
 {
+	m_quest_moster_map.erase(m_sEventDataIndex);
 	memset(&m_bKillCounts, 0, sizeof(m_bKillCounts));
 	m_sEventDataIndex = 0;
 
@@ -343,8 +391,8 @@ uint16 CUser::QuestV2SearchEligibleQuest(uint16 sNpcID)
 			|| (pHelper->bClass != 5 && !JobGroupCheck(pHelper->bClass))
 			|| (pHelper->bNation != 3 && pHelper->bNation != GetNation())
 			|| (pHelper->sEventDataIndex == 0)
-			|| (pHelper->bEventStatus < 0 || CheckExistEvent(pHelper->sEventDataIndex, 2))
-			|| !CheckExistEvent(pHelper->sEventDataIndex, pHelper->bEventStatus))
+			|| (pHelper->bEventStatus < 0 || CheckExistEvent(pHelper->sEventDataIndex, 2)) //若此任务没有完成
+			|| !CheckExistEvent(pHelper->sEventDataIndex, pHelper->bEventStatus)) //check 哪一步没有完成
 			continue;
 
 		return pHelper->nEventTriggerIndex;

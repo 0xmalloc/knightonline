@@ -1050,6 +1050,8 @@ public:
 	// quest ID | quest state (need to replace with enum)
 	typedef std::map<uint16, uint8> QuestMap;
 	QuestMap m_questMap;
+	typedef std::map<uint16, uint32> Quest_Moster_Couner_Map;
+	Quest_Moster_Couner_Map m_quest_moster_map;
 
 	uint8 m_bKillCounts[QUEST_MOB_GROUPS];
 	uint16 m_sEventDataIndex;

@@ -775,12 +775,15 @@ bool CDBAgent::LoadSkillShortcut(Packet & result, CUser *pUser)
 		return false;
 
 	dbCommand->FetchUInt16(1, sCount);
-	dbCommand->FetchString(2, strSkillData, sizeof(strSkillData));
+	dbCommand->FetchBinary(2, strSkillData, sizeof(strSkillData));
 
 	result << sCount;
-	for (uint32 i = 0; i < sCount; i++)
-		result << *(uint32 *)(strSkillData + (i * sizeof(uint32)));
-
+	for (uint32 i = 0; i < sCount; i++){
+		uint32 skillid = *(uint32 *)(strSkillData + (i * sizeof(uint32)));
+		//printf(" %u ", skillid);
+		result << skillid;
+	}
+	//printf("\n");
 	return true;
 }
 
@@ -789,9 +792,17 @@ void CDBAgent::SaveSkillShortcut(short sCount, char *buff, CUser *pUser)
 	unique_ptr<OdbcCommand> dbCommand(m_GameDB->CreateCommand());
 	if (dbCommand.get() == nullptr)
 		return;
+/*
+#ifdef DEBUG
+	for (uint32 i = 0; i < sCount; i++){
+		uint32 skillid = *(uint32 *)(buff + (i * sizeof(uint32)));
+		printf(" %u ", skillid);
+	}
+	printf("\n");
+#endif*/
 
 	dbCommand->AddParameter(SQL_PARAM_INPUT, pUser->GetName().c_str(), pUser->GetName().length());
-	dbCommand->AddParameter(SQL_PARAM_INPUT, buff, 260);
+	dbCommand->AddParameter(SQL_PARAM_INPUT, buff, 260, SQL_BINARY);
 
 	if (!dbCommand->Execute(string_format(_T("{CALL SKILLSHORTCUT_SAVE(?, %d, ?)}"), sCount)))
 		ReportSQLError(m_GameDB->GetError());
