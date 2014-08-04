@@ -329,6 +329,7 @@ void CUser::GameStart(Packet & pkt)
 
 void CUser::CheckSeedQuest()
 {
+#if 0
 	if (CheckExistEvent(STARTER_SEED_QUEST, 2))
 	{
 		Packet result(WIZ_QUEST, uint8(1));
@@ -336,4 +337,5 @@ void CUser::CheckSeedQuest()
 		result << uint16(0);
 		Send(&result);
 	}
+#endif
 }

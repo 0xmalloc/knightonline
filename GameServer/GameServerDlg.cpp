@@ -1476,8 +1476,10 @@ void CGameServerDlg::GetRegionNpcIn(C3DMap *pMap, uint16 region_x, uint16 region
 			|| pNpc->isDead())
 			continue;
 
-		if (nEventRoom > 0 && nEventRoom != pNpc->m_bEventRoom && pNpc->GetProtoID() != SAW_BLADE_SSID)
-			continue;
+		//if (nEventRoom > 0 && nEventRoom != pNpc->m_bEventRoom && pNpc->GetProtoID() != SAW_BLADE_SSID)
+		//怪物没有EventRoom   只有user有  这块需要至少2队以上的人测试
+		/*if(pNpc->GetProtoID() != SAW_BLADE_SSID)
+			continue;*/
 
 		pkt << pNpc->GetID();
 		pNpc->GetNpcInfo(pkt);
@@ -1557,9 +1559,9 @@ void CGameServerDlg::GetRegionNpcList(C3DMap *pMap, uint16 region_x, uint16 regi
 		CNpc *pNpc = GetNpcPtr(*itr);
 		if (pNpc == nullptr || pNpc->isDead())
 			continue;
-
+		/*
 		if (nEventRoom > 0 && nEventRoom != pNpc->m_bEventRoom && pNpc->GetProtoID() != SAW_BLADE_SSID)
-			continue;
+			continue;*/
 
 		pkt << pNpc->GetID();
 		t_count++;
