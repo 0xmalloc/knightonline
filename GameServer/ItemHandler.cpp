@@ -449,8 +449,12 @@ bool CUser::GiveItem(uint32 itemid, uint16 count, bool send_packet /*= true*/)
 	if (pItem->sCount > MAX_ITEM_COUNT)
 		pItem->sCount = MAX_ITEM_COUNT;
 
-	/*if (pItem->nNum == CHAOS_MAP)
-	pItem->nExpirationTime = int32(UNIXTIME) + 86400; // 1 day */
+
+	if (pItem->nNum == CHAOS_MAP)
+		pItem->nExpirationTime = int32(UNIXTIME) + 86400; // 1 day 
+	else{
+		pItem->nExpirationTime = 0;
+	}
 
 	pItem->sDuration = pTable->m_sDuration;
 
@@ -460,7 +464,7 @@ bool CUser::GiveItem(uint32 itemid, uint16 count, bool send_packet /*= true*/)
 		pItem->sCount = pItem->sDuration;
 
 	if (send_packet)
-		SendStackChange(itemid, m_sItemArray[pos].sCount, m_sItemArray[pos].sDuration, pos - SLOT_MAX, true);
+		SendStackChange(itemid, m_sItemArray[pos].sCount, m_sItemArray[pos].sDuration, pos - SLOT_MAX, true, pItem->nExpirationTime);
 	else
 	{
 		SetUserAbility(false);
@@ -1073,7 +1077,7 @@ bool CUser::IsValidSlotPos(_ITEM_TABLE* pTable, int destpos)
 	return true;
 }
 
-void CUser::SendStackChange(uint32 nItemID, uint32 nCount /* needs to be 4 bytes, not a bug */, uint16 sDurability, uint8 bPos, bool bNewItem /* = false */)
+void CUser::SendStackChange(uint32 nItemID, uint32 nCount /* needs to be 4 bytes, not a bug */, uint16 sDurability, uint8 bPos, bool bNewItem /* = false */,uint32	nExpirationTime )
 {
 	Packet result(WIZ_ITEM_COUNT_CHANGE);
 
@@ -1083,6 +1087,8 @@ void CUser::SendStackChange(uint32 nItemID, uint32 nCount /* needs to be 4 bytes
 	result << nItemID << nCount;
 	result << uint8(bNewItem ? 100 : 0);
 	result << sDurability;
+	result<< uint32(0); // unknown; 
+	result<< nExpirationTime; // expiration date in unix time
 
 	SetUserAbility(false);
 	SendItemWeight();

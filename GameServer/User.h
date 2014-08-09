@@ -619,7 +619,7 @@ public:
 	int FindSlotForItem(uint32 nItemID, uint16 sCount = 1);
 	int GetEmptySlot();
 	void SendAllKnightsID();
-	void SendStackChange(uint32 nItemID, uint32 nCount /* needs to be 4 bytes, not a bug */, uint16 sDurability, uint8 bPos, bool bNewItem = false);
+	void SendStackChange(uint32 nItemID, uint32 nCount /* needs to be 4 bytes, not a bug */, uint16 sDurability, uint8 bPos, bool bNewItem = false, uint32 nExpirationTime = 0 /*in unix time*/);
 
 	void Type4Duration();
 	void HPTimeChange();

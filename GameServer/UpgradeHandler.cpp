@@ -377,7 +377,7 @@ void CUser::ItemUpgradeNotice(_ITEM_TABLE * pItem, uint8 UpgradeResult)
 		else if (UpgradeResult == 1)
 			sUpgradeNotice = string_format("%s  成功升级  %s.",GetName().c_str(),pItem->m_sName.c_str());
 
-		g_pMain->SendAnnouncement(sUpgradeNotice.c_str());
+		//g_pMain->SendAnnouncement(sUpgradeNotice.c_str());
 		g_pMain->SendNotice(sUpgradeNotice.c_str());
 	}
 }
