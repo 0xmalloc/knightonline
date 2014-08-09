@@ -366,12 +366,16 @@ void CUser::ItemUpgradeNotice(_ITEM_TABLE * pItem, uint8 UpgradeResult)
 	if (pItem->m_ItemType == 11 || pItem->m_ItemType == 12) 
 		bSendUpgradeNotice = true;
 
+	if(pItem->m_iNum%10 >= 7 || pItem->m_iNum%10 == 0){
+		bSendUpgradeNotice = true;
+	}
+
 	if (bSendUpgradeNotice)
 	{
 		if (UpgradeResult == 0)
-			sUpgradeNotice = string_format("%s has failed to upgrade %s.",GetName().c_str(),pItem->m_sName.c_str());
+			sUpgradeNotice = string_format("%s  升级失败  %s.",GetName().c_str(),pItem->m_sName.c_str());
 		else if (UpgradeResult == 1)
-			sUpgradeNotice = string_format("%s has succeeded to upgrade %s.",GetName().c_str(),pItem->m_sName.c_str());
+			sUpgradeNotice = string_format("%s  成功升级  %s.",GetName().c_str(),pItem->m_sName.c_str());
 
 		g_pMain->SendAnnouncement(sUpgradeNotice.c_str());
 		g_pMain->SendNotice(sUpgradeNotice.c_str());

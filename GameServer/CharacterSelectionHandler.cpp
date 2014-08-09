@@ -324,6 +324,10 @@ void CUser::GameStart(Packet & pkt)
 		m_LastZ = GetZ();
 	}
 
+	std::string login_notice_str;
+	login_notice_str = string_format("%s  登录了游戏",GetName().c_str());
+	//g_pMain->SendAnnouncement(login_notice_str.c_str());
+	g_pMain->SendNotice(login_notice_str.c_str());
 	m_tHPLastTimeNormal = UNIXTIME;
 }
 

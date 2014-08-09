@@ -2444,6 +2444,13 @@ void CUser::ItemGet(Packet & pkt)
 		pReceiver->SetUserAbility(false);
 		pReceiver->SendItemWeight();
 
+		if(pTable->m_ItemType == 4)  //暗金物品
+		{
+			std::string  pickupstr;
+			pickupstr = string_format("%s  获得  %s.",pReceiver->GetName().c_str(),pTable->m_sName.c_str());
+			g_pMain->SendNotice(pickupstr.c_str());
+		}
+
 		// Now notify the party that we've looted, if applicable.
 		if (isInParty())
 		{
