@@ -19,6 +19,7 @@ void MagicInstance::Run()
 	if (sTargetID != -1 && pSkillTarget == nullptr)
 		pSkillTarget = g_pMain->GetUnitPtr(sTargetID);
 
+<<<<<<< HEAD
 	bool bSendSkillFailed = false;
 
 	if (pSkillCaster != nullptr && pSkillTarget != nullptr)
@@ -79,6 +80,11 @@ void MagicInstance::Run()
 
 	if (pSkill == nullptr
 		|| pSkillCaster == nullptr
+=======
+	if (pSkill == nullptr
+		|| pSkillCaster == nullptr
+		|| CheckSkillPrerequisites() == SkillUseFail
+>>>>>>> koserver2
 		|| (result = UserCanCast()) == SkillUseFail)
 	{
 		SendSkillFailed();
@@ -128,7 +134,11 @@ void MagicInstance::Run()
 					}
 
 					// Add all flying arrow instances to the user's list for hit detection
+<<<<<<< HEAD
 					FastGuard lock(pCaster->m_arrowLock);
+=======
+					Guard lock(pCaster->m_arrowLock);
+>>>>>>> koserver2
 					for (size_t i = 0; i < bCount; i++)
 						pCaster->m_flyingArrows.push_back(Arrow(pType->iNum, UNIXTIME));
 
@@ -173,11 +183,19 @@ void MagicInstance::Run()
 				{
 					pCaster->m_CoolDownList.insert(std::make_pair(nSkillID, UNIXTIME));
 
+<<<<<<< HEAD
 					if (pSkill->bType[0] == 1 || pSkill->bType[0] == 2)
 					{
 						pCaster->m_bLastSkillType = pSkill->bType[0];
 						pCaster->m_fLastSkillUseTime = UNIXTIME;
 					}
+=======
+					if (pSkill->bType[0] != 0)
+						pCaster->m_MagicTypeCooldownList.insert(std::make_pair(pSkill->bType[0], UNIXTIME));
+
+					if (pSkill->bType[1] != 0)
+						pCaster->m_MagicTypeCooldownList.insert(std::make_pair(pSkill->bType[1], UNIXTIME));
+>>>>>>> koserver2
 				}
 			}
 
@@ -237,9 +255,19 @@ SkillUseResult MagicInstance::UserCanCast()
 	// NPCs do not need most of these checks.
 	if (pSkillCaster->isPlayer())
 	{
+<<<<<<< HEAD
 		if (pSkill->sSkill != 0
 			&& (TO_USER(pSkillCaster)->m_sClass != (pSkill->sSkill / 10)
 			|| pSkillCaster->GetLevel() < pSkill->sSkillLevel))
+=======
+		if ((pSkill->sSkill != 0
+			&& (TO_USER(pSkillCaster)->m_sClass != (pSkill->sSkill / 10)
+			|| pSkillCaster->GetLevel() < pSkill->sSkillLevel)) 
+			&& pSkillCaster->GetZoneID() != ZONE_CHAOS_DUNGEON)
+			return SkillUseFail;
+
+		if (pSkillCaster->GetZoneID() == ZONE_CHAOS_DUNGEON && !g_pMain->pTempleEvent.isAttackable)
+>>>>>>> koserver2
 			return SkillUseFail;
 
 		if ((pSkillCaster->GetMana() - pSkill->sMsp) < 0)
@@ -344,6 +372,153 @@ SkillUseResult MagicInstance::UserCanCast()
 	return SkillUseOK;
 }
 
+<<<<<<< HEAD
+=======
+SkillUseResult MagicInstance::CheckSkillPrerequisites()
+{
+	if (pSkill == nullptr)
+		return SkillUseFail;
+
+	if (bOpcode != MAGIC_FLYING && bOpcode != MAGIC_EFFECTING)
+	{
+		if (bOpcode == MAGIC_CASTING 
+			&& pSkillTarget
+			&& (pSkill->sRange > 0 
+			&& pSkill->sUseStanding == 1
+			&& (pSkillCaster->GetDistanceSqrt(pSkillTarget) >= (float)pSkill->sRange)))  // Skill Range Check for Casting
+			return SkillUseFail;
+		else
+			return SkillUseOK;
+	}
+
+	if (pSkillCaster == nullptr)
+	{
+		TRACE("#### CheckSkillPrerequisites : pSkillCaster == nullptr ####\n");
+		return SkillUseFail;
+	}
+
+	if (pSkillCaster->isPlayer())
+	{
+		CUser *pCaster = TO_USER(pSkillCaster);
+
+		if (pCaster)
+		{
+			if (pCaster->GetZoneID() == ZONE_PRISON)
+				return SkillUseFail;
+
+			if (pSkill->sUseStanding == 1
+				&& pCaster->m_sSpeed != 0) // Hacking prevention!
+				return SkillUseFail;
+
+			if (pSkill->bType[0] == 3 || pSkill->bType[1] == 3)
+			{
+				_MAGIC_TYPE3 * pType = g_pMain->m_Magictype3Array.GetData(nSkillID);
+
+				if (pType == nullptr)
+					TRACE("[%s] Used skill %d but it does not exist in MagicType3.\n", pSkillCaster->GetName().c_str(), nSkillID);
+
+				else if (pType->bAttribute == AttributeNone)
+				{
+					if (pSkill->bType[0] != 0)
+						pCaster->m_MagicTypeCooldownList.erase(pSkill->bType[0]);
+
+					if (pSkill->bType[1] != 0)
+						pCaster->m_MagicTypeCooldownList.erase(pSkill->bType[1]);
+				}
+			}
+
+			// Skil Range, Safety Area, Temple Zones and Event Room Checks...
+			if (pSkillTarget != nullptr)
+			{
+				if ((pSkill->sRange > 0 
+					&& pSkill->sUseStanding == 0 
+					&& (pSkillCaster->GetDistanceSqrt(pSkillTarget) >= (float)pSkill->sRange))  // Skill Range Check
+					|| (pCaster->isInSafetyArea() && nSkillID < 400000) // Disable Skill in Safety Area 
+					|| (pCaster->isInTempleEventZone() &&  !pCaster->isSameEventRoom(pSkillTarget))) // If EventRoom is not same disable Skill.
+					return SkillUseFail;
+			}
+
+			// Skill Cooldown Checks...
+			if (bOpcode != MAGIC_TYPE4_EXTEND && pCaster->m_CoolDownList.find(nSkillID) != pCaster->m_CoolDownList.end())
+			{
+				SkillCooldownList::iterator itr = pCaster->m_CoolDownList.find(nSkillID);
+
+				int64 DiffrentMilliseconds = (int64(UNIXTIME) * 1000) - (int64(itr->second) * 1000);
+
+				if (DiffrentMilliseconds > 0 && DiffrentMilliseconds < int32(pSkill->sReCastTime * 100) && pSkill->bType[0] != 9 && !bIsRecastingSavedMagic)
+					return SkillUseFail;
+				else
+					pCaster->m_CoolDownList.erase(nSkillID);
+			}
+
+			if (pCaster->isRogue() && pSkill->bType[0] == 2 && pSkill -> iUseItem != 370007000)
+			{
+				_ITEM_TABLE * pLeftHand  = TO_USER(pSkillCaster)->GetItemPrototype(LEFTHAND);
+
+				if (pLeftHand == nullptr 
+					|| (pLeftHand 
+					&& !pLeftHand->isBow())) // Hacking prevention!
+					return SkillUseFail;
+
+				if (bOpcode == MAGIC_EFFECTING)
+					return SkillUseOK;						
+			}
+
+			// Same time skill checks...
+			MagicTypeCooldownList::iterator itr;
+			if ((pSkill->bType[0] == 1 
+				|| pSkill->bType[0] == 2
+				|| pSkill->bType[0] == 3
+				|| pSkill->bType[0] == 4
+				|| pSkill->bType[0] == 5
+				|| pSkill->bType[0] == 6
+				|| pSkill->bType[0] == 7)
+				&& nSkillID < 400000 
+				&& pCaster->m_MagicTypeCooldownList.find(pSkill->bType[0]) != pCaster->m_MagicTypeCooldownList.end())
+			{
+				itr = pCaster->m_MagicTypeCooldownList.find(pSkill->bType[0]);
+
+				if ((float(UNIXTIME - itr->second) < PLAYER_SKILL_REQUEST_INTERVAL))
+					return SkillUseFail;
+				else
+					pCaster->m_MagicTypeCooldownList.erase(pSkill->bType[0]);
+			} 
+
+			if ((pSkill->bType[1] == 1 
+				|| pSkill->bType[1] == 2
+				|| pSkill->bType[1] == 3
+				|| pSkill->bType[1] == 4
+				|| pSkill->bType[1] == 5
+				|| pSkill->bType[1] == 6
+				|| pSkill->bType[1] == 7)
+				&& nSkillID < 400000 
+				&& pCaster->m_MagicTypeCooldownList.find(pSkill->bType[1]) != pCaster->m_MagicTypeCooldownList.end())
+			{
+				itr = pCaster->m_MagicTypeCooldownList.find(pSkill->bType[1]);
+
+				if ((float(UNIXTIME - itr->second) < PLAYER_SKILL_REQUEST_INTERVAL))
+					return SkillUseFail;
+				else
+					pCaster->m_MagicTypeCooldownList.erase(pSkill->bType[1]);
+			}
+		}
+	}
+
+	if (pSkillTarget != nullptr)
+	{
+		if (pSkillTarget->isNPC() && !pSkillTarget->isAttackable(pSkillTarget))
+			return SkillUseFail;
+		else
+		{
+			if (TO_USER(pSkillTarget)->hasBuff(BUFF_TYPE_FREEZE)) // Effect Sorunu ve Blink Sorunu Var...
+				return SkillUseFail;
+		}
+	}
+
+	return SkillUseOK;
+}
+
+>>>>>>> koserver2
 /**
 * @brief	Checks primary type 3 (DOT/HOT) skill prerequisites before executing the skill.
 *
@@ -431,8 +606,12 @@ bool MagicInstance::CheckType3Prerequisites()
 
 		// It appears that the server should reject any attacks or heals
 		// on players that have transformed into monsters.
+<<<<<<< HEAD
 		if (TO_USER(pSkillTarget)->isMonsterTransformation()
 			&& !pSkillCaster->CanAttack(pSkillTarget))
+=======
+		if (TO_USER(pSkillTarget)->isSiegeTransformation() && !pSkillCaster->CanAttack(pSkillTarget))
+>>>>>>> koserver2
 			return false;
 
 		return true;
@@ -487,7 +666,11 @@ bool MagicInstance::CheckType4Prerequisites()
 	// NOTE: AOE buffs are exempt.
 	if (pType->isBuff())
 	{
+<<<<<<< HEAD
 		FastGuard lock(pSkillTarget->m_buffLock);
+=======
+		Guard lock(pSkillTarget->m_buffLock);
+>>>>>>> koserver2
 		if (pSkillTarget->m_buffMap.find(pType->bBuffType) 
 			!= pSkillTarget->m_buffMap.end())
 			return false;
@@ -514,9 +697,15 @@ bool MagicInstance::CheckType6Prerequisites()
 		// used for showing the transformation list & UseItem is the consumable item.
 	case TransformationSkillUseMonster:
 		// Ensure they have the item for showing the transformation list
+<<<<<<< HEAD
 		if (!pCaster->CanUseItem(pSkill->nBeforeAction)
 			// Ensure they have the required item for the skill.
 				|| !pCaster->CanUseItem(pSkill->iUseItem))
+=======
+		if ((!pCaster->CanUseItem(pSkill->nBeforeAction)
+			// Ensure they have the required item for the skill.
+				|| !pCaster->CanUseItem(pSkill->iUseItem)) && !pCaster->CheckExistItem(381001000))
+>>>>>>> koserver2
 				return false;
 
 		break;
@@ -561,17 +750,28 @@ bool MagicInstance::CheckType6Prerequisites()
 
 bool MagicInstance::ExecuteSkill(uint8 bType)
 {
+<<<<<<< HEAD
+=======
+	if (bType == 0)
+		return false;
+
+>>>>>>> koserver2
 	// Implement player-specific logic before skills are executed.
 	if (pSkillCaster->isPlayer())
 	{
 		// If a player is stealthed, and they are casting a type 1/2/3/7 skill
 		// it is classed as an attack, so they should be unstealthed.
+<<<<<<< HEAD
 		if (TO_USER(pSkillCaster)->m_bInvisibilityType != INVIS_NONE
 			&& ((bType >= 1 && bType <= 3) || (bType == 7)))
 		{
 			CMagicProcess::RemoveStealth(pSkillCaster, INVIS_DISPEL_ON_MOVE);
 			CMagicProcess::RemoveStealth(pSkillCaster, INVIS_DISPEL_ON_ATTACK);
 		}
+=======
+		if ((bType >= 1 && bType <= 3) || (bType == 7))
+			TO_USER(pSkillCaster)->RemoveStealth();
+>>>>>>> koserver2
 	}
 
 	switch (bType)
@@ -667,6 +867,7 @@ void MagicInstance::BuildSkillPacket(Packet & result, int16 sSkillCaster, int16 
 void MagicInstance::BuildAndSendSkillPacket(Unit * pUnit, bool bSendToRegion, int16 sSkillCaster, int16 sSkillTarget, int8 opcode, uint32 nSkillID, int16 sData[7])
 {
 	Packet result;
+<<<<<<< HEAD
 
 	if (pSkill->bType[0] == 4 || pSkill->bType[1] == 4)
 	{
@@ -691,6 +892,8 @@ void MagicInstance::BuildAndSendSkillPacket(Unit * pUnit, bool bSendToRegion, in
 		}
 	}
 
+=======
+>>>>>>> koserver2
 	BuildSkillPacket(result, sSkillCaster, sSkillTarget, opcode, nSkillID, sData);
 
 	// No need to proceed if we're not sending fail packets.
@@ -729,7 +932,13 @@ bool MagicInstance::IsAvailable()
 	CUser* pParty = nullptr;
 	int modulator = 0, Class = 0, skill_mod = 0;
 
+<<<<<<< HEAD
 	if (pSkill == nullptr)
+=======
+	if (pSkill == nullptr
+		|| (pSkillCaster->GetZoneID() == ZONE_CHAOS_DUNGEON 
+		&& !g_pMain->pTempleEvent.isAttackable))
+>>>>>>> koserver2
 		goto fail_return;
 
 	switch (pSkill->bMoral)
@@ -845,6 +1054,14 @@ bool MagicInstance::IsAvailable()
 		case 6:
 			if (!CheckType6Prerequisites())
 				return false;
+<<<<<<< HEAD
+=======
+			else
+			{
+				if (TO_USER(pSkillCaster)->CheckExistItem(381001000))
+					TO_USER(pSkillCaster)->RobItem(381001000);
+			}
+>>>>>>> koserver2
 			break;
 		}
 	}
@@ -882,11 +1099,18 @@ bool MagicInstance::IsAvailable()
 		else if (pSkill->sSkillLevel > pSkillCaster->GetLevel()) 
 			goto fail_return;
 
+<<<<<<< HEAD
 		if (pSkill->bType[0] == 1) {	// Weapons verification in case of COMBO attack (another hacking prevention).
+=======
+		if (pSkill->bType[0] == 1) 
+		{
+			// Weapons verification in case of COMBO attack (another hacking prevention).
+>>>>>>> koserver2
 			if (pSkill->sSkill == 1055 || pSkill->sSkill == 2055) {		// Weapons verification in case of dual wielding attacks !		
 				if (TO_USER(pSkillCaster)->isWeaponsDisabled())
 					return false;
 
+<<<<<<< HEAD
 				_ITEM_TABLE *pLeftHand = TO_USER(pSkillCaster)->GetItemPrototype(LEFTHAND),
 					*pRightHand = TO_USER(pSkillCaster)->GetItemPrototype(RIGHTHAND);
 
@@ -895,6 +1119,21 @@ bool MagicInstance::IsAvailable()
 					return false;
 			}
 			else if (pSkill->sSkill == 1056 || pSkill->sSkill == 2056) {	// Weapons verification in case of 2 handed attacks !
+=======
+				_ITEM_TABLE	*pLeftHand = TO_USER(pSkillCaster)->GetItemPrototype(LEFTHAND);
+				_ITEM_TABLE	*pRightHand = TO_USER(pSkillCaster)->GetItemPrototype(RIGHTHAND);
+
+				if ((pLeftHand != nullptr 
+					&& !pLeftHand->isSword() && !pLeftHand->isAxe() 
+					&& !pLeftHand->isMace() && !pLeftHand->isSpear())
+					|| (pRightHand != nullptr 
+					&& !pRightHand->isSword() && !pRightHand->isAxe() 
+					&& !pRightHand->isMace() && !pRightHand->isSpear()))
+					return false;
+			}
+			else if (pSkill->sSkill == 1056 || pSkill->sSkill == 2056) 
+			{	// Weapons verification in case of 2 handed attacks !
+>>>>>>> koserver2
 				if (TO_USER(pSkillCaster)->isWeaponsDisabled())
 					return false;
 
@@ -976,13 +1215,22 @@ bool MagicInstance::ExecuteType1()
 	if (pSkill == nullptr)
 		return false;
 
+<<<<<<< HEAD
 	int damage = 0;
 	bool bResult = false;
 
+=======
+>>>>>>> koserver2
 	_MAGIC_TYPE1* pType = g_pMain->m_Magictype1Array.GetData(nSkillID);
 	if (pType == nullptr)
 		return false;
 
+<<<<<<< HEAD
+=======
+	int damage = 0;
+	bool bResult = false;
+
+>>>>>>> koserver2
 	if (pSkillTarget != nullptr && !pSkillTarget->isDead())
 	{
 		bResult = 1;
@@ -1001,6 +1249,7 @@ bool MagicInstance::ExecuteType1()
 				sAdditionalDamage /= 3;
 		}
 
+<<<<<<< HEAD
 		// Chaos Dungeon Skills 
 		if (pSkillCaster->GetZoneID() == ZONE_CHAOS_DUNGEON)
 		{
@@ -1016,6 +1265,9 @@ bool MagicInstance::ExecuteType1()
 		}
 		else
 			damage = pSkillCaster->GetDamage(pSkillTarget, pSkill);
+=======
+		damage = pSkillCaster->GetDamage(pSkillTarget, pSkill);
+>>>>>>> koserver2
 
 		// Only add additional damage if the target's not currently blocking it.
 		// NOTE: Not sure whether to count this as physical or magic damage.
@@ -1023,6 +1275,12 @@ bool MagicInstance::ExecuteType1()
 		if (!pSkillTarget->m_bBlockPhysical)
 			damage += sAdditionalDamage;
 
+<<<<<<< HEAD
+=======
+		if (pSkillCaster->GetZoneID() == ZONE_CHAOS_DUNGEON)
+			damage = pType->sAddDamage / 10;
+
+>>>>>>> koserver2
 		pSkillTarget->HpChange(-damage, pSkillCaster);
 
 		if (pSkillTarget->m_bReflectArmorType != 0 && pSkillCaster != pSkillTarget)
@@ -1067,15 +1325,25 @@ bool MagicInstance::ExecuteType2()
 	if (pSkill == nullptr)
 		return false;
 
+<<<<<<< HEAD
 	int damage = 0;
 	bool bResult = false;
 	float total_range = 0.0f;	// These variables are used for range verification!
 	int sx, sz, tx, tz;
 
+=======
+>>>>>>> koserver2
 	_MAGIC_TYPE2 *pType = g_pMain->m_Magictype2Array.GetData(nSkillID);
 	if (pType == nullptr)
 		return false;
 
+<<<<<<< HEAD
+=======
+	int damage = 0;
+	bool bResult = false;
+	float total_range = 0.0f;	// These variables are used for range verification!
+	int sx, sz, tx, tz;
+>>>>>>> koserver2
 	int range = 0;
 
 	// If we need arrows, then we require a bow.
@@ -1131,7 +1399,11 @@ bool MagicInstance::ExecuteType2()
 	if (pSkillCaster->isPlayer())
 	{
 		CUser * pUser = TO_USER(pSkillCaster);
+<<<<<<< HEAD
 		FastGuard lock(pUser->m_arrowLock);
+=======
+		Guard lock(pUser->m_arrowLock);
+>>>>>>> koserver2
 
 		// No arrows currently flying.
 		if (pUser->m_flyingArrows.empty())
@@ -1187,13 +1459,24 @@ packet_send:
 // Applied when a magical attack, healing, and mana restoration is done.
 bool MagicInstance::ExecuteType3()
 {	
+<<<<<<< HEAD
 	int damage = 0, duration_damage = 0;
 	vector<Unit *> casted_member;
+=======
+	if (pSkill == nullptr)
+		return false;
+>>>>>>> koserver2
 
 	_MAGIC_TYPE3* pType = g_pMain->m_Magictype3Array.GetData(nSkillID);
 	if (pType == nullptr) 
 		return false;
 
+<<<<<<< HEAD
+=======
+	int damage = 0, duration_damage = 0;
+	vector<Unit *> casted_member;
+
+>>>>>>> koserver2
 	// If the target's a group of people...
 	if (sTargetID == -1)
 	{
@@ -1208,6 +1491,12 @@ bool MagicInstance::ExecuteType3()
 			if(pTarget == nullptr)
 				continue; 
 
+<<<<<<< HEAD
+=======
+			if (pTarget->isPlayer() && TO_USER(pTarget)->isGM())
+				continue;
+
+>>>>>>> koserver2
 			if (pSkillCaster != pTarget
 				&& !pTarget->isDead() && !pTarget->isBlinking() && pTarget->isAttackable()
 				&& CMagicProcess::UserRegionCheck(pSkillCaster, pTarget, pSkill, pType->bRadius, sData[0], sData[2]))
@@ -1253,6 +1542,13 @@ bool MagicInstance::ExecuteType3()
 		if(pTarget == nullptr)
 			continue;
 
+<<<<<<< HEAD
+=======
+		if (pSkill->sRange > 0 
+			&& (pSkillCaster->GetDistanceSqrt(pTarget) >= (float)pSkill->sRange))
+			continue;
+
+>>>>>>> koserver2
 		// If you are casting an attack spell.
 		if ((pType->sFirstDamage < 0) && (pType->bDirectType == 1 || pType->bDirectType == 8) 
 			&& (nSkillID < 400000) 
@@ -1271,6 +1567,7 @@ bool MagicInstance::ExecuteType3()
 				damage = -10;
 		}
 
+<<<<<<< HEAD
 		bool bSendColdAndLightningSkill = true;
 
 		if (pType->bDirectType == 1 && nSkillID < 400000)
@@ -1286,6 +1583,31 @@ bool MagicInstance::ExecuteType3()
 				}
 				else if (pTarget->isPlayer() && pType->bAttribute == 3 && pTarget->m_sLightningR <= nColdAndLightningPossibility)
 					bSendColdAndLightningSkill = false;
+=======
+		bool bSendLightningStunSkill = true;
+
+		if (pType->bDirectType == 1 
+			&& nSkillID < 400000 
+			&& pType->bAttribute == AttributeLightning && pTarget->isPlayer())
+		{
+			// Success rate...
+			if (pSkill->bSuccessRate < 100 && pSkill->bSuccessRate <= myrand(0, (100 - pSkill->bSuccessRate) * 10))
+				bSendLightningStunSkill = false;
+			// Calculate user ressistance...
+			else
+			{
+				uint16 nMaxRessitance = 250;
+				uint16 nTargetResistance = pTarget->m_sLightningR;
+
+				if (nTargetResistance < (nMaxRessitance / 2))
+					nTargetResistance = 110;
+
+				if (nTargetResistance > nMaxRessitance)
+					nMaxRessitance = nTargetResistance;
+
+				if (nTargetResistance >= myrand(0, nMaxRessitance - nTargetResistance))
+					bSendLightningStunSkill = false;
+>>>>>>> koserver2
 			}
 		}
 
@@ -1296,6 +1618,13 @@ bool MagicInstance::ExecuteType3()
 			{
 				// Affects target's HP
 			case 1:
+<<<<<<< HEAD
+=======
+				// Disable to heal or minor NPC.
+				if ((pTarget->isNPC() && pType->sTimeDamage > 0) || (pTarget->isNPC() && pType->sFirstDamage > 0))
+					return false;
+
+>>>>>>> koserver2
 				// "Critical Point" buff gives a chance to double HP from pots or the rogue skill "Minor heal".
 				if (damage > 0 && pSkillCaster->hasBuff(BUFF_TYPE_DAMAGE_DOUBLE)
 					&& CheckPercent(500))
@@ -1308,16 +1637,33 @@ bool MagicInstance::ExecuteType3()
 
 				break;
 			case 2:
+<<<<<<< HEAD
 			case 3:
 				pTarget->MSpChange(damage);			
+=======
+				if (!pTarget->isDead() && pTarget->isPlayer())
+					pTarget->MSpChange(pType->sFirstDamage);
+				else if (!pTarget->isDead())
+					pTarget->HpChange(pType->sFirstDamage,pSkillCaster);
+				break;
+			case 3:
+				pTarget->MSpChange(damage);
+>>>>>>> koserver2
 				break;
 
 				// "Magic Hammer" repairs equipped items.
 			case 4:
 				if (pTarget->isPlayer())
 				{
+<<<<<<< HEAD
 					TO_USER(pTarget)->ItemWoreOut(ATTACK, -damage);
 					TO_USER(pTarget)->ItemWoreOut(DEFENCE, -damage);
+=======
+					if (damage > 0)
+						TO_USER(pTarget)->ItemWoreOut(REPAIR_ALL, damage);
+					else
+						TO_USER(pTarget)->ItemWoreOut(DEFENCE, -damage);
+>>>>>>> koserver2
 				}
 				break;
 
@@ -1333,6 +1679,7 @@ bool MagicInstance::ExecuteType3()
 
 				// Caster absorbs damage based on percentage of target's HP. Players only.
 			case 8:
+<<<<<<< HEAD
 				if (pTarget->isPlayer())
 				{
 					if (pType->sFirstDamage < 100)
@@ -1344,6 +1691,24 @@ bool MagicInstance::ExecuteType3()
 					if (pTarget->isPlayer()) 
 						pSkillCaster->HpChangeMagic(-(damage));
 				}
+=======
+				if (pType->sFirstDamage > 0)
+				{
+					if (pType->sFirstDamage < 100)
+						damage = (pTarget->GetHealth() * 100) / pType->sFirstDamage;
+					else
+						damage = (pTarget->GetMaxHealth() - 100 * 100) / pType->sFirstDamage;
+				}
+
+				if (!pTarget->isDead() && pTarget->isPlayer())
+				{	
+					pTarget->HpChangeMagic(damage, pSkillCaster);
+					pSkillCaster->HpChangeMagic(-(damage));
+				}
+				else
+					pTarget->HpChange(damage,pSkillCaster);
+
+>>>>>>> koserver2
 				break;
 
 				// Caster absorbs damage based on percentage of target's max HP
@@ -1385,6 +1750,7 @@ bool MagicInstance::ExecuteType3()
 					pSkillCaster->HpChangeMagic(-(pType->sFirstDamage) / 2);
 				}
 				break;
+<<<<<<< HEAD
 			case 19: // Chaos Dungeon Skills
 				if (pSkillCaster->GetZoneID() == ZONE_CHAOS_DUNGEON)
 				{
@@ -1392,6 +1758,28 @@ bool MagicInstance::ExecuteType3()
 						pTarget->HpChangeMagic(-3000, pSkillCaster, AttributeFire);
 					if (pType->iNum == 490227)// Stun Lighting
 						pTarget->HpChangeMagic(-2000, pSkillCaster, AttributeLightning);
+=======
+			case 17:
+				if (!pTarget->isNPC() && !pTarget->isDead() && pSkillCaster->GetZoneID() == ZONE_DELOS && !pSkillCaster->isDead())
+				{
+					pTarget->HpChangeMagic(pType->sFirstDamage,pSkillCaster, (AttributeType) pType->bAttribute);
+				}
+				break;
+			case 19: // Chaos Dungeon Skills
+				if (pTarget->isPlayer())
+				{
+					pTarget->HpChangeMagic(damage / 10, pSkillCaster, (AttributeType) pType->bAttribute);
+
+					if (pTarget != pSkillCaster)
+						ReflectDamage(damage, pTarget);
+				}
+				break;
+				// Stat Scroll - MagicNum = 501011
+			case 255:
+				if (TO_USER(pSkillCaster)->isPlayer())
+				{
+
+>>>>>>> koserver2
 				}
 				break;
 			}
@@ -1410,6 +1798,11 @@ bool MagicInstance::ExecuteType3()
 				// HP booster (should this actually just be using sFirstDamage as the percent of max HP, i.e. 105 being 5% of max HP each increment?)
 				if (pType->bDirectType == 14)
 					duration_damage = (int)(pSkillCaster->GetLevel() * (1 + pSkillCaster->GetLevel() / 30.0)) + 3;
+<<<<<<< HEAD
+=======
+				else if (pType->bDirectType == 19)
+					duration_damage = (pType->sTimeDamage / 10);
+>>>>>>> koserver2
 				else if (pType->sTimeDamage < 0 && pType->bAttribute != 4) 
 					duration_damage = GetMagicDamage(pTarget, pType->sTimeDamage, pType->bAttribute);
 				else 
@@ -1438,7 +1831,14 @@ bool MagicInstance::ExecuteType3()
 					pEffect->m_bHPInterval = 2;					// interval of 2s between each damage loss/HP gain 
 
 					// number of ticks required at a rate of 2s per tick over the total duration of the skill
+<<<<<<< HEAD
 					float tickCount = (float) pType->bDuration / (float) pEffect->m_bHPInterval;
+=======
+					float tickCount = (float)pType->bDuration / (float)pEffect->m_bHPInterval;
+
+					if (pSkillCaster->GetZoneID() == ZONE_CHAOS_DUNGEON)
+						tickCount *=2;
+>>>>>>> koserver2
 
 					// amount of HP to be given/taken every tick at a rate of 2s per tick
 					pEffect->m_sHPAmount = (int16)(duration_damage / tickCount);
@@ -1458,12 +1858,20 @@ bool MagicInstance::ExecuteType3()
 				// Ignore healing spells, not sure if this will break any skills.
 					&& pType->sTimeDamage < 0)
 			{
+<<<<<<< HEAD
 				if (bSendColdAndLightningSkill)
+=======
+				if (bSendLightningStunSkill)
+>>>>>>> koserver2
 					TO_USER(pTarget)->SendUserStatusUpdate(pType->bAttribute == POISON_R ? USER_STATUS_POISON : USER_STATUS_DOT, USER_STATUS_INFLICT);
 			}
 		}
 
+<<<<<<< HEAD
 		if (!bSendColdAndLightningSkill)
+=======
+		if (!bSendLightningStunSkill)
+>>>>>>> koserver2
 			sData[1] = 0;
 
 		// Send the skill data in the current context to the caster's region, with the target explicitly set.
@@ -1490,13 +1898,17 @@ bool MagicInstance::ExecuteType3()
 
 bool MagicInstance::ExecuteType4()
 {
+<<<<<<< HEAD
 	int damage = 0;
 
 	vector<Unit *> casted_member;
+=======
+>>>>>>> koserver2
 	if (pSkill == nullptr)
 		return false;
 
 	_MAGIC_TYPE4* pType = g_pMain->m_Magictype4Array.GetData(nSkillID);
+<<<<<<< HEAD
 
 	if (pType == nullptr)
 		return false;
@@ -1504,6 +1916,17 @@ bool MagicInstance::ExecuteType4()
 	if (!bIsRecastingSavedMagic 
 		&& sTargetID >= 0 
 		&& pSkillTarget->HasSavedMagic(nSkillID))
+=======
+	if (pType == nullptr)
+		return false;
+
+	int damage = 0;
+	vector<Unit *> casted_member;
+
+	if (!bIsRecastingSavedMagic 
+		&& sTargetID >= 0 
+		&& (pSkillTarget && pSkillTarget->HasSavedMagic(nSkillID)))
+>>>>>>> koserver2
 		return false;
 
 	if (sTargetID == -1)
@@ -1518,6 +1941,21 @@ bool MagicInstance::ExecuteType4()
 			if(pTarget == nullptr)
 				continue; 
 
+<<<<<<< HEAD
+=======
+			if (TO_USER(pSkillCaster)->isInArena() && pSkillCaster == pTarget)
+				continue;
+
+			if (pTarget->isPlayer())
+			{
+				if (TO_USER(pTarget)->isGM())
+					continue;
+
+				if (pSkillCaster->GetNation() != pTarget->GetNation())
+					TO_USER(pTarget)->RemoveStealth();
+			}
+
+>>>>>>> koserver2
 			if (!pTarget->isDead() && !pTarget->isBlinking() && pTarget->isAttackable()
 				&& CMagicProcess::UserRegionCheck(pSkillCaster, pTarget, pSkill, pType->bRadius, sData[0], sData[2]))
 				casted_member.push_back(pTarget);
@@ -1526,9 +1964,21 @@ bool MagicInstance::ExecuteType4()
 		if (casted_member.empty())
 		{		
 			if (pSkillCaster->isPlayer())
+<<<<<<< HEAD
 				SendSkill();
 
 			return false;
+=======
+			{
+				if (pSkill->bMoral == MORAL_PARTY_ALL)
+					casted_member.push_back(pSkillCaster);
+				else
+				{
+					SendSkill();
+					return false;
+				}
+			}
+>>>>>>> koserver2
 		}
 	}
 	else 
@@ -1548,11 +1998,24 @@ bool MagicInstance::ExecuteType4()
 		if(pTarget == nullptr)
 			continue;
 
+<<<<<<< HEAD
+=======
+		if (pSkill->sRange > 0 && (pSkillCaster->GetDistanceSqrt(pTarget) >= (float)pSkill->sRange))
+			continue;
+
+>>>>>>> koserver2
 		uint8 bResult = 1;
 		_BUFF_TYPE4_INFO pBuffInfo;
 		bool bAllowCastOnSelf = false;
 		uint16 sDuration = pType->sDuration;
 
+<<<<<<< HEAD
+=======
+		// Speed Skills
+		bool bSetSpeed = true;
+		uint8 nTargetSpeedAmount = pType->bSpeed;
+
+>>>>>>> koserver2
 		// A handful of skills (Krowaz, currently) should use the caster as the target.
 		// As such, we should correct this before any other buff/debuff logic is handled.
 		switch (pType->bBuffType)
@@ -1589,7 +2052,11 @@ bool MagicInstance::ExecuteType4()
 			}
 		}
 
+<<<<<<< HEAD
 		pTarget->m_buffLock.Acquire();
+=======
+		pTarget->m_buffLock.lock();
+>>>>>>> koserver2
 		Type4BuffMap::iterator buffItr = pTarget->m_buffMap.find(pType->bBuffType);
 
 		// Identify whether or not a skill (buff/debuff) with this buff type was already cast on the player.
@@ -1597,14 +2064,22 @@ bool MagicInstance::ExecuteType4()
 		//			We should not error out in this case.
 		bool bSkillTypeAlreadyOnTarget = (!bIsRecastingSavedMagic && buffItr != pTarget->m_buffMap.end());
 
+<<<<<<< HEAD
 		pTarget->m_buffLock.Release();
+=======
+		pTarget->m_buffLock.unlock();
+>>>>>>> koserver2
 
 		// Debuffs 'stack', in that the expiry time is reset each time.
 		// Debuffs also take precedence over buffs of the same nature, so we should ensure they get removed 
 		// rather than just stacking the modifiers, as the client only supports one (de)buff of that type active.
 		if (bSkillTypeAlreadyOnTarget && pType->isDebuff())
 		{
+<<<<<<< HEAD
 			CMagicProcess::RemoveType4Buff(pType->bBuffType, pTarget);
+=======
+			CMagicProcess::RemoveType4Buff(pType->bBuffType, pTarget, false);
+>>>>>>> koserver2
 			bSkillTypeAlreadyOnTarget = false;
 		}
 
@@ -1654,6 +2129,10 @@ bool MagicInstance::ExecuteType4()
 		if (!bSkillTypeAlreadyOnTarget)
 		{
 			pBuffInfo.m_nSkillID = nSkillID;
+<<<<<<< HEAD
+=======
+			pBuffInfo.m_bBuffType = pType->bBuffType;
+>>>>>>> koserver2
 			pBuffInfo.m_bIsBuff = pType->bIsBuff;
 
 			pBuffInfo.m_bDurationExtended = false;
@@ -1663,22 +2142,65 @@ bool MagicInstance::ExecuteType4()
 			pTarget->AddType4Buff(pType->bBuffType, pBuffInfo);
 		}
 
+<<<<<<< HEAD
+=======
+		// Speed skill posibility...
+		if (pTarget->isPlayer())
+		{
+			if ((pSkill->bMoral == MORAL_ENEMY 
+				|| pSkill->bMoral == MORAL_AREA_ENEMY) 
+				&& (pType->bBuffType == BUFF_TYPE_SPEED2 
+				|| pType->bBuffType == BUFF_TYPE_STUN))
+			{
+				uint16 nMaxRessitance = 250;
+				uint16 nTargetResistance = pType->bBuffType == BUFF_TYPE_SPEED2 ? pTarget->m_sColdR : pTarget->m_sLightningR;
+
+				if (nTargetResistance < (nMaxRessitance / 2))
+					nTargetResistance = 110;
+
+				if (nTargetResistance > nMaxRessitance)
+					nMaxRessitance = nTargetResistance;
+
+				if (nTargetResistance >= myrand(0, nMaxRessitance - nTargetResistance))
+					bSetSpeed = false;
+
+				_MAGIC_TYPE4 * pTypeTarget;
+
+				Guard lock(pTarget->m_buffLock);
+				auto itr = pTarget->m_buffMap.find(BUFF_TYPE_SPEED);
+				if (itr != pTarget->m_buffMap.end() && (pTypeTarget = g_pMain->m_Magictype4Array.GetData(itr->second.m_nSkillID)))
+					nTargetSpeedAmount = pTypeTarget->bSpeed;
+
+				if (!bSetSpeed)
+					goto fail_return;
+			}
+		}
+
+>>>>>>> koserver2
 		// Update character stats.
 		if (pTarget->isPlayer())
 		{
 			TO_USER(pTarget)->SetUserAbility();
 			TO_USER(pTarget)->Send2AI_UserUpdateInfo();
 
+<<<<<<< HEAD
 			if (pType->bBuffType == BUFF_TYPE_HP_MP)
 				pTarget->HpChange(pTarget->GetMaxHealth());
+=======
+			if (pType->isBuff() && pType->bBuffType == BUFF_TYPE_HP_MP)
+				TO_USER(pTarget)->HpChange(pTarget->m_sMaxHPAmount);
+>>>>>>> koserver2
 		}
 
 fail_return:
 		if (pSkill->bType[1] == 0 || pSkill->bType[1] == 4)
 		{
+<<<<<<< HEAD
 			if (!bSendSpeedSkill)
 				return true;
 
+=======
+>>>>>>> koserver2
 			Unit *pTmp = (pSkillCaster->isPlayer() ? pSkillCaster : pTarget);
 			int16 sDataCopy[] = 
 			{
@@ -1686,6 +2208,12 @@ fail_return:
 				sData[4], pType->bSpeed, sData[6]
 			};
 
+<<<<<<< HEAD
+=======
+			if (!bSetSpeed)
+				sDataCopy[5] = nTargetSpeedAmount;
+
+>>>>>>> koserver2
 			BuildAndSendSkillPacket(pTmp, true, sCasterID, pTarget->GetID(), bOpcode, nSkillID, sDataCopy);
 
 			if (pSkill->bMoral >= MORAL_ENEMY
@@ -1697,6 +2225,13 @@ fail_return:
 
 				TO_USER(pTarget)->SendUserStatusUpdate(status, USER_STATUS_INFLICT);
 			}
+<<<<<<< HEAD
+=======
+
+			if (pType->bBuffType == BUFF_TYPE_DECREASE_RESIST
+				|| pType->bBuffType == BUFF_TYPE_DISABLE_TARGETING)
+				SendSkill();
+>>>>>>> koserver2
 		}
 
 		if (bResult == 0
@@ -1722,7 +2257,11 @@ bool MagicInstance::ExecuteType5()
 	// Targeting a group of people (e.g. party)
 	if (sTargetID == -1)
 	{
+<<<<<<< HEAD
 		SessionMap & sessMap = g_pMain->m_socketMgr.GetActiveSessionMap();
+=======
+		SessionMap sessMap = g_pMain->m_socketMgr.GetActiveSessionMap();
+>>>>>>> koserver2
 		foreach (itr, sessMap)
 		{
 			CUser * pTUser = TO_USER(itr->second);
@@ -1743,7 +2282,10 @@ bool MagicInstance::ExecuteType5()
 			if (CMagicProcess::UserRegionCheck(pSkillCaster, pTUser, pSkill, pSkill->sRange, sData[0], sData[2]))
 				casted_member.push_back(pTUser);
 		}
+<<<<<<< HEAD
 		g_pMain->m_socketMgr.ReleaseLock();
+=======
+>>>>>>> koserver2
 	}
 	// Targeting a single person
 	else
@@ -1815,14 +2357,27 @@ bool MagicInstance::ExecuteType5()
 
 		case REMOVE_TYPE4: // Remove type 4 debuffs
 			{
+<<<<<<< HEAD
 				bool bRecastSavedMagic = false;
 				FastGuard lock(pTUser->m_buffLock);
+=======
+				Guard lock(pTUser->m_buffLock);
+>>>>>>> koserver2
 				Type4BuffMap buffMap = pTUser->m_buffMap; // copy the map so we can't break it while looping
 
 				foreach (itr, buffMap)
 				{
 					if (itr->second.isDebuff())
+<<<<<<< HEAD
 						CMagicProcess::RemoveType4Buff(itr->first, pTUser);
+=======
+					{
+						CMagicProcess::RemoveType4Buff(itr->first, pTUser);
+
+						if (pTUser->isLockableScroll(itr->second.m_bBuffType))
+							pTUser->RecastLockableScrolls(itr->second.m_bBuffType);
+					}
+>>>>>>> koserver2
 				}
 
 				// NOTE: This originally checked to see if there were any active debuffs.
@@ -1833,6 +2388,7 @@ bool MagicInstance::ExecuteType5()
 			} break;
 
 		case RESURRECTION_SELF:
+<<<<<<< HEAD
 			if (pSkillCaster != pTUser)
 				continue;
 
@@ -1840,6 +2396,22 @@ bool MagicInstance::ExecuteType5()
 			pTUser->Regene(1, nSkillID);
 			pTUser->RobItem(pSkill->iUseItem, pType->sNeedStone);
 			TO_USER(pSkillCaster)->GiveItem(pSkill->iUseItem, pType->sNeedStone / 2);
+=======
+			if (pSkillCaster != pTUser || pTUser->m_iLostExp == 0)
+				continue;
+
+			pTUser->Regene(1,nSkillID);
+			break;
+		case RESURRECTION:
+			if (pTUser->CheckExistItem(pSkill->iUseItem, pType->sNeedStone))
+			{
+				if (pTUser->RobItem(pSkill->iUseItem, pType->sNeedStone))
+				{
+					TO_USER(pSkillCaster)->GiveItem(pSkill->iUseItem, (pType->sNeedStone / 2) + 1);
+					pTUser->Regene(1,nSkillID);
+				}
+			}
+>>>>>>> koserver2
 			break;
 
 		case REMOVE_BLESS:
@@ -1869,8 +2441,14 @@ bool MagicInstance::ExecuteType6()
 		|| !pSkillCaster->isPlayer())
 		return false;
 
+<<<<<<< HEAD
 	CUser * pCaster = TO_USER(pSkillCaster);
 	_MAGIC_TYPE6 * pType = g_pMain->m_Magictype6Array.GetData(nSkillID);
+=======
+	_MAGIC_TYPE6 * pType = g_pMain->m_Magictype6Array.GetData(nSkillID);
+
+	CUser * pCaster = TO_USER(pSkillCaster);
+>>>>>>> koserver2
 	uint16 sDuration = 0;
 
 	if (pType == nullptr
@@ -1882,7 +2460,11 @@ bool MagicInstance::ExecuteType6()
 			&& pSkillCaster->GetZoneID() > ELMORAD)
 			|| (!bIsRecastingSavedMagic && pCaster->isTransformed())
 			// All buffs must be removed before using transformation skills
+<<<<<<< HEAD
 			|| (pType->bUserSkillUse != TransformationSkillUseNPC && pSkillCaster->isBuffed())
+=======
+			|| (pType->bUserSkillUse != TransformationSkillUseNPC && pSkillCaster->isBuffed(true))
+>>>>>>> koserver2
 			// Transformation nation.
 			|| (pType->bNation != 0 && pType->bNation != pCaster->GetNation()))
 	{
@@ -1958,18 +2540,31 @@ bool MagicInstance::ExecuteType6()
 
 bool MagicInstance::ExecuteType7()
 {
+<<<<<<< HEAD
 	vector<Unit *> casted_member;
 
+=======
+>>>>>>> koserver2
 	if (pSkill == nullptr)
 		return false;
 
 	_MAGIC_TYPE7* pType = g_pMain->m_Magictype7Array.GetData(nSkillID);
+<<<<<<< HEAD
 
 	int damage = pType->sDamage;
 
 	if (pType == nullptr)
 		return false;
 
+=======
+	if (pType == nullptr)
+		return false;
+
+	vector<Unit *> casted_member;
+
+	int damage = pType->sDamage;
+
+>>>>>>> koserver2
 	if (sTargetID == -1)
 	{
 		std::vector<uint16> unitList;
@@ -1984,6 +2579,12 @@ bool MagicInstance::ExecuteType7()
 			if(pTarget == nullptr)
 				continue; 
 
+<<<<<<< HEAD
+=======
+			if (pTarget->isPlayer() && TO_USER(pTarget)->isGM())
+				continue;
+
+>>>>>>> koserver2
 			if (pSkillCaster != pTarget && !pTarget->isDead() && !pTarget->isBlinking() && pTarget->isAttackable()
 				&& CMagicProcess::UserRegionCheck(pSkillCaster, pTarget, pSkill, pType->bRadius, sData[0], sData[2]))
 				casted_member.push_back(pTarget);
@@ -2033,11 +2634,15 @@ bool MagicInstance::ExecuteType8()
 	if (pSkill == nullptr)
 		return false;
 
+<<<<<<< HEAD
 	vector<CUser *> casted_member;
+=======
+>>>>>>> koserver2
 	_MAGIC_TYPE8* pType = g_pMain->m_Magictype8Array.GetData(nSkillID);
 	if (pType == nullptr)
 		return false;
 
+<<<<<<< HEAD
 	if (sTargetID == -1)
 	{
 		// TODO: Localise this loop to make it not suck (the life out of the server).
@@ -2053,6 +2658,20 @@ bool MagicInstance::ExecuteType8()
 				casted_member.push_back(pTUser);
 		}
 		g_pMain->m_socketMgr.ReleaseLock();
+=======
+	vector<CUser *> casted_member;
+
+	if (sTargetID == -1)
+	{
+		// TODO: Localise this loop to make it not suck (the life out of the server).
+		SessionMap sessMap = g_pMain->m_socketMgr.GetActiveSessionMap();
+		foreach (itr, sessMap)
+		{		
+			CUser* pTUser = TO_USER(itr->second);
+			if (CMagicProcess::UserRegionCheck(pSkillCaster, pTUser, pSkill, pType->sRadius, sData[0], sData[2]))
+				casted_member.push_back(pTUser);
+		}
+>>>>>>> koserver2
 
 		if (casted_member.empty()) 
 			return false;	
@@ -2076,12 +2695,15 @@ bool MagicInstance::ExecuteType8()
 		uint8 bResult = 0;
 		_OBJECT_EVENT* pEvent = nullptr;
 
+<<<<<<< HEAD
 		// If we're in a home zone, we'll want the coordinates from there. Otherwise, assume our own home zone.
 		_HOME_INFO* pHomeInfo = g_pMain->m_HomeArray.GetData(pTUser->GetZoneID() <= ZONE_ELMORAD ? pTUser->GetZoneID() : pTUser->GetNation());
 		_START_POSITION * pStartP = g_pMain->m_StartPositionArray.GetData(pTUser->GetZoneID());
 		if (pHomeInfo == nullptr)
 			return false;
 
+=======
+>>>>>>> koserver2
 		if (pType->bWarpType != 11) 
 		{   // Warp or summon related: targets CANNOT be dead.
 			if (pTUser->isDead()
@@ -2097,11 +2719,32 @@ bool MagicInstance::ExecuteType8()
 		if (pTUser->m_bWarp)
 			goto packet_send;
 
+<<<<<<< HEAD
 		switch(pType->bWarpType) {	
 		case 1:		// Send source to resurrection point.
 			// Send the packet to the target.
 			sData[1] = 1;
 			BuildAndSendSkillPacket(*itr, true, sCasterID, (*itr)->GetID(), bOpcode, nSkillID, sData); 
+=======
+		switch(pType->bWarpType)
+		{
+		case 1:		// Send source to resurrection point.
+			// Disable gate / escape etc for forgetten temple and pvp zones...
+			if (pTUser->GetZoneID() > ZONE_BIFROST
+				&& (nSkillID == 109035
+				|| nSkillID == 110035
+				|| nSkillID == 209035
+				|| nSkillID == 210035))
+			{
+				SendSkillFailed();
+				return false;
+			}
+			// Send the packet to the target.
+			sData[1] = 1;
+
+			BuildAndSendSkillPacket(*itr, true, sCasterID, (*itr)->GetID(), bOpcode, nSkillID, sData); 
+
+>>>>>>> koserver2
 			if (pTUser->GetMap() == nullptr)
 				continue;
 
@@ -2109,6 +2752,7 @@ bool MagicInstance::ExecuteType8()
 
 			if (pEvent != nullptr)
 				pTUser->Warp(uint16(pEvent->fPosX * 10), uint16(pEvent->fPosZ * 10));	
+<<<<<<< HEAD
 			else if (pTUser->GetZoneID() <= ELMORAD)
 			{
 				if (pTUser->GetNation() == KARUS)
@@ -2158,6 +2802,15 @@ bool MagicInstance::ExecuteType8()
 					else
 						pTUser->Warp(uint16((pStartP->sKarusX + myrand(0, pStartP->bRangeX)) * 10), uint16((pStartP->sKarusZ + myrand(0, pStartP->bRangeZ)) * 10));
 				}
+=======
+			else if (pTUser->GetZoneID() <= ELMORAD || pTUser->GetMap()->isWarZone() || pTUser->GetMap()->canAttackOtherNation())
+			{
+				_START_POSITION * pStartPosition = g_pMain->m_StartPositionArray.GetData(pTUser->GetZoneID());
+				if (pStartPosition)
+					pTUser->Warp((uint16)((pTUser->GetNation() == KARUS ? pStartPosition->sKarusX : pStartPosition->sElmoradX) + myrand(0, pStartPosition->bRangeX)) * 10,(uint16)((pTUser->GetNation() == KARUS ? pStartPosition->sKarusZ : pStartPosition->sElmoradZ) + myrand(0, pStartPosition->bRangeZ)) * 10);
+				else
+					return false;
+>>>>>>> koserver2
 			}
 			else
 				pTUser->Warp(uint16(pTUser->GetMap()->m_fInitX * 10), uint16(pTUser->GetMap()->m_fInitZ * 10));
@@ -2189,10 +2842,24 @@ bool MagicInstance::ExecuteType8()
 			} break;
 
 		case 12:	// Summon a target within the zone.	
+<<<<<<< HEAD
 			// Cannot teleport users from other zones.
 			if (pSkillCaster->GetZoneID() != pTUser->GetZoneID()
 				// Cannot teleport ourselves.
 					|| pSkillCaster == pSkillTarget)
+=======
+			// Disable telepert for forgetten temple...
+			if(pTUser->GetZoneID() == ZONE_FORGOTTEN_TEMPLE 
+				|| (pTUser->GetZoneID() > ZONE_BIFROST && (nSkillID == 490042 || nSkillID == 490050)))
+			{
+				SendSkillFailed();
+				return false;
+			}
+			// Cannot teleport users from other zones.
+			if (pSkillCaster->GetZoneID() != pTUser->GetZoneID()
+				// Cannot teleport ourselves.
+					|| pSkillCaster == pTUser)
+>>>>>>> koserver2
 					goto packet_send;
 
 			// Send the packet to the target.
@@ -2235,6 +2902,7 @@ bool MagicInstance::ExecuteType8()
 				pTUser->Warp(uint16(warp_x * 10), uint16(warp_z * 10));
 			} break;
 
+<<<<<<< HEAD
 		case 21:	// Summon a monster within a zone.
 			{
 				MonsterSummonList * pMonsterSummonList = g_pMain->m_MonsterSummonList.GetData(1); // bType
@@ -2251,6 +2919,27 @@ bool MagicInstance::ExecuteType8()
 					}
 					else
 						nCurrentMonster++;
+=======
+		case 21:	// Summon a monster within a zone with monster staff.
+			{
+				MonsterSummonList * pMonsterSummonList = g_pMain->m_MonsterSummonList.GetData(1);
+
+				if (pMonsterSummonList)
+				{
+					int nCurrentMonster = 0;
+					int nRandom = myrand(0, (int32)pMonsterSummonList->size());
+
+					for (std::vector<_MONSTER_SUMMON_LIST>::iterator itr = pMonsterSummonList->begin(); itr != pMonsterSummonList->end(); ++itr)
+					{
+						if (nCurrentMonster == nRandom)
+						{
+							g_pMain->SpawnEventNpc(itr->sSid,true,pSkillCaster->GetZoneID(),pSkillCaster->GetX(),pSkillCaster->GetY(),pSkillCaster->GetZ(),1,(pType->sRadius/1000));
+							break;
+						}
+
+						nCurrentMonster++;
+					}
+>>>>>>> koserver2
 				}
 			}
 			break;
@@ -2259,14 +2948,26 @@ bool MagicInstance::ExecuteType8()
 			float dest_x, dest_z = 0.0f;
 			// If we're not even in the same zone, I can't teleport to you!
 			if (pTUser->GetZoneID() != pSkillCaster->GetZoneID()
+<<<<<<< HEAD
 				|| (pSkill->bMoral < MORAL_ENEMY && pSkillCaster->isHostileTo(pTUser)))
+=======
+				|| (pSkill->bMoral < MORAL_ENEMY && pSkillCaster->isHostileTo(pTUser))
+				|| (pSkill->iNum > 500000 && pSkillCaster->GetZoneID() > ZONE_MORADON))
+>>>>>>> koserver2
 				return false;
 
 			dest_x = pTUser->GetX();
 			dest_z = pTUser->GetZ();
 
+<<<<<<< HEAD
 			if (pSkillCaster->isPlayer())
 				TO_USER(pSkillCaster)->Warp(uint16(dest_x * 10), uint16(dest_z * 10));
+=======
+			if (pSkillCaster->isPlayer() && (pSkillCaster->GetDistanceSqrt(pSkillTarget) <= (float)pType->sRadius))
+				TO_USER(pSkillCaster)->Warp(uint16(dest_x * 10), uint16(dest_z * 10));
+			else
+				SendSkillFailed();
+>>>>>>> koserver2
 			break;
 		}
 
@@ -2296,7 +2997,11 @@ bool MagicInstance::ExecuteType9()
 	if(pCaster == nullptr)
 		return false; 
 
+<<<<<<< HEAD
 	FastGuard lock(pCaster->m_buffLock);
+=======
+	Guard lock(pCaster->m_buffLock);
+>>>>>>> koserver2
 	Type9BuffMap & buffMap = pCaster->m_type9BuffMap;
 
 	// Ensure this type of skill isn't already in use.
@@ -2350,7 +3055,11 @@ bool MagicInstance::ExecuteType9()
 				if (pUser == nullptr)
 					continue;
 
+<<<<<<< HEAD
 				FastGuard buffLock(pUser->m_buffLock);
+=======
+				Guard buffLock(pUser->m_buffLock);
+>>>>>>> koserver2
 
 				// If this user already has this skill active, we don't need to reapply it.
 				if (pUser->m_type9BuffMap.find(pType->bStateChange) 
@@ -2375,6 +3084,7 @@ bool MagicInstance::ExecuteType9()
 	}
 	else if (pType->bStateChange == 9)
 	{
+<<<<<<< HEAD
 		if(pSkill == nullptr || pType == nullptr)
 			return false;
 		else if (pCaster->HasSavedMagic(pType->iNum) == false && pCaster->canInstantCast())
@@ -2382,6 +3092,11 @@ bool MagicInstance::ExecuteType9()
 			g_pMain->SpawnEventNpc(pType->sMonsterNum,true,pCaster->GetZoneID(),pCaster->GetX(),pCaster->GetY(),pCaster->GetZ(),1,2);
 			SendSkill();
 		}
+=======
+		buffMap.insert(std::make_pair(pType->bStateChange, _BUFF_TYPE9_INFO(nSkillID, UNIXTIME + pType->sDuration)));
+		g_pMain->SpawnEventNpc(pType->sMonsterNum,true,pCaster->GetZoneID(),pCaster->GetX(),pCaster->GetY(),pCaster->GetZ(),1,2, pType->sDuration, pCaster->GetZoneID() == ZONE_MORADON ? 3 : pCaster->GetNation(), pCaster->GetSocketID());
+		SendSkill();
+>>>>>>> koserver2
 	}
 
 	return true;
@@ -2464,7 +3179,11 @@ short MagicInstance::GetMagicDamage(Unit *pTarget, int total_hit, int attribute)
 				&& pRightHand != nullptr && pRightHand->isStaff()
 				&& pUser->GetItemPrototype(LEFTHAND) == nullptr)
 			{
+<<<<<<< HEAD
 				FastGuard lock(pSkillCaster->m_equippedItemBonusLock);
+=======
+				Guard lock(pSkillCaster->m_equippedItemBonusLock);
+>>>>>>> koserver2
 				righthand_damage = pRightHand->m_sDamage + pUser->m_bAddWeaponDamage;
 				auto itr = pSkillCaster->m_equippedItemBonuses.find(RIGHTHAND);
 				if (itr != pSkillCaster->m_equippedItemBonuses.end())
@@ -2480,7 +3199,11 @@ short MagicInstance::GetMagicDamage(Unit *pTarget, int total_hit, int attribute)
 			}
 
 			// Add on any elemental skill damage
+<<<<<<< HEAD
 			FastGuard lock(pSkillCaster->m_equippedItemBonusLock);
+=======
+			Guard lock(pSkillCaster->m_equippedItemBonusLock);
+>>>>>>> koserver2
 			foreach (itr, pSkillCaster->m_equippedItemBonuses)
 			{
 				uint8 bSlot = itr->first;
@@ -2561,6 +3284,12 @@ int32 MagicInstance::GetWeatherDamage(int32 damage, int attribute)
 
 void MagicInstance::Type6Cancel(bool bForceRemoval /*= false*/)
 {
+<<<<<<< HEAD
+=======
+	if (g_pMain->m_Magictype6Array.GetData(nSkillID) == nullptr)
+		return;
+
+>>>>>>> koserver2
 	// NPCs cannot transform.
 	if (!pSkillCaster->isPlayer()
 		// Are we transformed? Note: if we're relogging, and we need to remove it, we should ignore this check.
@@ -2590,7 +3319,11 @@ void MagicInstance::Type9Cancel(bool bRemoveFromMap /*= true*/)
 
 	uint8 bResponse = 0;
 	CUser * pCaster = TO_USER(pSkillCaster);
+<<<<<<< HEAD
 	FastGuard lock(pCaster->m_buffLock);
+=======
+	Guard lock(pCaster->m_buffLock);
+>>>>>>> koserver2
 	Type9BuffMap & buffMap = pCaster->m_type9BuffMap;
 
 	// If this skill isn't already applied, there's no reason to remove it.
@@ -2622,6 +3355,13 @@ void MagicInstance::Type9Cancel(bool bRemoveFromMap /*= true*/)
 		pCaster->Send(&pet);
 		bResponse = 93;
 	}
+<<<<<<< HEAD
+=======
+	else if (pType->bStateChange == 9)
+	{
+		g_pMain->KillNpc(pCaster->GetSocketID());
+	}
+>>>>>>> koserver2
 
 	Packet result(WIZ_MAGIC_PROCESS, uint8(MAGIC_DURATION_EXPIRED));
 	result << bResponse;
@@ -2639,6 +3379,14 @@ void MagicInstance::Type4Cancel()
 		|| pType->isDebuff())
 		return;
 
+<<<<<<< HEAD
+=======
+	if (nSkillID > 500000 
+		&& TO_USER(pSkillCaster)->isLockableScroll(pType->bBuffType)
+		&& pSkillCaster->hasDebuff(pType->bBuffType))
+		return;
+
+>>>>>>> koserver2
 	if (!CMagicProcess::RemoveType4Buff(pType->bBuffType, TO_USER(pSkillCaster)))
 		return;
 
@@ -2713,7 +3461,11 @@ void MagicInstance::Type4Extend()
 		|| pType->isDebuff())
 		return;
 
+<<<<<<< HEAD
 	FastGuard lock(pSkillTarget->m_buffLock);
+=======
+	Guard lock(pSkillTarget->m_buffLock);
+>>>>>>> koserver2
 	Type4BuffMap::iterator itr = pSkillTarget->m_buffMap.find(pType->bBuffType);
 
 	// Can't extend a buff that hasn't been started.

@@ -162,7 +162,11 @@ void CUser::ReqLetterSend(Packet & pkt)
 				bResult = -1;
 		// Untradeable item
 		else if (pTable->m_bRace == RACE_UNTRADEABLE || nItemID >= ITEM_GOLD
+<<<<<<< HEAD
 			|| pItem->isSealed() || pItem->isRented())
+=======
+			|| pItem->isSealed() || pItem->isExpireItem()||pItem->isRented() || pItem->isBound() || pItem->isDuplicate())
+>>>>>>> koserver2
 			bResult = -32;
 	}
 
@@ -271,4 +275,8 @@ void CUser::ReqLetterDelete(Packet & pkt)
 		result << nLetterID;
 	}
 	Send(&result);
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> koserver2

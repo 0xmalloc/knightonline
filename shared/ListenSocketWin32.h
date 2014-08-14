@@ -9,8 +9,11 @@
 
 #pragma once
 
+<<<<<<< HEAD
 #ifdef CONFIG_USE_IOCP
 
+=======
+>>>>>>> koserver2
 template <class T>
 uint32 THREADCALL ListenSocketThread(void * lpParam)
 {
@@ -72,17 +75,23 @@ public:
 		return true;
 	}
 
+<<<<<<< HEAD
 	void suspend() { m_thread.suspend(); }
 	void resume() { m_thread.resume(); }
 
+=======
+>>>>>>> koserver2
 	bool runnable()
 	{
 		struct sockaddr_in m_tempAddress;
 		uint32 len = sizeof(sockaddr_in);
 		m_threadRunning = true;
 
+<<<<<<< HEAD
 		// Remove blocking on the socket
 		// SocketOps::Nonblocking(m_socket);
+=======
+>>>>>>> koserver2
 		while (m_opened && m_threadRunning)
 		{
 			//SOCKET aSocket = accept(m_socket, (sockaddr*)&m_tempAddress, (socklen_t*)&len);
@@ -116,8 +125,11 @@ public:
 		m_opened = false;
 		m_threadRunning = false;
 
+<<<<<<< HEAD
 		resume();
 
+=======
+>>>>>>> koserver2
 		if (mo)
 			SocketOps::CloseSocket(m_socket);
 
@@ -137,5 +149,8 @@ private:
 	struct sockaddr_in m_address;
 	bool m_opened;
 };
+<<<<<<< HEAD
 
 #endif
+=======
+>>>>>>> koserver2

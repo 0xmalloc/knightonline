@@ -31,6 +31,11 @@ typedef CSTLMap <MAP>						ZoneArray;
 typedef CSTLMap <_K_MONSTER_ITEM>			NpcItemArray;
 typedef CSTLMap <_MAKE_ITEM_GROUP>			MakeItemGroupArray;
 typedef CSTLMap <_SERVER_RESOURCE>			ServerResourceArray;
+<<<<<<< HEAD
+=======
+typedef CSTLMap <_NPC_LIVE_TIME>			NpcLiveTimeArray;
+typedef CSTLMap <_OBJECT_EVENT>				ObjectEventArray;
+>>>>>>> koserver2
 
 typedef std::map<uint16, CUser *>			UserSessionMap;
 
@@ -53,6 +58,10 @@ private:
 	bool GetServerResourceTable();
 	bool MapFileLoad();
 	void GetServerInfoIni();
+<<<<<<< HEAD
+=======
+	bool GetObjectPostTableData();
+>>>>>>> koserver2
 
 public:
 	CServerDlg();
@@ -62,7 +71,11 @@ public:
 	void GameServerAcceptThread();
 	void GetServerResource(int nResourceID, std::string * result, ...);
 	bool AddObjectEventNpc(_OBJECT_EVENT* pEvent, MAP * pMap);
+<<<<<<< HEAD
 	CNpc * SpawnEventNpc(uint16 sSid, bool bIsMonster, uint8 byZone, float fX, float fY, float fZ, int16 nEventRoom = 0);
+=======
+	CNpc * SpawnEventNpc(uint16 sSid, bool bIsMonster, uint8 byZone, float fX, float fY, float fZ, uint16 sDuration = 0, uint8 nation = 0, int16 socketID = -1,uint16 nEventRoom = 0);
+>>>>>>> koserver2
 	void NpcUpdate(uint16 sSid, bool bIsMonster, uint8 byGroup = 0, uint16 sPid = 0);
 
 	void RemoveEventNPC(CNpc * pNpc);
@@ -78,7 +91,13 @@ public:
 	MAP * GetZoneByID(int zonenumber);
 
 	static uint32 THREADCALL Timer_CheckAliveTest(void * lpParam);
+<<<<<<< HEAD
 	void CheckAliveTest();
+=======
+	static uint32 THREADCALL Timer_CheckLiveTimes(void * lpParam);
+	void CheckAliveTest();
+	void CheckLiveTimes();
+>>>>>>> koserver2
 	void DeleteAllUserList(CGameSocket *pSock = nullptr);
 	void Send(Packet * pkt);
 	void SendSystemMsg(std::string & pMsg, int type=0);
@@ -106,12 +125,22 @@ public:
 	NpcItemArray			m_NpcItemArray;
 	MakeItemGroupArray		m_MakeItemGroupArray;
 	ServerResourceArray		m_ServerResourceArray;
+<<<<<<< HEAD
+=======
+	NpcLiveTimeArray		m_NpcLiveTimeArray;
+	ObjectEventArray		m_ObjectEventArray;
+>>>>>>> koserver2
 
 	Thread m_zoneEventThread;
 
 	std::string m_strGameDSN, m_strGameUID, m_strGamePWD;
 	OdbcConnection m_GameDB;
 
+<<<<<<< HEAD
+=======
+	uint32 m_AIServerPort;
+
+>>>>>>> koserver2
 	UserSessionMap m_pUser;
 
 	Atomic<uint16>	m_TotalNPC;			// DB¿¡ÀÖ´Â ÃÑ ¼ö
@@ -127,7 +156,11 @@ public:
 	uint8 m_iWeather;
 	bool m_bIsNight;
 
+<<<<<<< HEAD
 	FastMutex m_userLock, m_npcThreadLock, m_eventThreadLock;
+=======
+	std::recursive_mutex m_userLock, m_npcThreadLock, m_eventThreadLock;
+>>>>>>> koserver2
 
 	KOSocketMgr<CGameSocket> m_socketMgr;
 };

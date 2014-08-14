@@ -162,6 +162,7 @@ void CUser::SelectCharacter(Packet & pkt)
 		return;
 	}
 
+<<<<<<< HEAD
 	if (g_pMain->m_byBattleOpen == NO_BATTLE && GetFame() == COMMAND_CAPTAIN)
 		m_bFame = CHIEF;
 
@@ -173,6 +174,28 @@ void CUser::SelectCharacter(Packet & pkt)
 			|| isInTempleEventZone())
 	{
 		NativeZoneReturn();
+=======
+	if (!g_pMain->isWarOpen() && GetFame() == COMMAND_CAPTAIN)
+		m_bFame = CHIEF;
+
+	// Disallow players from relogging in the opposite nation's home zone when an invasion's not running.
+	if (((GetZoneID() != GetNation() && GetZoneID() <= ZONE_ELMORAD && !g_pMain->m_byBattleOpen)
+		// also disallow players from logging back into war zones that aren't currently active...
+			|| (GetMap()->isWarZone() && !g_pMain->m_byBattleOpen)
+			// Chaos, bdw and juraid montuain
+			|| isInTempleEventZone()
+			// forgetten temple
+			|| GetZoneID() == ZONE_FORGOTTEN_TEMPLE
+			// Ardream, Ronark Land Base, Ronark Land, Bifrost, Krowaz Dominion.
+			|| (g_pMain->m_byBattleOpen && (GetZoneID() == ZONE_ARDREAM 
+			|| GetZoneID() == ZONE_RONARK_LAND_BASE
+			|| GetZoneID() == ZONE_RONARK_LAND 
+			|| GetZoneID() == ZONE_BIFROST
+			|| GetZoneID() == ZONE_KROWAZ_DOMINION))) && !isGM())
+	{
+		NativeZoneReturn();
+		UserDataSaveToAgent();
+>>>>>>> koserver2
 		Disconnect();
 		return;
 	}
@@ -216,7 +239,11 @@ fail_return:
 void CUser::SendServerChange(std::string & ip, uint8 bInit)
 {
 	Packet result(WIZ_SERVER_CHANGE);
+<<<<<<< HEAD
 	result << ip << uint16(_LISTEN_PORT) << bInit << GetZoneID() << g_pMain->m_byOldVictory;
+=======
+	result << ip << uint16(g_pMain->m_GameServerPort) << bInit << GetZoneID() << g_pMain->m_byOldVictory;
+>>>>>>> koserver2
 	Send(&result);
 }
 
@@ -232,7 +259,11 @@ void CUser::SetLogInInfoToDB(uint8 bInit)
 
 	Packet result(WIZ_LOGIN_INFO);
 	result	<< GetName() 
+<<<<<<< HEAD
 		<< pInfo->strServerIP << uint16(_LISTEN_PORT) << GetRemoteIP() 
+=======
+		<< pInfo->strServerIP << uint16(g_pMain->m_GameServerPort) << GetRemoteIP() 
+>>>>>>> koserver2
 		<< bInit;
 	g_pMain->AddDatabaseRequest(result, this);
 }
@@ -300,7 +331,11 @@ void CUser::GameStart(Packet & pkt)
 		BlinkStart();
 		SetUserAbility();
 		// rental
+<<<<<<< HEAD
 		RecastSavedMagic(m_sHp == m_iMaxHp ? true : false); //ItemMallRecast
+=======
+		//ItemMallRecast
+>>>>>>> koserver2
 
 		// If we've relogged while dead, we need to make sure the client 
 		// is still given the option to revive.
@@ -308,13 +343,31 @@ void CUser::GameStart(Packet & pkt)
 			SendDeathAnimation();
 
 		g_pMain->TempleEventGetActiveEventTime(this);
+<<<<<<< HEAD
 	}
 
+=======
+
+		m_tGameStartTimeSavedMagic = UNIXTIME;
+
+		m_LastX = GetX();
+		m_LastZ = GetZ();
+	}
+
+	std::string login_notice_str;
+	login_notice_str = string_format("%s  登录了游戏",GetName().c_str());
+	//g_pMain->SendAnnouncement(login_notice_str.c_str());
+	g_pMain->SendNotice(login_notice_str.c_str());
+>>>>>>> koserver2
 	m_tHPLastTimeNormal = UNIXTIME;
 }
 
 void CUser::CheckSeedQuest()
 {
+<<<<<<< HEAD
+=======
+#if 0
+>>>>>>> koserver2
 	if (CheckExistEvent(STARTER_SEED_QUEST, 2))
 	{
 		Packet result(WIZ_QUEST, uint8(1));
@@ -322,4 +375,8 @@ void CUser::CheckSeedQuest()
 		result << uint16(0);
 		Send(&result);
 	}
+<<<<<<< HEAD
+=======
+#endif
+>>>>>>> koserver2
 }

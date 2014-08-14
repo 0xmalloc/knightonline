@@ -1,6 +1,9 @@
 #pragma once
 
+<<<<<<< HEAD
 #include "Mutex.h"
+=======
+>>>>>>> koserver2
 #include "Condition.h"
 
 class RWLock

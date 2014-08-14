@@ -1,5 +1,9 @@
 #include "stdafx.h"
+<<<<<<< HEAD
 #ifdef CONFIG_USE_IOCP
+=======
+
+>>>>>>> koserver2
 void Socket::AssignToCompletionPort()
 {
 	CreateIoCompletionPort((HANDLE)m_fd, m_completionPort, (ULONG_PTR)this, 0);
@@ -17,7 +21,11 @@ void Socket::WriteCallback()
 		return;
 
 	// We don't want any writes going on while this is happening.
+<<<<<<< HEAD
 	Guard<Mutex> lock(m_writeMutex);
+=======
+	Guard lock(m_writeMutex);
+>>>>>>> koserver2
 	if(writeBuffer.GetContiguousBytes())
 	{
 		DWORD w_length = 0;
@@ -50,7 +58,11 @@ void Socket::SetupReadEvent()
 	if (IsDeleted() || !IsConnected())
 		return;
 
+<<<<<<< HEAD
 	Guard<Mutex> lock(m_readMutex);
+=======
+	Guard lock(m_readMutex);
+>>>>>>> koserver2
 	DWORD r_length = 0;
 	DWORD flags = 0;
 	WSABUF buf;
@@ -70,5 +82,8 @@ void Socket::SetupReadEvent()
 		}
 	}
 }
+<<<<<<< HEAD
 
 #endif
+=======
+>>>>>>> koserver2

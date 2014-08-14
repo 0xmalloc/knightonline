@@ -15,9 +15,14 @@ SMDFile::SMDFile() : m_ppnEvent(nullptr), m_fHeight(nullptr),
 
 SMDFile *SMDFile::Load(std::string mapName, bool bLoadWarpsAndRegeneEvents /*= false*/)
 {
+<<<<<<< HEAD
 #ifdef WIN32 // case insensitive filenames, allowing for database inconsistency...
 	STRTOLOWER(mapName);
 #endif
+=======
+	// case insensitive filenames, allowing for database inconsistency...
+	STRTOLOWER(mapName);
+>>>>>>> koserver2
 
 	// Look to see if that SMD file has been loaded already
 	SMDMap::iterator itr = s_loadedMaps.find(mapName);
@@ -68,8 +73,13 @@ void SMDFile::OnInvalidMap()
 	printf("This problem is most likely occur with maps tweaked to use a different\n");
 	printf("map size. Unfortunately, doing this means data after that (almost everything)\n");
 	printf("becomes corrupt, which is known to cause extremely 'unusual' buggy behaviour.\n\n");
+<<<<<<< HEAD
 	printf("It is recommended you use a map built for this zone, or at the very least,\n");\
 		printf("you should use a map originally built for the same zone size.\n\n");
+=======
+	printf("It is recommended you use a map built for this zone, or at the very least,\n");
+	printf("you should use a map originally built for the same zone size.\n\n");
+>>>>>>> koserver2
 	ASSERT(0);
 }
 
@@ -119,6 +129,7 @@ void SMDFile::LoadObjectEvent(FILE *fp)
 	if (fread(&iEventObjectCount, sizeof(int), 1, fp) != 1)
 		return OnInvalidMap();
 
+<<<<<<< HEAD
 	for (int i = 0; i < iEventObjectCount; i++)
 	{
 		_OBJECT_EVENT* pEvent = new _OBJECT_EVENT;
@@ -131,6 +142,13 @@ void SMDFile::LoadObjectEvent(FILE *fp)
 		if (pEvent->sIndex <= 0
 			|| !m_ObjectEventArray.PutData(pEvent->sIndex, pEvent))
 			delete pEvent;
+=======
+	// Load on K_OBJECTPOS table, this is set fd to last pointer...
+	for (int i = 0; i < iEventObjectCount; i++)
+	{
+		if (fread((new _OBJECT_EVENT), 24, 1, fp) != 1)
+			return OnInvalidMap();
+>>>>>>> koserver2
 	}
 }
 
@@ -205,6 +223,7 @@ bool SMDFile::IsValidPosition(float x, float z, float y)
 	return (x < m_N3ShapeMgr->Width() && z < m_N3ShapeMgr->Height());
 }
 
+<<<<<<< HEAD
 float SMDFile::GetHeight(float x, float y, float z)
 {
 	int iX, iZ;
@@ -283,6 +302,8 @@ float SMDFile::GetHeight(float x, float y, float z)
 	else return fYTerrain;
 }
 
+=======
+>>>>>>> koserver2
 int SMDFile::GetEventID(int x, int z)
 {
 	if (x < 0 || x >= m_nMapSize || z < 0 || z >= m_nMapSize)
@@ -291,6 +312,7 @@ int SMDFile::GetEventID(int x, int z)
 	return m_ppnEvent[x * m_nMapSize + z];
 }
 
+<<<<<<< HEAD
 bool SMDFile::ObjectCollision(float x1, float z1, float y1, float x2, float z2, float y2)
 {
 	__Vector3	vec1(x1, y1, z1), vec2(x2, y2, z2);
@@ -301,6 +323,8 @@ bool SMDFile::ObjectCollision(float x1, float z1, float y1, float x2, float z2, 
 	return m_N3ShapeMgr->CheckCollision(vec1, vDir, fSpeed);
 }
 
+=======
+>>>>>>> koserver2
 SMDFile::~SMDFile()
 {
 	if (m_ppnEvent != nullptr)

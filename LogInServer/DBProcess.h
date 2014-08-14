@@ -10,8 +10,13 @@ public:
 	bool LoadVersionList();
 	bool LoadUserCountList();
 
+<<<<<<< HEAD
 	uint16 AccountLogin(std::string & id, std::string & pwd);
 	int16 AccountPremium(std::string & id);
+=======
+	uint16 AccountLogin(std::string & strAccountID, std::string & strPasswd);
+	int16 AccountPremium(std::string & strAccountID);
+>>>>>>> koserver2
 
 private:
 	OdbcConnection m_dbConnection;

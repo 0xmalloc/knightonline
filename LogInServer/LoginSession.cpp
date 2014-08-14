@@ -1,4 +1,8 @@
 #include "stdafx.h"
+<<<<<<< HEAD
+=======
+#include "../shared/DateTime.h"
+>>>>>>> koserver2
 
 LSPacketHandler PacketHandlers[NUM_LS_OPCODES];
 void InitPacketHandlers(void)
@@ -9,10 +13,15 @@ void InitPacketHandlers(void)
 	PacketHandlers[LS_LOGIN_REQ]			= &LoginSession::HandleLogin;
 	PacketHandlers[LS_SERVERLIST]			= &LoginSession::HandleServerlist;
 	PacketHandlers[LS_NEWS]					= &LoginSession::HandleNews;
+<<<<<<< HEAD
 #if __VERSION >= 1453
 	PacketHandlers[LS_CRYPTION]				= &LoginSession::HandleSetEncryptionPublicKey;
 	PacketHandlers[LS_UNKF7]				= &LoginSession::HandleUnkF7;
 #endif
+=======
+	PacketHandlers[LS_CRYPTION]				= &LoginSession::HandleSetEncryptionPublicKey;
+	PacketHandlers[LS_UNKF7]				= &LoginSession::HandleUnkF7;
+>>>>>>> koserver2
 }
 
 LoginSession::LoginSession(uint16 socketID, SocketMgr *mgr) : KOSocket(socketID, mgr, -1, 2048, 64) {}
@@ -48,7 +57,11 @@ void LoginSession::HandlePatches(Packet & pkt)
 	{
 		auto pInfo = itr->second;
 		if (pInfo->sVersion > version)
+<<<<<<< HEAD
 			downloadset.insert(pInfo->strFileName);
+=======
+			downloadset.insert(pInfo->strFilename);
+>>>>>>> koserver2
 	}
 
 	result << g_pMain->GetFTPUrl() << g_pMain->GetFTPPath();
@@ -70,12 +83,20 @@ void LoginSession::HandleLogin(Packet & pkt)
 		AUTH_BANNED		= 0x04,
 		AUTH_IN_GAME	= 0x05,
 		AUTH_ERROR		= 0x06,
+<<<<<<< HEAD
+=======
+		AUTH_AGREEMENT	= 0xF,
+>>>>>>> koserver2
 		AUTH_FAILED		= 0xFF
 	};
 
 	Packet result(pkt.GetOpcode());
 	uint16 resultCode = 0;
 	string account, password;
+<<<<<<< HEAD
+=======
+	DateTime time;
+>>>>>>> koserver2
 
 	pkt >> account >> password;
 	if (account.size() == 0 || account.size() > MAX_ID_SIZE 
@@ -106,6 +127,12 @@ void LoginSession::HandleLogin(Packet & pkt)
 	case AUTH_ERROR:
 		sAuthMessage = "ERROR";
 		break;
+<<<<<<< HEAD
+=======
+	case AUTH_AGREEMENT:
+		sAuthMessage = "USER AGREEMENT";
+		break;
+>>>>>>> koserver2
 	case AUTH_FAILED:
 		sAuthMessage = "FAILED";
 		break;
@@ -114,7 +141,13 @@ void LoginSession::HandleLogin(Packet & pkt)
 		break;
 	}
 
+<<<<<<< HEAD
 	printf(string_format("Login : %s / PW : %s / Authentication : %s\n",account.c_str(),password.c_str(),sAuthMessage.c_str()).c_str());
+=======
+	printf("[ LOGIN - %d:%d:%d ] ID=%s Authentication=%s\n", 
+		time.GetHour(), time.GetMinute(), time.GetSecond(),
+		account.c_str(), sAuthMessage.c_str());
+>>>>>>> koserver2
 
 	result << uint8(resultCode);
 	if (resultCode == AUTH_SUCCESS)
@@ -124,6 +157,7 @@ void LoginSession::HandleLogin(Packet & pkt)
 	}
 	else if (resultCode == AUTH_IN_GAME)
 	{
+<<<<<<< HEAD
 		/*
 		SessionMap & sessMap = g_pMain->m_socketMgr.GetActiveSessionMap();
 		foreach (itr, sessMap)
@@ -132,6 +166,15 @@ void LoginSession::HandleLogin(Packet & pkt)
 		}
 		*/
 	}
+=======
+	}
+	else if (resultCode == AUTH_AGREEMENT)
+	{
+	}
+
+	g_pMain->WriteUserLogFile(string_format("[ LOGIN - %d:%d:%d ] ID=%s Authentication=%s\n",time.GetHour(),time.GetMinute(),time.GetSecond(),account.c_str(),password.c_str(),sAuthMessage.c_str()));
+
+>>>>>>> koserver2
 	Send(&result);	
 }
 
@@ -139,11 +182,17 @@ void LoginSession::HandleServerlist(Packet & pkt)
 {
 	Packet result(pkt.GetOpcode());
 
+<<<<<<< HEAD
 #if __VERSION >= 1500
 	uint16 echo;
 	pkt >> echo;
 	result << echo;
 #endif
+=======
+	uint16 echo;
+	pkt >> echo;
+	result << echo;
+>>>>>>> koserver2
 
 	g_pMain->GetServerList(result);
 	Send(&result);
@@ -166,7 +215,10 @@ void LoginSession::HandleNews(Packet & pkt)
 	Send(&result);
 }
 
+<<<<<<< HEAD
 #if __VERSION >= 1453
+=======
+>>>>>>> koserver2
 void LoginSession::HandleSetEncryptionPublicKey(Packet & pkt)
 {
 	Packet result(pkt.GetOpcode());
@@ -181,4 +233,7 @@ void LoginSession::HandleUnkF7(Packet & pkt)
 	result << uint16(0);
 	Send(&result);
 }
+<<<<<<< HEAD
 #endif
+=======
+>>>>>>> koserver2

@@ -89,3 +89,18 @@ LUA_FUNCTION(GetUserDailyOp);
 LUA_FUNCTION(GetEventTrigger);
 LUA_FUNCTION(GetPremium);
 LUA_FUNCTION(CheckWarVictory);
+<<<<<<< HEAD
+=======
+LUA_FUNCTION(CheckMiddleStatueCapture);
+LUA_FUNCTION(MoveMiddleStatue);
+LUA_FUNCTION(LevelChange);
+LUA_FUNCTION(GivePremium);
+LUA_FUNCTION(RollDice);
+LUA_FUNCTION(CheckMonsterChallengeTime);
+LUA_FUNCTION(CheckMonsterChallengeUserCount);
+LUA_FUNCTION(GetPVPMonumentNation);
+LUA_FUNCTION(NationChange);
+LUA_FUNCTION(GetRace);
+LUA_FUNCTION(GenderChange);
+LUA_FUNCTION(JobChange);
+>>>>>>> koserver2

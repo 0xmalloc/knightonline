@@ -8,12 +8,18 @@
 
 #define MAX_USER			3000
 
+<<<<<<< HEAD
 #define MAX_ID_SIZE			21
 #if __VERSION >= 1453
 #define MAX_PW_SIZE			32
 #else
 #define MAX_PW_SIZE			12
 #endif
+=======
+#define MIN_ID_SIZE			6
+#define MAX_ID_SIZE			20
+#define MAX_PW_SIZE			28
+>>>>>>> koserver2
 
 #define MAX_ITEM_COUNT		9999
 
@@ -21,6 +27,12 @@
 
 #define VIEW_DISTANCE		48
 
+<<<<<<< HEAD
+=======
+#define DAY                HOUR   * 24
+
+#define HOUR               MINUTE * 60
+>>>>>>> koserver2
 // Define a minute as 60s.
 #define MINUTE				60u
 // Define a second as 1000ms.
@@ -127,7 +139,12 @@ enum NpcType
 	NPC_KEY_QUEST_6			= 116, // Recon of the Key
 	NPC_KEY_QUEST_7			= 117, // Keeper of the Key
 	NPC_ROBOS				= 118, // need to see what he actually does to name this properly
+<<<<<<< HEAD
 	NPC_MONUMENT			= 122, // El Morad/Asga village/Raiba village/Doda camp monuments 
+=======
+	NPC_KARUS_MONUMENT		= 121, // Luferson Monument/Linate Monument/Bellua monument/Laon Camp Monument
+	NPC_HUMAN_MONUMENT		= 122, // El Morad/Asga village/Raiba village/Doda camp monuments
+>>>>>>> koserver2
 	NPC_SERVER_TRANSFER		= 123,
 	NPC_RANKING				= 124,
 	NPC_LYONI				= 125, // need to see what this NPC actually does to name this properly
@@ -158,7 +175,12 @@ enum NpcType
 	NPC_KARUS_GATEKEEPER	= 198,
 	NPC_ELMORAD_GATEKEEPER	= 199,
 	NPC_CHAOS_STONE		 	= 200,
+<<<<<<< HEAD
 	NPC_PVP_MONUMENT		= 210
+=======
+	NPC_PVP_MONUMENT		= 210,
+	NPC_BATTLE_MONUMENT		= 211
+>>>>>>> koserver2
 };
 
 enum ZoneAbilityType
@@ -295,6 +317,10 @@ struct	_ITEM_DATA
 	INLINE bool isBound() { return bFlag == ITEM_FLAG_BOUND; }
 	INLINE bool isRented() { return bFlag == ITEM_FLAG_RENTED; }
 	INLINE bool isDuplicate() { return bFlag == ITEM_FLAG_DUPLICATE; }
+<<<<<<< HEAD
+=======
+	INLINE bool isExpireItem() { return 0 != nExpirationTime;}
+>>>>>>> koserver2
 };
 
 enum HairData
@@ -412,7 +438,11 @@ INLINE void STRTOUPPER(std::string& str)
 
 // ideally this guard should be scoped within the loop...
 #define foreach_stlmap(itr, arr) \
+<<<<<<< HEAD
 	FastGuard _lock(arr.m_lock); \
+=======
+	Guard _lock(arr.m_lock); \
+>>>>>>> koserver2
 	foreach_stlmap_nolock(itr, arr)
 
 #define foreach_stlmap_nolock(itr, arr) \

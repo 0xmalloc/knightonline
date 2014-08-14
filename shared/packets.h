@@ -470,10 +470,24 @@ enum DailyOperationsOpCode
 enum EventOpCode
 {
 	TEMPLE_EVENT_BORDER_DEFENCE_WAR	= 4,
+<<<<<<< HEAD
 	TEMPLE_EVENT_CHAOS					= 24,
 	TEMPLE_EVENT_JURAD_MOUNTAIN		= 100
 };
 
+=======
+	TEMPLE_EVENT_CHAOS				= 24,
+	TEMPLE_EVENT_JURAD_MOUNTAIN		= 100
+};
+
+enum RankTypes
+{
+	RANK_TYPE_PK_ZONE = 1,
+	RANK_TYPE_ZONE_BORDER_DEFENSE_WAR = 2,
+	RANK_TYPE_CHAOS_DUNGEON = 3,
+};
+
+>>>>>>> koserver2
 ////////////////////////////////////////////////////////////////
 // WareHouse Packet sub define
 ////////////////////////////////////////////////////////////////
@@ -666,6 +680,16 @@ enum ObjectType
 	OBJECT_NPC			= 11
 };
 
+<<<<<<< HEAD
+=======
+enum BattleWinnerTypes
+{
+	BATTLE_WINNER_NPC		= 0,
+	BATTLE_WINNER_KILL		= 1,
+	BATTLE_WINNER_MONUMENT	= 2
+};
+
+>>>>>>> koserver2
 
 // ---------------------------------------------------------------------
 // AI Server와 게임서버간의 Npc에 관련된 패킷은 1번~49번 
@@ -686,6 +710,10 @@ const uint8	AG_NPC_HP_REQ		= 13;
 const uint8 AG_NPC_SPAWN_REQ	= 14;	// spawns an NPC/monster at the desired location
 const uint8 AG_NPC_REGION_UPDATE	= 15;
 const uint8 AG_NPC_UPDATE	= 16;
+<<<<<<< HEAD
+=======
+const uint8 AG_NPC_KILL_REQ	= 17;
+>>>>>>> koserver2
 
 // ---------------------------------------------------------------------
 // AI Server와 게임서버간의 User, Npc 공통 관련된 패킷은 50번~100번 

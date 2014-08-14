@@ -64,7 +64,11 @@ void CUser::ItemUpgradeProcess(Packet & pkt)
 *
 * @param	pkt	The packet.
 */
+<<<<<<< HEAD
 void CUser::ItemUpgrade(Packet & pkt, bool isRebirthUpgrade)
+=======
+void CUser::ItemUpgrade(Packet & pkt, uint8 nUpgradeType)
+>>>>>>> koserver2
 {
 	enum UpgradeErrorCodes
 	{
@@ -78,7 +82,11 @@ void CUser::ItemUpgrade(Packet & pkt, bool isRebirthUpgrade)
 
 	enum UpgradeType { UpgradeTypeNormal = 1, UpgradeTypePreview = 2 };
 
+<<<<<<< HEAD
 	Packet result(WIZ_ITEM_UPGRADE, uint8(isRebirthUpgrade ? ITEM_UPGRADE_REBIRTH : ITEM_UPGRADE));
+=======
+	Packet result(WIZ_ITEM_UPGRADE, nUpgradeType);
+>>>>>>> koserver2
 	_ITEM_DATA  * pOriginItem;
 	_ITEM_TABLE * proto;
 	int32 nItemID[10]; int8 bPos[10];
@@ -91,9 +99,13 @@ void CUser::ItemUpgrade(Packet & pkt, bool isRebirthUpgrade)
 		goto fail_return;
 	}
 
+<<<<<<< HEAD
 #if __VERSION >= 1453 // not sure when this occurred, assuming ROFD.
 	pkt >> bType; // either preview or upgrade, need to allow for these types
 #endif
+=======
+	pkt >> bType; // either preview or upgrade, need to allow for these types
+>>>>>>> koserver2
 	pkt >> sNpcID;
 	for (int i = 0; i < 10; i++)
 	{
@@ -108,6 +120,10 @@ void CUser::ItemUpgrade(Packet & pkt, bool isRebirthUpgrade)
 	|| (proto = g_pMain->GetItemPtr(nItemID[0])) == nullptr)
 		goto fail_return; // error with error code UpgradeNoMatch ("Items required for upgrade do not match")
 	else if (pOriginItem->isRented() 
+<<<<<<< HEAD
+=======
+		||pOriginItem->isExpireItem()
+>>>>>>> koserver2
 		|| pOriginItem->isSealed()) // unsure if there's another error code for sealed items
 	{
 		bResult = UpgradeRental;
@@ -118,7 +134,12 @@ void CUser::ItemUpgrade(Packet & pkt, bool isRebirthUpgrade)
 	for (int x = 0; x < 10; x++)
 	{
 		if (bPos[x] != -1
+<<<<<<< HEAD
 			&& nItemID[x] != GetItem(SLOT_MAX + bPos[x])->nNum)
+=======
+			&& (nItemID[x] > 0 
+			&& nItemID[x] != GetItem(SLOT_MAX + bPos[x])->nNum))
+>>>>>>> koserver2
 			goto fail_return;
 	}
 
@@ -231,8 +252,16 @@ void CUser::ItemUpgrade(Packet & pkt, bool isRebirthUpgrade)
 					continue;
 
 				_ITEM_DATA * pItem = GetItem(SLOT_MAX + bPos[x]);
+<<<<<<< HEAD
 				if (nItemID[x] != pItem->nNum 
 					|| nItemID[x] != pUpgrade->nReqItem[x-1])
+=======
+
+				if (pItem == nullptr
+					|| nItemID[x] != pItem->nNum 
+					|| (nUpgradeType != ITEM_ACCESSORIES 
+					&& nItemID[x] != pUpgrade->nReqItem[x-1]))
+>>>>>>> koserver2
 				{
 					isValidMatch = false;
 					break;
@@ -272,9 +301,12 @@ void CUser::ItemUpgrade(Packet & pkt, bool isRebirthUpgrade)
 		}
 		else
 		{
+<<<<<<< HEAD
 			// Rob gold upgrade noah
 			GoldLose(pUpgrade->nReqNoah, true); 
 
+=======
+>>>>>>> koserver2
 			// Generate the new item ID
 			int nNewItemID = pOriginItem->nNum + pUpgrade->nGiveItem;
 
@@ -296,6 +328,11 @@ void CUser::ItemUpgrade(Packet & pkt, bool isRebirthUpgrade)
 
 				// Send upgrade notice.
 				ItemUpgradeNotice(newProto, UpgradeSucceeded);
+<<<<<<< HEAD
+=======
+
+				// Rob gold upgrade noah
+>>>>>>> koserver2
 				GoldLose(pUpgrade->nReqNoah,true); 
 			}
 
@@ -325,9 +362,13 @@ void CUser::ItemUpgrade(Packet & pkt, bool isRebirthUpgrade)
 		}
 	} // end of scoped lock
 
+<<<<<<< HEAD
 #if __VERSION >= 1453
 	result << bType;
 #endif
+=======
+	result << bType;
+>>>>>>> koserver2
 
 	result << bResult;
 	foreach_array (i, nItemID)
@@ -367,6 +408,7 @@ void CUser::ItemUpgradeNotice(_ITEM_TABLE * pItem, uint8 UpgradeResult)
 	if (pItem->m_ItemType == 11 || pItem->m_ItemType == 12) 
 		bSendUpgradeNotice = true;
 
+<<<<<<< HEAD
 	if (bSendUpgradeNotice)
 	{
 		if (UpgradeResult == 0)
@@ -375,6 +417,20 @@ void CUser::ItemUpgradeNotice(_ITEM_TABLE * pItem, uint8 UpgradeResult)
 			sUpgradeNotice = string_format("%s has succeeded to upgrade %s.",GetName().c_str(),pItem->m_sName.c_str());
 
 		g_pMain->SendAnnouncement(sUpgradeNotice.c_str());
+=======
+	if(pItem->m_iNum%10 >= 7 || pItem->m_iNum%10 == 0){
+		bSendUpgradeNotice = true;
+	}
+
+	if (bSendUpgradeNotice)
+	{
+		if (UpgradeResult == 0)
+			sUpgradeNotice = string_format("%s  升级失败  %s.",GetName().c_str(),pItem->m_sName.c_str());
+		else if (UpgradeResult == 1)
+			sUpgradeNotice = string_format("%s  成功升级  %s.",GetName().c_str(),pItem->m_sName.c_str());
+
+		//g_pMain->SendAnnouncement(sUpgradeNotice.c_str());
+>>>>>>> koserver2
 		g_pMain->SendNotice(sUpgradeNotice.c_str());
 	}
 }
@@ -386,6 +442,10 @@ void CUser::ItemUpgradeNotice(_ITEM_TABLE * pItem, uint8 UpgradeResult)
 */
 void CUser::ItemUpgradeAccessories(Packet & pkt)
 {
+<<<<<<< HEAD
+=======
+	ItemUpgrade(pkt, ITEM_ACCESSORIES);
+>>>>>>> koserver2
 }
 
 /**
@@ -426,7 +486,11 @@ void CUser::BifrostPieceProcess(Packet & pkt)
 
 	if (g_pMain->m_ItemExchangeArray.GetSize() > 0)
 	{
+<<<<<<< HEAD
 		foreach_stlmap_nolock(itr, g_pMain->m_ItemExchangeArray)
+=======
+		foreach_stlmap (itr, g_pMain->m_ItemExchangeArray)
+>>>>>>> koserver2
 		{
 			if (itr->second->nOriginItemNum[0] == nExchangeItemID)
 			{
@@ -582,7 +646,11 @@ void CUser::SpecialItemExchange(Packet & pkt)
 	{
 		if (g_pMain->m_ItemExchangeArray.GetSize() > 0)
 		{
+<<<<<<< HEAD
 			foreach_stlmap_nolock(itr, g_pMain->m_ItemExchangeArray)
+=======
+			foreach_stlmap (itr, g_pMain->m_ItemExchangeArray)
+>>>>>>> koserver2
 			{
 				if (itr->second->bRandomFlag == 102) // Special Item Exchange
 				{
@@ -751,5 +819,9 @@ void CUser::SpecialItemExchange(Packet & pkt)
 */
 void CUser::ItemUpgradeRebirth(Packet & pkt)
 {
+<<<<<<< HEAD
 	ItemUpgrade(pkt, true);
+=======
+	ItemUpgrade(pkt, ITEM_UPGRADE_REBIRTH);
+>>>>>>> koserver2
 }

@@ -159,7 +159,11 @@ public:
 	short		m_ItemUserLevel;		// 죽을때 매직 이상 아이템를 떨구기위해 참조해야하는 유저의레벨
 
 	std::map<uint16, uint32> m_DamagedUserList; // max NPC_HAVE_USER_LIST?
+<<<<<<< HEAD
 	FastMutex m_damageListLock;
+=======
+	std::recursive_mutex m_damageListLock;
+>>>>>>> koserver2
 
 	int		m_TotalDamage;
 	short   m_sMaxDamageUserid;		// 나에게 최고의 데미지를 준 유저의 아이디 저장..
@@ -326,6 +330,12 @@ public:
 
 	bool	m_bDelete; // when set, will remove the NPC from the server after execution.
 
+<<<<<<< HEAD
+=======
+	int16	m_oSocketID; // owner user
+	uint16	m_bEventRoom;
+
+>>>>>>> koserver2
 public:
 	CNpc();
 	virtual ~CNpc();
@@ -335,7 +345,11 @@ public:
 	void InitUserList();
 	void InitPos();
 
+<<<<<<< HEAD
 	void Load(uint16 sNpcID, CNpcTable * proto, bool bMonster);
+=======
+	void Load(uint16 sNpcID, CNpcTable * proto, bool bMonster, uint8 nation = 0);
+>>>>>>> koserver2
 	void SendMoveResult(float fX, float fY, float fZ, float fSpeed = 0.0f);
 
 protected:

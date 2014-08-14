@@ -1,5 +1,8 @@
 #include "stdafx.h"
+<<<<<<< HEAD
 #include "Mutex.h"
+=======
+>>>>>>> koserver2
 #include "Condition.h"
 
 Condition::Condition() : m_nLockCount(0)
@@ -8,26 +11,35 @@ Condition::Condition() : m_nLockCount(0)
 
 void Condition::BeginSynchronized()
 {
+<<<<<<< HEAD
 #ifdef USE_STD_CONDITION_VARIABLE
 	m_lock.lock();
 #else
 	m_lock.Acquire();
 #endif
+=======
+	m_lock.lock();
+>>>>>>> koserver2
 	++m_nLockCount;
 }
 
 void Condition::EndSynchronized()
 {
 	--m_nLockCount;
+<<<<<<< HEAD
 #ifdef USE_STD_CONDITION_VARIABLE
 	m_lock.unlock();
 #else
 	m_lock.Release();
 #endif
+=======
+	m_lock.unlock();
+>>>>>>> koserver2
 }
 
 uint32 Condition::Wait(time_t timeout)
 {
+<<<<<<< HEAD
 #ifdef USE_STD_CONDITION_VARIABLE
 	std::unique_lock<std::mutex> lock(m_lock);
 	m_condition.wait_for(lock, std::chrono::milliseconds(timeout));
@@ -91,10 +103,16 @@ uint32 Condition::Wait(time_t timeout)
 
 	return dwWaitResult;
 #endif
+=======
+	std::unique_lock<std::mutex> lock(m_lock);
+	m_condition.wait_for(lock, std::chrono::milliseconds(timeout));
+	return 0;
+>>>>>>> koserver2
 }
 
 uint32 Condition::Wait()
 {
+<<<<<<< HEAD
 #ifdef USE_STD_CONDITION_VARIABLE
 	std::unique_lock<std::mutex> lock(m_lock);
 	m_condition.wait(lock);
@@ -162,10 +180,16 @@ uint32 Condition::Wait()
 
 	return dwWaitResult;
 #endif
+=======
+	std::unique_lock<std::mutex> lock(m_lock);
+	m_condition.wait(lock);
+	return 0;
+>>>>>>> koserver2
 }
 
 void Condition::Signal()
 {
+<<<<<<< HEAD
 #ifdef USE_STD_CONDITION_VARIABLE
 	m_condition.notify_one();
 #else
@@ -179,10 +203,14 @@ void Condition::Signal()
 	// Signal the event.
 	SetEvent(hWaitEvent);
 #endif
+=======
+	m_condition.notify_one();
+>>>>>>> koserver2
 }
 
 void Condition::Broadcast()
 {
+<<<<<<< HEAD
 #ifdef USE_STD_CONDITION_VARIABLE
 	m_condition.notify_all();
 #else
@@ -277,6 +305,9 @@ bool Condition::LockHeldByCallingThread()
 	m_lock.Release();
 	return true;
 #endif
+=======
+	m_condition.notify_all();
+>>>>>>> koserver2
 }
 
 Condition::~Condition()

@@ -13,17 +13,32 @@ struct _USER_SEAL_ITEM;
 typedef std::map<uint64, _USER_SEAL_ITEM*>	UserItemSealMap;
 typedef	std::list<_EXCHANGE_ITEM*>			ItemList;
 typedef	std::map<uint32, time_t>			SkillCooldownList;
+<<<<<<< HEAD
 typedef	std::map<uint16, time_t>			RHitRepeatList; 
 typedef	std::map<uint32, time_t>			UserSavedMagicMap;
 
 // Time (in seconds) between each save request (1 min).
 #define PLAYER_SAVE_INTERVAL			(1 * 60)
+=======
+typedef	std::map<uint8, time_t>				MagicTypeCooldownList;
+typedef	std::map<uint16, time_t>			RHitRepeatList; 
+typedef	std::map<uint32, time_t>			UserSavedMagicMap;
+
+// Time (in seconds) between each save request (3 min).
+#define PLAYER_SAVE_INTERVAL			(3 * 60)
+>>>>>>> koserver2
 // Time (in seconds) between each skill request (-1 sec).
 #define PLAYER_SKILL_REQUEST_INTERVAL	0.7f
 // Time (in seconds) between each r hit request (-1 sec).
 #define PLAYER_R_HIT_REQUEST_INTERVAL	1.0f
 // Time (in minute) for daily operations
 #define DAILY_OPERATIONS_MINUTE			1440
+<<<<<<< HEAD
+=======
+// Time (in seconds) for nation monuments
+#define NATION_MONUMENT_REWARD_SECOND	60
+
+>>>>>>> koserver2
 enum GameState
 {
 	GAME_STATE_CONNECTED,
@@ -145,6 +160,10 @@ public:
 	uint8	m_bAccountStatus;
 	uint8	m_bPremiumType;
 	uint16	m_sPremiumTime;
+<<<<<<< HEAD
+=======
+	uint32  m_nKnightCash;
+>>>>>>> koserver2
 
 	bool	m_bSelectedCharacter;
 	bool	m_bStoreOpen;
@@ -170,11 +189,21 @@ public:
 	// Magic System Cooldown checks
 	SkillCooldownList	m_CoolDownList;
 
+<<<<<<< HEAD
+=======
+	// Magic System Same time magic type checks
+	MagicTypeCooldownList	m_MagicTypeCooldownList;
+
+>>>>>>> koserver2
 	// Attack System Cooldown checks
 	RHitRepeatList	m_RHitRepeatList;
 
 	ArrowList m_flyingArrows;
+<<<<<<< HEAD
 	FastMutex m_arrowLock;
+=======
+	std::recursive_mutex m_arrowLock;
+>>>>>>> koserver2
 
 	TransformationType m_transformationType;
 	uint16	m_sTransformID;
@@ -198,7 +227,11 @@ public:
 	uint32	m_sMaxWeight;
 	uint16	m_sMaxWeightBonus;
 
+<<<<<<< HEAD
 	uint16   m_sSpeed;	// NOTE: Currently unused
+=======
+	int16   m_sSpeed;
+>>>>>>> koserver2
 
 	uint8	m_bPlayerAttackAmount;
 	uint8	m_bAddWeaponDamage;
@@ -252,6 +285,11 @@ public:
 	uint8	m_bHPDurationNormal;
 	uint8	m_bHPIntervalNormal;
 
+<<<<<<< HEAD
+=======
+	time_t m_tGameStartTimeSavedMagic;
+
+>>>>>>> koserver2
 	uint32	m_fSpeedHackClientTime, m_fSpeedHackServerTime;
 	uint8	m_bSpeedHackCheck;
 
@@ -280,10 +318,20 @@ public:
 	bool	m_bWeaponsDisabled;
 
 	TeamColour	m_teamColour;
+<<<<<<< HEAD
 	time_t	m_fLastSkillUseTime;
 	uint8	m_bLastSkillType;
 	uint32 m_iLoyaltyDaily;
 	uint16 m_iLoyaltyPremiumBonus;
+=======
+	uint32		m_iLoyaltyDaily;
+	uint16		m_iLoyaltyPremiumBonus;
+	uint16		m_KillCount;
+	uint16		m_DeathCount;
+
+	float		m_LastX;
+	float		m_LastZ;
+>>>>>>> koserver2
 
 public:
 	INLINE bool isBanned() { return GetAuthority() == AUTHORITY_BANNED; }
@@ -368,7 +416,13 @@ public:
 	INLINE uint8 GetFame() { return m_bFame; }
 
 	INLINE uint16 GetClass() { return m_sClass; }
+<<<<<<< HEAD
 	INLINE bool GetPremium() { return m_bPremiumType != 0 ? true : false; }
+=======
+	INLINE uint8 GetPremium() { return m_bPremiumType; }
+	INLINE bool isLockableScroll(uint8 buffType) { return (buffType == BUFF_TYPE_HP_MP || buffType == BUFF_TYPE_AC || buffType == BUFF_TYPE_DAMAGE); }
+	INLINE uint8 GetRace() { return m_bRace; }
+>>>>>>> koserver2
 
 	/**
 	* @brief	Gets the player's base class type, independent of nation.
@@ -434,14 +488,33 @@ public:
 	INLINE GameState GetState() { return m_state; }
 
 	INLINE uint16 GetActiveQuestID() { return m_sEventDataIndex; }
+<<<<<<< HEAD
+=======
+
+>>>>>>> koserver2
 	uint8 GetClanGrade();
 	uint8 GetClanRank();
 	uint32 GetClanPoint();
 	void SendClanPointChange(int32 nChangeAmount = 0);
+<<<<<<< HEAD
+=======
+
+>>>>>>> koserver2
 	uint8 GetBeefRoastVictory();
 	uint8 GetRankReward(bool isMonthly);
 	uint8 GetWarVictory();
 
+<<<<<<< HEAD
+=======
+	uint8 CheckMiddleStatueCapture();
+	void MoveMiddleStatue();	
+
+	uint8 GetPVPMonumentNation();
+
+	uint8 GetMonsterChallengeTime();
+	uint8 GetMonsterChallengeUserCount();
+
+>>>>>>> koserver2
 	INLINE uint8 GetStat(StatType type)
 	{
 		if (type >= STAT_COUNT)
@@ -557,7 +630,11 @@ public:
 
 	void SetRival(CUser * pRival);
 	void RemoveRival();
+<<<<<<< HEAD
 	void SendLoyaltyChange(int32 nChangeAmount = 0, bool bIsKillReward = false);
+=======
+	void SendLoyaltyChange(int32 nChangeAmount = 0, bool bIsKillReward = false, bool bIsBonusTime = false, bool bIsAddLoyaltyMonthly = true);
+>>>>>>> koserver2
 
 	void NativeZoneReturn();
 	void KickOutZoneUser(bool home = false, uint8 nZoneID = 21);
@@ -590,10 +667,20 @@ public:
 	void GoldChange(short tid, int gold);
 	CUser * GetItemRoutingUser(uint32 nItemID, uint16 sCount);
 	bool GetStartPosition(short & x, short & y, uint8 bZone = 0);
+<<<<<<< HEAD
 	int FindSlotForItem(uint32 nItemID, uint16 sCount = 1);
 	int GetEmptySlot();
 	void SendAllKnightsID();
 	void SendStackChange(uint32 nItemID, uint32 nCount /* needs to be 4 bytes, not a bug */, uint16 sDurability, uint8 bPos, bool bNewItem = false);
+=======
+	bool GetStartPositionRandom(short & x, short & z, uint8 bZone = 0);
+	int FindSlotForItem(uint32 nItemID, uint16 sCount = 1);
+	int GetEmptySlot();
+	void SendAllKnightsID();
+	void SendStackChange(uint32 nItemID, uint32 nCount /* needs to be 4 bytes, not a bug */, uint16 sDurability, uint8 bPos, bool bNewItem = false, uint32 nExpirationTime = 0 /*in unix time*/);
+
+	void check_expire_item();
+>>>>>>> koserver2
 
 	void Type4Duration();
 	void HPTimeChange();
@@ -616,7 +703,12 @@ public:
 	void ShowEffect(uint32 nSkillID);
 	void ShowNpcEffect(uint32 nEffectID, bool bSendToRegion = false);
 	void SendAnvilRequest(uint16 sNpcID, uint8 bType = ITEM_UPGRADE_REQ);
+<<<<<<< HEAD
 	void RecastSavedMagic(bool bFillToMaxHealth = false);
+=======
+	void RecastSavedMagic(uint8 buffType = 0);
+	void RecastLockableScrolls(uint8 buffType);
+>>>>>>> koserver2
 
 	// packet handlers start here
 	void VersionCheck(Packet & pkt);
@@ -661,11 +753,29 @@ public:
 
 	uint32 GetEventTrigger();
 
+<<<<<<< HEAD
+=======
+	void RemoveStealth();
+
+	void GivePremium(uint8 bPremiumType, uint16 sPremiumTime);
+	void RobChaosSkillItems();
+
+	// Nation Transfer, Gender Change and Job Change (in game)
+	uint8 NationChange();
+	uint8 GetNewRace();
+	bool GenderChange(uint8 nRace = 0);
+	uint8 JobChange(uint8 NewJob = 0);
+
+>>>>>>> koserver2
 	COMMAND_HANDLER(HandleTestCommand);
 	COMMAND_HANDLER(HandleGiveItemCommand);
 	COMMAND_HANDLER(HandleZoneChangeCommand);
 	COMMAND_HANDLER(HandleMonsterSummonCommand);
 	COMMAND_HANDLER(HandleNPCSummonCommand);
+<<<<<<< HEAD
+=======
+	COMMAND_HANDLER(HandleMonKillCommand);
+>>>>>>> koserver2
 	COMMAND_HANDLER(HandleWar1OpenCommand);
 	COMMAND_HANDLER(HandleWar2OpenCommand);
 	COMMAND_HANDLER(HandleWar3OpenCommand);
@@ -675,15 +785,27 @@ public:
 	COMMAND_HANDLER(HandleCaptainCommand);
 	COMMAND_HANDLER(HandleSnowWarOpenCommand);
 	COMMAND_HANDLER(HandleWarCloseCommand);
+<<<<<<< HEAD
 	COMMAND_HANDLER(HandleShutdownCommand);
 	COMMAND_HANDLER(HandleLoyaltyChangeCommand);
 	COMMAND_HANDLER(HandleExpChangeCommand);
 	COMMAND_HANDLER(HandleGoldChangeCommand);
+=======
+	COMMAND_HANDLER(HandleLoyaltyChangeCommand);
+	COMMAND_HANDLER(HandleExpChangeCommand);
+	COMMAND_HANDLER(HandleGoldChangeCommand);
+	COMMAND_HANDLER(HandleLoyaltyAddCommand); /* for the server NP event */
+>>>>>>> koserver2
 	COMMAND_HANDLER(HandleExpAddCommand); /* for the server XP event */
 	COMMAND_HANDLER(HandleMoneyAddCommand); /* for the server coin event */
 	COMMAND_HANDLER(HandlePermitConnectCommand);
 	COMMAND_HANDLER(HandleTeleportAllCommand);
 	COMMAND_HANDLER(HandleKnightsSummonCommand);
+<<<<<<< HEAD
+=======
+	COMMAND_HANDLER(HandleWarResultCommand);
+	COMMAND_HANDLER(HandleResetPlayerRankingCommand);
+>>>>>>> koserver2
 
 	void Regene(uint8 regene_type, uint32 magicid = 0);
 	void RequestUserIn(Packet & pkt);
@@ -719,9 +841,15 @@ public:
 	void ExchangeAgree(Packet & pkt);
 	void ExchangeAdd(Packet & pkt);
 	void ExchangeDecide();
+<<<<<<< HEAD
 	void ExchangeCancel();
 
 	void InitExchange(bool bStart);
+=======
+	void ExchangeCancel(bool bIsOnDeath = false);
+	void ExchangeFinish();
+
+>>>>>>> koserver2
 	bool CheckExchange();
 	bool ExecuteExchange();
 
@@ -762,8 +890,13 @@ public:
 	void ClassChange(Packet & pkt, bool bFromClient = true);
 	void ClassChangeReq();
 	void SendStatSkillDistribute();
+<<<<<<< HEAD
 	void AllPointChange();
 	void AllSkillPointChange();
+=======
+	void AllPointChange(bool bIsFree = false);
+	void AllSkillPointChange(bool bIsFree = false);
+>>>>>>> koserver2
 
 	void CountConcurrentUser();
 	void UserDataSaveToAgent();
@@ -803,7 +936,11 @@ public:
 
 	// from the client
 	void ItemUpgradeProcess(Packet & pkt);
+<<<<<<< HEAD
 	void ItemUpgrade(Packet & pkt, bool isRebirth = false);
+=======
+	void ItemUpgrade(Packet & pkt, uint8 nUpgradeType = ITEM_UPGRADE);
+>>>>>>> koserver2
 	void ItemUpgradeNotice(_ITEM_TABLE * pItem, uint8 UpgradeResult);
 	void ItemUpgradeAccessories(Packet & pkt);
 	void BifrostPieceProcess(Packet & pkt); // originally named BeefRoastPieceProcess() -- that's not happening.
@@ -842,6 +979,10 @@ public:
 	void HandleChallengeRejected(uint8 opcode);
 
 	void HandlePlayerRankings(Packet & pkt);
+<<<<<<< HEAD
+=======
+	uint16 GetPlayerRank(uint8 nRankType);
+>>>>>>> koserver2
 
 	void HandleMiningSystem(Packet & pkt);
 	void HandleMiningStart(Packet & pkt);
@@ -872,15 +1013,23 @@ public:
 	void RemovePlayerRank();
 	void UpdatePlayerRank();
 
+<<<<<<< HEAD
 	void AddEventUser(CUser * pUser = nullptr);
 	void RemoveEventUser(uint16 m_socketID);
 	void UpdateEventUser(uint16 m_socketID, int16 nEventRoom = 0);
 	bool isEventUser(uint16 m_socketID);
+=======
+	bool isEventUser();
+>>>>>>> koserver2
 
 	void SendTargetHP( uint8 echo, int tid, int damage = 0 );
 	bool IsValidSlotPos( _ITEM_TABLE* pTable, int destpos );
 	void SetUserAbility(bool bSendPacket = true);
+<<<<<<< HEAD
 	void LevelChange(short level, bool bLevelUp = true);
+=======
+	void LevelChange(uint8 level, bool bLevelUp = true);
+>>>>>>> koserver2
 	void SetSlotItemValue();
 	void ApplySetItemBonuses(_SET_ITEM * pItem);
 	void SendTime();
@@ -890,7 +1039,11 @@ public:
 	void SetMaxMp();
 	void SetMaxHp(int iFlag = 0);
 	void RecvUserExp(Packet & pkt);
+<<<<<<< HEAD
 	void ExpChange(int64 iExp);
+=======
+	void ExpChange(int64 iExp, bool bIsBonusReward = false);
+>>>>>>> koserver2
 	void LogOut();
 	void SendMyInfo();
 	void SendServerChange(std::string & ip, uint8 bInit);
@@ -908,8 +1061,13 @@ public:
 	void ChangeFame(uint8 bFame);
 	void SendServerIndex();
 
+<<<<<<< HEAD
 	void SendToRegion(Packet *pkt, CUser *pExceptUser = nullptr, int16 nEventRoom = 0);
 	void SendToZone(Packet *pkt, CUser *pExceptUser = nullptr, int16 nEventRoom = 0);
+=======
+	void SendToRegion(Packet *pkt, CUser *pExceptUser = nullptr, uint16 nEventRoom = 0);
+	void SendToZone(Packet *pkt, CUser *pExceptUser = nullptr, uint16 nEventRoom = 0, float fRange = 0.0f);
+>>>>>>> koserver2
 
 	virtual void OnDeath(Unit *pKiller);
 	void UpdateAngerGauge(uint8 byAngerGauge);
@@ -1004,7 +1162,10 @@ public:
 	void ReqChangeCape(Packet & pkt);
 	void ReqSealItem(Packet & pkt);
 
+<<<<<<< HEAD
 	bool GetStartPositionRandom_CHAOS(short & x, short & z);
+=======
+>>>>>>> koserver2
 	//private:
 	static ChatCommandTable s_commandTable;
 	GameState m_state;
@@ -1012,12 +1173,21 @@ public:
 	// quest ID | quest state (need to replace with enum)
 	typedef std::map<uint16, uint8> QuestMap;
 	QuestMap m_questMap;
+<<<<<<< HEAD
+=======
+	typedef std::map<uint16, uint32> Quest_Moster_Couner_Map;
+	Quest_Moster_Couner_Map m_quest_moster_map;
+>>>>>>> koserver2
 
 	uint8 m_bKillCounts[QUEST_MOB_GROUPS];
 	uint16 m_sEventDataIndex;
 
 	UserSavedMagicMap m_savedMagicMap;
+<<<<<<< HEAD
 	FastMutex m_savedMagicLock;
+=======
+	std::recursive_mutex m_savedMagicLock;
+>>>>>>> koserver2
 
 	_KNIGHTS_USER * m_pKnightsUser;
 
@@ -1071,6 +1241,12 @@ public:
 	DECLARE_LUA_GETTER(GetPartyMemberAmount)
 	DECLARE_LUA_GETTER(GetPremium)
 	DECLARE_LUA_GETTER(GetWarVictory)
+<<<<<<< HEAD
+=======
+	DECLARE_LUA_GETTER(GetMonsterChallengeTime)
+	DECLARE_LUA_GETTER(GetMonsterChallengeUserCount)
+	DECLARE_LUA_GETTER(GetRace)
+>>>>>>> koserver2
 
 	// Shortcuts for lazy people
 	DECLARE_LUA_FUNCTION(hasCoins)  {
@@ -1325,4 +1501,39 @@ public:
 	DECLARE_LUA_FUNCTION(GetEventTrigger) {
 		LUA_RETURN(LUA_GET_INSTANCE()->GetEventTrigger());
 	}
+<<<<<<< HEAD
+=======
+
+	DECLARE_LUA_FUNCTION(CheckMiddleStatueCapture) {
+		LUA_RETURN(LUA_GET_INSTANCE()->CheckMiddleStatueCapture());
+	}
+
+	DECLARE_LUA_FUNCTION(MoveMiddleStatue) {
+		LUA_NO_RETURN(LUA_GET_INSTANCE()->MoveMiddleStatue());
+	}
+
+	DECLARE_LUA_FUNCTION(LevelChange) {
+		LUA_NO_RETURN(LUA_GET_INSTANCE()->LevelChange(LUA_ARG(uint8, 2), false));
+	}
+
+	DECLARE_LUA_FUNCTION(GivePremium) {
+		LUA_NO_RETURN(LUA_GET_INSTANCE()->GivePremium(LUA_ARG(uint8, 2), LUA_ARG_OPTIONAL(uint8, 1, 3)));
+	}
+
+	DECLARE_LUA_FUNCTION(GetPVPMonumentNation) {
+		LUA_RETURN(LUA_GET_INSTANCE()->GetPVPMonumentNation());
+	}
+
+	DECLARE_LUA_FUNCTION(NationChange) {
+		LUA_RETURN(LUA_GET_INSTANCE()->NationChange());
+	}
+
+	DECLARE_LUA_FUNCTION(GenderChange) {
+		LUA_RETURN(LUA_GET_INSTANCE()->GenderChange((LUA_ARG(uint8, 2))));
+	}
+
+	DECLARE_LUA_FUNCTION(JobChange) {
+		LUA_RETURN(LUA_GET_INSTANCE()->JobChange((LUA_ARG(uint8, 2))));
+	}
+>>>>>>> koserver2
 };

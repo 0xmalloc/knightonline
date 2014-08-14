@@ -2,9 +2,13 @@
 
 #define CONF_GAME_SERVER	"./GameServer.ini"
 
+<<<<<<< HEAD
 #define _LISTEN_PORT		15001
 #define _UDP_PORT			8888
 #define AI_SERVER_PORT		10020
+=======
+#define _UDP_PORT			8888
+>>>>>>> koserver2
 #define CLIENT_SOCKSIZE		100
 
 #define MAX_NPC_SIZE		30
@@ -43,6 +47,7 @@
 
 #define KARUS_ARRAY (KARUS - 1)
 #define ELMORAD_ARRAY (ELMORAD - 1)
+<<<<<<< HEAD
 
 enum PVPKillLoyalty
 {
@@ -55,6 +60,9 @@ enum PVPKillLoyalty
 	OTHER_ZONE_KILL_LOYALTY_SOURCE			= 64,
 	OTHER_ZONE_KILL_LOYALTY_TARGET			= -50
 };
+=======
+#define MONSTER_CHALLENGE_COUNT 32
+>>>>>>> koserver2
 
 // Attack Type
 #define DIRECT_ATTACK		0
@@ -88,7 +96,11 @@ enum InOutType
 
 // Temple Event
 #define BIFROST_EVENT_COUNT				3
+<<<<<<< HEAD
 #define CHAOS_EVENT_COUNT				4
+=======
+#define CHAOS_EVENT_COUNT				3
+>>>>>>> koserver2
 #define BORDER_DEFENSE_WAR_EVENT_COUNT	7
 #define JURAD_MOUNTAIN_EVENT_COUNT		3
 
@@ -108,6 +120,12 @@ enum InOutType
 #define SNOW_BATTLEZONE_OPEN			0x09
 #define UNDER_ATTACK_NOTIFY				0x10
 #define DECLARE_BATTLE_ZONE_STATUS		0x11
+<<<<<<< HEAD
+=======
+#define DECLARE_BATTLE_MONUMENT_STATUS	0x12
+#define DECLARE_NATION_MONUMENT_STATUS	0x13
+#define DECLARE_NATION_REWARD_STATUS	0x14
+>>>>>>> koserver2
 
 #define WAR_TIME_COUNT			3
 #define WAR_ZONE_COUNT			WAR_TIME_COUNT
@@ -154,6 +172,10 @@ enum InOutType
 #define ZONE_BORDER_DEFENSE_WAR	84
 #define ZONE_CHAOS_DUNGEON		85
 #define ZONE_JURAD_MOUNTAIN		87
+<<<<<<< HEAD
+=======
+#define ZONE_PRISON				92
+>>>>>>> koserver2
 #define ZONE_ISILOON_ARENA		93
 #define ZONE_FELANKOR_ARENA		94
 
@@ -166,7 +188,11 @@ enum InOutType
 #define MIN_LEVEL_WAR_ZONE			35
 #define MIN_LEVEL_NIEDS_TRIANGLE	35
 #define MAX_LEVEL_NIEDS_TRIANGLE	59
+<<<<<<< HEAD
 #define MIN_LEVEL_RONARK_LAND		70
+=======
+#define MIN_LEVEL_RONARK_LAND		35
+>>>>>>> koserver2
 #define MIN_LEVEL_ARDREAM			35
 #define MAX_LEVEL_ARDREAM			59
 #define MIN_LEVEL_RONARK_LAND_BASE	45
@@ -176,14 +202,37 @@ enum InOutType
 
 // Where to respawn after dying in the Moradon arenas
 #define MINI_ARENA_RESPAWN_X		734
+<<<<<<< HEAD
 #define MINI_ARENA_RESPAWN_Z		428
 #define MINI_ARENA_RESPAWN_RADIUS	5
 
+=======
+#define MINI_ARENA_RESPAWN_Z		427
+#define MINI_ARENA_RESPAWN_RADIUS	5
+
+// Where to Warp dodo or laon camp in the enemy nation zone
+#define DODO_CAMP_WARP_X			1054
+#define DODO_CAMP_WARP_Z			1141
+#define LAON_CAMP_WARP_X			1012
+#define LAON_CAMP_WARP_Z			914
+#define DODO_LAON_WARP_RADIUS		5
+
+// Bonus experience in War zones or PK zones
+#define PVP_BONUS_EXP 10000
+
+>>>>>>> koserver2
 // Automatic Ranking Minutes
 #define RELOAD_KNIGHTS_AND_USER_RATING 30 // Minute
 
 // Where to respawn after dying in the Chaos Stone boss
 #define CHAOS_STONE_MONSTER_RESPAWN_RADIUS 20
+<<<<<<< HEAD
+=======
+#define CHAOS_STONE_MONSTER_LIVE_TIME 900  // (15 minutes)
+
+// Standard (pre-squared) range used for moradon mini arena.
+#define RANGE_20M 20.0f
+>>>>>>> koserver2
 
 // Standard (pre-squared) range used for party rewards and such.
 #define RANGE_50M (50.0f * 50.0f)
@@ -191,6 +240,12 @@ enum InOutType
 // Item IDs
 #define ITEM_CONT_RECOVERY		800370000
 #define ITEM_SCROLL_OF_IDENTITY	800032000
+<<<<<<< HEAD
+=======
+#define ITEM_NATION_TRANSFER    800360000
+#define ITEM_GENDER_CHANGE		800560000
+#define ITEM_JOB_CHANGE			800560000
+>>>>>>> koserver2
 #define ITEM_MEAT_DUMPLING		508216000
 #define GOLDEN_MATTOCK			389135000
 #define MATTOCK					389132000
@@ -206,14 +261,40 @@ enum InOutType
 #define RED_TREASURE_CHEST		379154000
 #define GREEN_TREASURE_CHEST	379155000
 #define BLUE_TREASURE_CHEST		379156000
+<<<<<<< HEAD
 #define MONSTER_STONE			900144023
+=======
+#define ITEM_MONSTER_STONE		900144023
+#define ITEM_LIGHT_PIT			700041000
+#define ITEM_DRAIN_RESTORE		700040000
+#define ITEM_KILLING_BLADE		700037000
+>>>>>>> koserver2
 
 // ID of the Seed quest, to be automatically started on first load.
 #define STARTER_SEED_QUEST 500
 
+<<<<<<< HEAD
 #define PVP_MONUMENT_KARUS_SPID		14003
 #define PVP_MONUMENT_ELMORAD_SPID	14004
 #define PVP_MONUMENT_ALL_SPID		14005
+=======
+#define MONUMENT_KARUS_SPID		14003
+#define MONUMENT_ELMORAD_SPID	14004
+#define MONUMENT_ENEMY_SPID		14005
+
+#define ELMORAD_MONUMENT_SID		10301
+#define ASGA_VILLAGE_MONUMENT_SID	10302
+#define RAIBA_VILLAGE_MONUMENT_SID	10303
+#define DODO_CAMP_MONUMENT_SID		10304
+
+#define LUFERSON_MONUMENT_SID		20301
+#define LINATE_MONUMENT_SID			20302
+#define BELLUA_MONUMENT_SID			20303
+#define LAON_CAMP_MONUMENT_SID		20304
+
+#define SAW_BLADE_SSID				32153
+#define CHAOS_CUBE_SSID				31527
+>>>>>>> koserver2
 
 enum UserStatus
 {
@@ -241,7 +322,14 @@ enum AttributeType
 	AttributeNone		= 0,
 	AttributeFire		= 1,
 	AttributeIce		= 2,
+<<<<<<< HEAD
 	AttributeLightning	= 3
+=======
+	AttributeLightning	= 3,
+	AttributeLightMagic	= 4,
+	AttributeCurse		= 5,
+	AttributePosion		= 6
+>>>>>>> koserver2
 };
 
 typedef union{
@@ -257,4 +345,8 @@ typedef union{
 #define TO_USER(v)	static_cast<CUser *>(v)
 #define TO_NPC(v)	static_cast<CNpc *>(v)
 
+<<<<<<< HEAD
 #include "../shared/globals.h"
+=======
+#include "../shared/globals.h"
+>>>>>>> koserver2

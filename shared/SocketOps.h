@@ -17,6 +17,7 @@ namespace SocketOps
 	// Enables nagle buffering algorithm
 	bool EnableBuffering(SOCKET fd);
 
+<<<<<<< HEAD
 	// Set internal buffer size to socket.
 	bool SetRecvBufferSize(SOCKET fd, uint32 size);
 
@@ -28,4 +29,8 @@ namespace SocketOps
 
 	// Sets SO_REUSEADDR
 	void ReuseAddr(SOCKET fd);
+=======
+	// Closes socket completely.
+	void CloseSocket(SOCKET fd);
+>>>>>>> koserver2
 };

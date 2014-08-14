@@ -2,6 +2,7 @@
 
 #include <queue>
 
+<<<<<<< HEAD
 /* Identify environment */
 
 // current platform
@@ -103,6 +104,23 @@
 /* Define the build we're compiling */
 #if defined(_DEBUG) || defined(DEBUG)
 #	define BUILD_TYPE "Debug"
+=======
+#define VC_EXTRALEAN
+#define WIN32_LEAN_AND_MEAN
+
+#include <Windows.h>
+#include <winsock2.h>
+#include <ws2tcpip.h>
+
+#define THREADCALL WINAPI
+#define STRCASECMP _stricmp
+
+#define I64FMT "%016I64X"
+#define I64FMTD "%I64u"
+#define SI64FMTD "%I64d"
+
+#if defined(_DEBUG) || defined(DEBUG)
+>>>>>>> koserver2
 #	include <cassert>
 #	include "DebugUtils.h"
 
@@ -112,9 +130,13 @@
 //	Enables tracing to stdout. 
 //	Preferable with the VS debugger (is thrown in the "output" window), but
 //	it can be spammy otherwise (especially if you don't need it enabled).
+<<<<<<< HEAD
 #	ifdef WIN32
 #		define USE_SQL_TRACE
 #	endif
+=======
+#	define USE_SQL_TRACE
+>>>>>>> koserver2
 
 //	Ensure both typically used debug defines behave as intended
 #	ifndef DEBUG
@@ -126,11 +148,15 @@
 #	endif
 
 #else
+<<<<<<< HEAD
 #	define BUILD_TYPE "Release"
+=======
+>>>>>>> koserver2
 #	define ASSERT 
 #	define TRACE 
 #endif
 
+<<<<<<< HEAD
 /* Define the architecture we're compiling for */
 #ifdef X64
 #	define ARCH "X64"
@@ -138,6 +164,8 @@
 #	define ARCH "X86"
 #endif
 
+=======
+>>>>>>> koserver2
 // Ignore the warning "nonstandard extension used: enum '<enum name>' used in qualified name"
 // Sometimes it's necessary to avoid collisions, but aside from that, specifying the enumeration helps make code intent clearer.
 #pragma warning(disable: 4482)
@@ -145,6 +173,7 @@
 #define STR(str) #str
 #define STRINGIFY(str) STR(str)
 
+<<<<<<< HEAD
 // If we support C++11, use experimental std::thread implementation
 #if (__cplusplus >= 201103L)	/* C++11 */  \
 	|| (_MSC_VER >= 1700)		/* VS2012 */ \
@@ -170,6 +199,25 @@
 #else
 #	define sleep(ms) Sleep(ms)
 #endif
+=======
+#include <thread>
+#include <chrono>
+#include <atomic>
+#include <mutex>
+
+class Guard
+{
+public:
+	Guard(std::recursive_mutex& mutex) : target(mutex)  { target.lock(); }
+	Guard(std::recursive_mutex* mutex) : target(*mutex) { target.lock(); }
+	~Guard() { target.unlock(); }
+
+protected:
+	std::recursive_mutex& target;
+};
+
+#define sleep(ms) Sleep(ms)
+>>>>>>> koserver2
 
 #ifdef min
 #undef min
@@ -182,6 +230,7 @@
 // define compiler-specific types
 #include "types.h"
 
+<<<<<<< HEAD
 #ifndef WIN32
 // 	For working 64-bit support we need unixODBX 2.3.1 (Nov 2011)
 //	Unfortunately, 2.3.0 (2010) is still available in most repositories
@@ -202,6 +251,11 @@
 #include <memory>
 #include <map>
 #include <unordered_map>
+=======
+#include <random>
+#include <memory>
+#include <map>
+>>>>>>> koserver2
 #include <list>
 #include <vector>
 

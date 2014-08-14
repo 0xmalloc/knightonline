@@ -132,3 +132,10 @@
 #define IDS_BEEF_ROAST_VICTORY_ELMORAD						240
 #define IDS_BEEF_ROAST_FINISH								241
 #define IDS_BEEF_ROAST_DRAW									242
+<<<<<<< HEAD
+=======
+#define IDS_BATTLE_MONUMENT_STATUS							243
+#define IDS_BATTLE_MONUMENT_WON_MESSAGE						244
+#define IDS_BATTLE_MONUMENT_LOST_MESSAGE					245
+#define IDS_NP_REPAY_EVENT									246
+>>>>>>> koserver2

@@ -20,6 +20,10 @@ struct _MAGIC_TABLE
 	uint8	bSuccessRate;
 	uint8	bType[2];
 	uint16	sRange;
+<<<<<<< HEAD
+=======
+	uint8	sUseStanding;
+>>>>>>> koserver2
 	uint16	sEtc;
 };
 
@@ -192,9 +196,16 @@ struct _SERVER_RESOURCE
 	std::string strResource;
 };
 
+<<<<<<< HEAD
 #pragma pack(push, 1)
 struct _OBJECT_EVENT
 {
+=======
+struct _OBJECT_EVENT
+{
+	int nIndex;
+	uint16 sZoneID;
+>>>>>>> koserver2
 	int sBelong;
 	short sIndex;
 	short sType;
@@ -206,6 +217,10 @@ struct _OBJECT_EVENT
 	uint8 byLife;
 };
 
+<<<<<<< HEAD
+=======
+#pragma pack(push, 1)
+>>>>>>> koserver2
 struct _REGENE_EVENT
 {
 	float fRegenePosX;
@@ -270,7 +285,23 @@ struct _MONSTER_RESPAWN_LIST
 {
 	uint16	sIndex;
 	uint16	sSid;
+<<<<<<< HEAD
 	uint8	sCount;
+=======
+	uint16	sCount;
+};
+
+struct _MONSTER_RESPAWN_LIST_INFORMATION
+{
+	uint16 sIndex;
+	uint16 sSid;
+	uint8 ZoneID;
+	uint16 X;
+	uint16 Y;
+	uint16 Z;
+	uint16	sCount;
+	uint8 bRadius;
+>>>>>>> koserver2
 };
 
 #define MAX_PARTY_USERS		8
@@ -299,6 +330,10 @@ struct	_PARTY_GROUP
 struct _BUFF_TYPE4_INFO
 {
 	uint32	m_nSkillID;
+<<<<<<< HEAD
+=======
+	uint8	m_bBuffType;
+>>>>>>> koserver2
 	bool	m_bIsBuff; // Is it a buff or a debuff?
 	bool	m_bDurationExtended;
 	time_t	m_tEndTime;
@@ -307,7 +342,11 @@ struct _BUFF_TYPE4_INFO
 	INLINE bool isDebuff() { return !m_bIsBuff; }
 
 	_BUFF_TYPE4_INFO() 
+<<<<<<< HEAD
 		: m_nSkillID(0), m_bIsBuff(false), m_bDurationExtended(false), m_tEndTime(0)
+=======
+		: m_nSkillID(0), m_bBuffType(0), m_bIsBuff(false), m_bDurationExtended(false), m_tEndTime(0)
+>>>>>>> koserver2
 	{
 	}
 };

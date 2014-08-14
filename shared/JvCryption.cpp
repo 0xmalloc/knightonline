@@ -3,6 +3,7 @@
 #include "version.h"
 
 // Cryption
+<<<<<<< HEAD
 #if __VERSION >= 1700
 #define g_private_key 0x1207500120128966
 #elif __VERSION >= 1298 && __VERSION < 1453
@@ -10,6 +11,9 @@
 #else
 #define g_private_key 0x1257091582190465
 #endif
+=======
+#define g_private_key 0x1207500120128966
+>>>>>>> koserver2
 
 void CJvCryption::Init() { m_tkey = m_public_key ^ g_private_key; }
 

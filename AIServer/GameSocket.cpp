@@ -87,6 +87,12 @@ bool CGameSocket::HandlePacket(Packet & pkt)
 	case AG_NPC_SPAWN_REQ:
 		RecvNpcSpawnRequest(pkt);
 		break;
+<<<<<<< HEAD
+=======
+	case AG_NPC_KILL_REQ:
+		RecvNpcKillRequest(pkt);
+		break;
+>>>>>>> koserver2
 	case AG_MAGIC_ATTACK_REQ:
 		CMagicProcess::MagicPacket(pkt);
 		break;
@@ -156,7 +162,11 @@ void CGameSocket::ReadUserInfo(Packet & pkt, CUser * pUser)
 	if (pUser->m_sPartyNumber != -1)
 		pUser->m_byNowParty = 1;
 
+<<<<<<< HEAD
 	FastGuard lock(pUser->m_equippedItemBonusLock);
+=======
+	Guard lock(pUser->m_equippedItemBonusLock);
+>>>>>>> koserver2
 	pUser->m_equippedItemBonuses.clear();
 
 	for (uint32 i = 0; i < equippedItems; i++)
@@ -519,6 +529,7 @@ void CGameSocket::RecvBattleEvent(Packet & pkt)
 
 void CGameSocket::RecvNpcSpawnRequest(Packet & pkt)
 {
+<<<<<<< HEAD
 	uint16 sSid, sX, sY, sZ, sCount, sRadius;
 	int16 nEventRoom;
 	uint8 byZone;
@@ -526,6 +537,17 @@ void CGameSocket::RecvNpcSpawnRequest(Packet & pkt)
 	float fX, fY, fZ;
 
 	pkt >> sSid >> bIsMonster >> byZone >> sX >> sY >> sZ >> sCount >> sRadius >> nEventRoom;
+=======
+	uint16 sSid, sX, sY, sZ, sCount, sRadius, sDuration;
+	int16 socketID;
+	uint16 nEventRoom;
+	uint8 byZone;
+	uint8 nation;
+	bool bIsMonster;
+	float fX, fY, fZ;
+
+	pkt >> sSid >> bIsMonster >> byZone >> sX >> sY >> sZ >> sCount >> sRadius >> sDuration >> nation >> socketID >> nEventRoom;
+>>>>>>> koserver2
 
 	fX = sX / 10.0f;
 	fY = sY / 10.0f;
@@ -538,7 +560,40 @@ void CGameSocket::RecvNpcSpawnRequest(Packet & pkt)
 			byZone, 
 			(float)(fX + myrand(minRange, sRadius)), 
 			fY, 
+<<<<<<< HEAD
 			(float)(fZ + myrand(minRange, sRadius)), nEventRoom);
+=======
+			(float)(fZ + myrand(minRange, sRadius)), sDuration, nation, socketID, nEventRoom);
+	}
+}
+
+void CGameSocket::RecvNpcKillRequest(Packet & pkt)
+{
+	uint16 nid;
+	pkt >> nid;
+
+	if (nid < NPC_BAND)	// is player
+	{
+		foreach_stlmap (itr, g_pMain->m_arNpc)
+		{
+			CNpc *pNpc = itr->second;
+			if (pNpc == nullptr)
+				continue;
+
+			if (pNpc->m_oSocketID != nid)
+				continue;
+
+			pNpc->m_oSocketID = -1;
+			pNpc->Dead();
+		}
+	}
+	else
+	{
+		CNpc* pNpc = g_pMain->GetNpcPtr(nid);
+
+		if (pNpc)
+			pNpc->Dead();
+>>>>>>> koserver2
 	}
 }
 

@@ -1,7 +1,11 @@
 #include "stdafx.h"
 
 static std::mt19937 s_randomNumberGenerator;
+<<<<<<< HEAD
 static FastMutex s_rngLock;
+=======
+static std::recursive_mutex s_rngLock;
+>>>>>>> koserver2
 static bool s_rngSeeded = false;
 
 INLINE void SeedRNG()
@@ -15,7 +19,11 @@ INLINE void SeedRNG()
 
 int32 myrand(int32 min, int32 max)
 {
+<<<<<<< HEAD
 	FastGuard lock(s_rngLock);
+=======
+	Guard lock(s_rngLock);
+>>>>>>> koserver2
 	SeedRNG();
 	if (min > max) std::swap(min, max);
 	std::uniform_int_distribution<int32> dist(min, max);
@@ -24,7 +32,11 @@ int32 myrand(int32 min, int32 max)
 
 uint64 RandUInt64()
 {
+<<<<<<< HEAD
 	FastGuard lock(s_rngLock);
+=======
+	Guard lock(s_rngLock);
+>>>>>>> koserver2
 	SeedRNG();
 	std::uniform_int_distribution<uint64> dist;
 	return dist(s_randomNumberGenerator);

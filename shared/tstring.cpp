@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+#include "stdafx.h"
+>>>>>>> koserver2
 #include "tstring.h"
 #include <stdarg.h>
 #include <cctype>

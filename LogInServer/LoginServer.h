@@ -39,6 +39,11 @@ private:
 	std::string m_ODBCName, m_ODBCLogin, m_ODBCPwd;
 	short	m_sLastVersion;
 
+<<<<<<< HEAD
+=======
+	uint32 m_LoginServerPort;
+
+>>>>>>> koserver2
 	VersionInfoList		m_VersionList;
 	ServerInfoList		m_ServerList;
 
@@ -46,11 +51,22 @@ private:
 
 	RWLock m_patchListLock;
 	Packet m_serverListPacket;
+<<<<<<< HEAD
 	FastMutex m_lock, m_serverListLock;
 
 	FILE *m_fp;
 public:
 	CDBProcess	m_DBProcess;
+=======
+	std::recursive_mutex m_lock, m_serverListLock;
+
+	FILE *m_fpLoginServer;
+public:
+	CDBProcess	m_DBProcess;
+	void WriteUserLogFile(std::string & logMessage);
+
+	FILE *m_fpUser;
+>>>>>>> koserver2
 };
 
 extern LoginServer * g_pMain;

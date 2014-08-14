@@ -205,6 +205,7 @@ bool KOSocket::SendCompressed(Packet * pkt)
 	if (pkt->size() > 0)
 		memcpy(buffer + 1, pkt->contents(), pkt->size());
 
+<<<<<<< HEAD
 	crc = (uint32)crc32(buffer, inLength);
 	outLength = lzf_compress(buffer, inLength, outBuffer, outLength);
 
@@ -213,6 +214,12 @@ bool KOSocket::SendCompressed(Packet * pkt)
 #else // 16-bit
 	result << uint16(outLength) << uint16(inLength);
 #endif
+=======
+	crc = (uint32)crc32(buffer, inLength, 0);
+	outLength = lzf_compress(buffer, inLength, outBuffer, outLength);
+
+	result << outLength << inLength;
+>>>>>>> koserver2
 	result << uint32(crc);
 
 	result.append(outBuffer, outLength);

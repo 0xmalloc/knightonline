@@ -1,7 +1,10 @@
 #pragma once
 
+<<<<<<< HEAD
 #include "Mutex.h"
 
+=======
+>>>>>>> koserver2
 class SocketMgr;
 class Socket
 {
@@ -34,11 +37,19 @@ public:
 
 	/* Send Operations */
 
+<<<<<<< HEAD
 	// Locks sending mutex, adds bytes, unlocks mutex.
 	bool Send(const uint8 * Bytes, uint32 Size);
 
 	// Burst system - Locks the sending mutex.
 	INLINE  void BurstBegin() { m_writeMutex.Acquire(); }
+=======
+	// Locks sending std::recursive_mutex, adds bytes, unlocks std::recursive_mutex.
+	bool Send(const uint8 * Bytes, uint32 Size);
+
+	// Burst system - Locks the sending mutex.
+	INLINE  void BurstBegin() { m_writeMutex.lock(); }
+>>>>>>> koserver2
 
 	// Burst system - Adds bytes to output buffer.
 	bool BurstSend(const uint8 * Bytes, uint32 Size);
@@ -47,7 +58,11 @@ public:
 	void BurstPush();
 
 	// Burst system - Unlocks the sending mutex.
+<<<<<<< HEAD
 	INLINE void BurstEnd() { m_writeMutex.Release(); }
+=======
+	INLINE void BurstEnd() { m_writeMutex.unlock(); }
+>>>>>>> koserver2
 
 	/* Client Operations */
 
@@ -80,8 +95,12 @@ protected:
 	SOCKET m_fd;
 
 	CircularBuffer readBuffer, writeBuffer;
+<<<<<<< HEAD
 
 	Mutex m_writeMutex, m_readMutex;
+=======
+	std::recursive_mutex m_writeMutex, m_readMutex;
+>>>>>>> koserver2
 
 	// are we connected? stop from posting events.
 	bool m_connected;
@@ -93,8 +112,11 @@ protected:
 
 	SocketMgr *m_socketMgr;
 
+<<<<<<< HEAD
 	/* Win32 - IOCP Specific Calls */
 #ifdef CONFIG_USE_IOCP
+=======
+>>>>>>> koserver2
 public:
 	// Set completion port that this socket will be assigned to.
 	INLINE void SetCompletionPort(HANDLE cp) { m_completionPort = cp; }
@@ -108,6 +130,7 @@ private:
 
 	// Assigns the socket to his completion port.
 	void AssignToCompletionPort();
+<<<<<<< HEAD
 #endif
 
 	/* Linux - EPOLL Specific Calls */
@@ -132,6 +155,17 @@ public:
 	INLINE bool AcquireSendLock()
 	{
 		FastGuard lock(m_writeLockMutex);
+=======
+
+public:
+	/* Atomic wrapper functions for increasing read/write locks */
+	INLINE void IncSendLock() { Guard lock(m_writeMutex); ++m_writeLock; }
+	INLINE void DecSendLock() { Guard lock(m_writeMutex); --m_writeLock; }
+	INLINE bool HasSendLock() { Guard lock(m_writeMutex); return (m_writeLock != 0); }
+	INLINE bool AcquireSendLock()
+	{
+		Guard lock(m_writeMutex);
+>>>>>>> koserver2
 		if (m_writeLock != 0)
 			return false;
 
@@ -141,5 +175,9 @@ public:
 private:
 	// Write lock, stops multiple write events from being posted.
 	uint32 m_writeLock;
+<<<<<<< HEAD
 	FastMutex m_writeLockMutex;
+=======
+	std::recursive_mutex m_writeLockMutex;
+>>>>>>> koserver2
 };

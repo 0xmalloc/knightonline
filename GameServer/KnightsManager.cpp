@@ -72,6 +72,7 @@ void CKnightsManager::PacketProcess(CUser *pUser, Packet & pkt)
 		GetClanSymbol(pUser, pkt.read<uint16>());
 		break;
 	case KNIGHTS_ALLY_CREATE:
+<<<<<<< HEAD
 		KnightsAllianceCreate(pUser, pkt);
 		break;
 	case KNIGHTS_ALLY_REQ:
@@ -85,6 +86,21 @@ void CKnightsManager::PacketProcess(CUser *pUser, Packet & pkt)
 		break;
 	case KNIGHTS_ALLY_PUNISH:
 		KnightsAlliancePunish(pUser, pkt);
+=======
+		//KnightsAllianceCreate(pUser, pkt);
+		break;
+	case KNIGHTS_ALLY_REQ:
+		//KnightsAllianceRequest(pUser, pkt);
+		break;
+	case KNIGHTS_ALLY_INSERT:
+		//KnightsAllianceInsert(pUser, pkt);
+		break;
+	case KNIGHTS_ALLY_REMOVE:
+		//KnightsAllianceRemove(pUser, pkt);
+		break;
+	case KNIGHTS_ALLY_PUNISH:
+		//KnightsAlliancePunish(pUser, pkt);
+>>>>>>> koserver2
 		break;
 	case KNIGHTS_ALLY_LIST:
 		KnightsAllianceList(pUser, pkt);
@@ -160,7 +176,11 @@ bool CKnightsManager::IsAvailableName( const char *strname)
 
 int CKnightsManager::GetKnightsIndex( int nation )
 {
+<<<<<<< HEAD
 	FastGuard lock(g_pMain->m_KnightsArray.m_lock);
+=======
+	Guard lock(g_pMain->m_KnightsArray.m_lock);
+>>>>>>> koserver2
 
 	int knightindex = 0;
 	if (nation == ELMORAD)	knightindex = 15000;
@@ -340,11 +360,21 @@ void CKnightsManager::ModifyKnightsLeader(CUser *pUser, Packet & pkt, uint8 opco
 	{
 		uint16 ViceChiefCount = 0;
 
+<<<<<<< HEAD
 		if (g_pMain->GetUserPtr(pKnights->m_strViceChief_1, TYPE_CHARACTER) != nullptr)
 			ViceChiefCount++;
 		if (g_pMain->GetUserPtr(pKnights->m_strViceChief_2, TYPE_CHARACTER) != nullptr)
 			ViceChiefCount++;
 		if (g_pMain->GetUserPtr(pKnights->m_strViceChief_3, TYPE_CHARACTER) != nullptr)
+=======
+		if (g_pMain->GetUserPtr(pKnights->m_strViceChief_1, TYPE_CHARACTER))
+			ViceChiefCount++;
+
+		if (g_pMain->GetUserPtr(pKnights->m_strViceChief_2, TYPE_CHARACTER))
+			ViceChiefCount++;
+
+		if (g_pMain->GetUserPtr(pKnights->m_strViceChief_3, TYPE_CHARACTER))
+>>>>>>> koserver2
 			ViceChiefCount++;
 
 		result << opcode << isClanLeader << ViceChiefCount << pKnights->m_strViceChief_1 << pKnights->m_strViceChief_2 << pKnights->m_strViceChief_3;
@@ -1155,6 +1185,7 @@ void CKnightsManager::ListTop10Clans(CUser *pUser)
 	result << uint16(0);
 
 	// List top 5 clans of each nation
+<<<<<<< HEAD
 	for (int nation = KARUS - 1; nation < ELMORAD; nation++)
 	{
 		for (int i = 1; i <= 5; i++)
@@ -1165,6 +1196,19 @@ void CKnightsManager::ListTop10Clans(CUser *pUser)
 
 			if (pRating == nullptr
 				|| (pKnights = g_pMain->GetClanPtr(pRating->sClanID)) == nullptr)
+=======
+	for (int nation = KARUS_ARRAY; nation <= ELMORAD_ARRAY; nation++)
+	{
+		uint16 i = 1;
+		foreach_stlmap (itr, g_pMain->m_KnightsRatingArray[nation])
+		{
+			if (i > 5)
+				break;
+
+			CKnights *pKnights = g_pMain->GetClanPtr(itr->second->sClanID);
+
+			if (pKnights == nullptr)
+>>>>>>> koserver2
 			{
 				result	<< int16(-1)	// Clan ID
 					<< ""			// Clan name (2 byte length)
@@ -1173,8 +1217,18 @@ void CKnightsManager::ListTop10Clans(CUser *pUser)
 			}
 			else
 			{
+<<<<<<< HEAD
 				result << pKnights->m_sIndex << pKnights->m_strName << pKnights->m_sMarkVersion << int16(i-1);
 			}
+=======
+				if (pKnights->m_byNation == nation + 1)
+					result << pKnights->m_sIndex << pKnights->m_strName << pKnights->m_sMarkVersion << int16(i-1);
+				else
+					continue;
+			}
+
+			i++;
+>>>>>>> koserver2
 		}
 	}
 

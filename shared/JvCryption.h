@@ -1,7 +1,15 @@
 #pragma once
 
 #define USE_CRYPTION
+<<<<<<< HEAD
 #include "crc32.h"
+=======
+
+extern "C"
+{
+	#include "crc32.h"
+}
+>>>>>>> koserver2
 
 class CJvCryption
 {

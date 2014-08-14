@@ -104,6 +104,7 @@ public:
 
 		return &(m_pCells[x][z]->SubCells[xx][zz]);
 	}
+<<<<<<< HEAD
 	float		GetHeightNearstPos(const __Vector3& vPos, __Vector3* pvNormal = nullptr);
 	float		GetHeight(float fX, float fZ, __Vector3* pvNormal = nullptr);
 	int			SubCellPathThru(const __Vector3& vFrom, const __Vector3& vAt, __CellSub** ppSubCells);
@@ -121,6 +122,15 @@ public:
 	bool		LoadCollisionData(FILE *fp);
 
 	void Release();
+=======
+	float		Width() { return m_fMapWidth; }
+	float		Height() { return m_fMapWidth; }
+
+	bool		Create(float fMapWidth, float fMapLength);
+	bool		LoadCollisionData(FILE *fp);
+
+	void unlock();
+>>>>>>> koserver2
 	CN3ShapeMgr();
 	virtual ~CN3ShapeMgr();
 };

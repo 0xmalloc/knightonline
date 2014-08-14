@@ -104,6 +104,9 @@ void CUser::ReqLoadWebItemMall()
 			<< pItem->bFlag // item type flag (e.g. rented)
 			<< pItem->sRemainingRentalTime; // remaining time
 	}
+<<<<<<< HEAD
 
+=======
+>>>>>>> koserver2
 	Send(&result);
 }

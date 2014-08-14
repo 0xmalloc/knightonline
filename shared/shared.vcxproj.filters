@@ -12,6 +12,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+<<<<<<< HEAD
     <ClCompile Include="CircularBuffer.cpp">
       <Filter>Networking</Filter>
     </ClCompile>
@@ -28,6 +29,66 @@
       <Filter>Networking</Filter>
     </ClCompile>
     <ClCompile Include="SocketMgrWin32.cpp">
+=======
+    <ClCompile Include="tstring.cpp" />
+    <ClCompile Include="Ini.cpp" />
+    <ClCompile Include="DebugUtils.cpp" />
+    <ClCompile Include="SMDFile.cpp" />
+    <ClCompile Include="TimeThread.cpp" />
+    <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="signal_handler.cpp" />
+    <ClCompile Include="globals.cpp" />
+    <ClCompile Include="CircularBuffer.cpp" />
+    <ClCompile Include="database\OdbcCommand.cpp" />
+    <ClCompile Include="database\OdbcConnection.cpp" />
+    <ClCompile Include="database\OdbcParameter.cpp" />
+    <ClCompile Include="database\OdbcRecordset.cpp" />
+    <ClCompile Include="ReferenceObject.cpp" />
+    <ClCompile Include="CircularBuffer.cpp" />
+    <ClCompile Include="Condition.cpp" />
+    <ClCompile Include="database\OdbcCommand.cpp" />
+    <ClCompile Include="database\OdbcConnection.cpp" />
+    <ClCompile Include="database\OdbcParameter.cpp" />
+    <ClCompile Include="database\OdbcRecordset.cpp" />
+    <ClCompile Include="JvCryption.cpp" />
+    <ClCompile Include="KOSocket.cpp" />
+    <ClCompile Include="ReferenceObject.cpp" />
+    <ClCompile Include="RWLock.cpp" />
+    <ClCompile Include="Socket.cpp" />
+    <ClCompile Include="SocketMgr.cpp" />
+    <ClCompile Include="SocketOpsWin32.cpp" />
+    <ClCompile Include="SocketWin32.cpp" />
+    <ClCompile Include="CircularBuffer.cpp" />
+    <ClCompile Include="Condition.cpp" />
+    <ClCompile Include="database\OdbcCommand.cpp" />
+    <ClCompile Include="database\OdbcConnection.cpp" />
+    <ClCompile Include="database\OdbcParameter.cpp" />
+    <ClCompile Include="database\OdbcRecordset.cpp" />
+    <ClCompile Include="JvCryption.cpp" />
+    <ClCompile Include="KOSocket.cpp" />
+    <ClCompile Include="ReferenceObject.cpp" />
+    <ClCompile Include="RWLock.cpp" />
+    <ClCompile Include="Socket.cpp" />
+    <ClCompile Include="SocketMgr.cpp" />
+    <ClCompile Include="SocketOpsWin32.cpp" />
+    <ClCompile Include="SocketWin32.cpp" />
+    <ClCompile Include="database\OdbcRecordset.cpp">
+      <Filter>Database</Filter>
+    </ClCompile>
+    <ClCompile Include="database\OdbcCommand.cpp">
+      <Filter>Database</Filter>
+    </ClCompile>
+    <ClCompile Include="database\OdbcConnection.cpp">
+      <Filter>Database</Filter>
+    </ClCompile>
+    <ClCompile Include="database\OdbcParameter.cpp">
+      <Filter>Database</Filter>
+    </ClCompile>
+    <ClCompile Include="KOSocket.cpp">
+      <Filter>Networking</Filter>
+    </ClCompile>
+    <ClCompile Include="SocketMgr.cpp">
+>>>>>>> koserver2
       <Filter>Networking</Filter>
     </ClCompile>
     <ClCompile Include="SocketOpsWin32.cpp">
@@ -36,6 +97,7 @@
     <ClCompile Include="SocketWin32.cpp">
       <Filter>Networking</Filter>
     </ClCompile>
+<<<<<<< HEAD
     <ClCompile Include="database\OdbcCommand.cpp">
       <Filter>Database</Filter>
     </ClCompile>
@@ -77,6 +139,81 @@
   <ItemGroup>
     <ClInclude Include="CircularBuffer.h">
       <Filter>Networking</Filter>
+=======
+    <ClCompile Include="Socket.cpp">
+      <Filter>Networking</Filter>
+    </ClCompile>
+    <ClCompile Include="ReferenceObject.cpp">
+      <Filter>Threading</Filter>
+    </ClCompile>
+    <ClCompile Include="RWLock.cpp">
+      <Filter>Threading</Filter>
+    </ClCompile>
+    <ClCompile Include="JvCryption.cpp">
+      <Filter>Networking</Filter>
+    </ClCompile>
+    <ClCompile Include="CircularBuffer.cpp">
+      <Filter>Networking</Filter>
+    </ClCompile>
+    <ClCompile Include="Condition.cpp">
+      <Filter>Threading</Filter>
+    </ClCompile>
+    <ClCompile Include="Thread.cpp">
+      <Filter>Threading</Filter>
+    </ClCompile>
+    <ClCompile Include="crc32.c" />
+    <ClCompile Include="lzf.c">
+      <Filter>Networking</Filter>
+    </ClCompile>
+    <ClCompile Include="SocketMgr.cpp">
+      <Filter>Networking</Filter>
+    </ClCompile>
+    <ClCompile Include="SocketOpsWin32.cpp">
+      <Filter>Networking</Filter>
+    </ClCompile>
+    <ClCompile Include="SocketWin32.cpp">
+      <Filter>Networking</Filter>
+    </ClCompile>
+    <ClCompile Include="RWLock.cpp">
+      <Filter>Threading</Filter>
+    </ClCompile>
+    <ClCompile Include="Condition.cpp">
+      <Filter>Threading</Filter>
+    </ClCompile>
+    <ClCompile Include="KOSocket.cpp">
+      <Filter>Threading</Filter>
+    </ClCompile>
+    <ClCompile Include="JvCryption.cpp">
+      <Filter>Networking</Filter>
+    </ClCompile>
+    <ClCompile Include="Socket.cpp">
+      <Filter>Networking</Filter>
+    </ClCompile>
+    <ClCompile Include="HardwareInformation.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Ini.h" />
+    <ClInclude Include="DebugUtils.h" />
+    <ClInclude Include="DateTime.h" />
+    <ClInclude Include="globals.h" />
+    <ClInclude Include="SMDFile.h" />
+    <ClInclude Include="STLMap.h" />
+    <ClInclude Include="TimeThread.h" />
+    <ClInclude Include="crc32.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="signal_handler.h" />
+    <ClInclude Include="database\OdbcParameter.h">
+      <Filter>Database</Filter>
+    </ClInclude>
+    <ClInclude Include="database\OdbcRecordset.h">
+      <Filter>Database</Filter>
+    </ClInclude>
+    <ClInclude Include="database\OdbcCommand.h">
+      <Filter>Database</Filter>
+    </ClInclude>
+    <ClInclude Include="database\OdbcConnection.h">
+      <Filter>Database</Filter>
+>>>>>>> koserver2
     </ClInclude>
     <ClInclude Include="KOSocket.h">
       <Filter>Networking</Filter>
@@ -90,9 +227,12 @@
     <ClInclude Include="Network.h">
       <Filter>Networking</Filter>
     </ClInclude>
+<<<<<<< HEAD
     <ClInclude Include="Packet.h">
       <Filter>Networking</Filter>
     </ClInclude>
+=======
+>>>>>>> koserver2
     <ClInclude Include="Socket.h">
       <Filter>Networking</Filter>
     </ClInclude>
@@ -102,6 +242,7 @@
     <ClInclude Include="SocketMgr.h">
       <Filter>Networking</Filter>
     </ClInclude>
+<<<<<<< HEAD
     <ClInclude Include="SocketMgrWin32.h">
       <Filter>Networking</Filter>
     </ClInclude>
@@ -149,5 +290,41 @@
       <Filter>Threading</Filter>
     </ClInclude>
     <ClInclude Include="signal_handler.h" />
+=======
+    <ClInclude Include="SocketOps.h">
+      <Filter>Networking</Filter>
+    </ClInclude>
+    <ClInclude Include="ReferenceObject.h">
+      <Filter>Threading</Filter>
+    </ClInclude>
+    <ClInclude Include="RWLock.h">
+      <Filter>Threading</Filter>
+    </ClInclude>
+    <ClInclude Include="JvCryption.h">
+      <Filter>Networking</Filter>
+    </ClInclude>
+    <ClInclude Include="ClientSocketMgr.h">
+      <Filter>Networking</Filter>
+    </ClInclude>
+    <ClInclude Include="CircularBuffer.h">
+      <Filter>Networking</Filter>
+    </ClInclude>
+    <ClInclude Include="ByteBuffer.h">
+      <Filter>Networking</Filter>
+    </ClInclude>
+    <ClInclude Include="Atomic.h">
+      <Filter>Threading</Filter>
+    </ClInclude>
+    <ClInclude Include="lzf.h">
+      <Filter>Networking</Filter>
+    </ClInclude>
+    <ClInclude Include="Condition.h">
+      <Filter>Threading</Filter>
+    </ClInclude>
+    <ClInclude Include="Thread.h">
+      <Filter>Threading</Filter>
+    </ClInclude>
+    <ClInclude Include="HardwareInformation.h" />
+>>>>>>> koserver2
   </ItemGroup>
 </Project>

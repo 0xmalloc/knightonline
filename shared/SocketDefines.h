@@ -1,5 +1,6 @@
 #pragma once
 
+<<<<<<< HEAD
 //	unix defines
 #ifndef CONFIG_USE_IOCP
 
@@ -14,6 +15,8 @@
 
 #else // IOCP-specific functionality
 
+=======
+>>>>>>> koserver2
 enum SocketIOEvent
 {
 	SOCKET_IO_EVENT_READ_COMPLETE   = 0,
@@ -60,4 +63,7 @@ public:
 		m_inUse = false;
 	}
 };
+<<<<<<< HEAD
 #endif
+=======
+>>>>>>> koserver2

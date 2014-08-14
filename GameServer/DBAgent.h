@@ -43,7 +43,11 @@ public:
 	CDBAgent();
 
 
+<<<<<<< HEAD
 	bool Startup(bool bMarsEnabled, 
+=======
+	bool Startup(bool bMarsEnabled,
+>>>>>>> koserver2
 		tstring & strAccountDSN, tstring & strAccountUID, tstring & strAccountPWD,
 		tstring & strGameDSN, tstring & strGameUID, tstring & strGamePWD);
 
@@ -71,6 +75,10 @@ public:
 	bool LoadPremiumServiceUser(std::string & strAccountID, CUser *pUser);
 	bool LoadSavedMagic(CUser *pUser);
 	bool SetLogInInfo(std::string & strAccountID, std::string & strCharID, std::string & strServerIP, short sServerNo, std::string & strClientIP, uint8 bInit);
+<<<<<<< HEAD
+=======
+	bool SavePremiumServiceUser(CUser *pUser);
+>>>>>>> koserver2
 
 	bool LoadWebItemMall(std::vector<_ITEM_DATA> & itemList, CUser *pUser);
 
@@ -101,6 +109,10 @@ public:
 	NameChangeOpcode UpdateCharacterName(std::string & strAccountID, std::string & strUserID, std::string & strNewUserID);
 	void UpdateCape(uint16 sClanID, uint16 sCapeID, uint8 r, uint8 g, uint8 b);
 	void UpdateClanGrade(uint16 sClanID, uint8 byFlag, uint16 sCapeID);
+<<<<<<< HEAD
+=======
+	void UpdateAccountKnightCash(std::string & strAccountID, uint32 KnightCash = 0);
+>>>>>>> koserver2
 
 	void UpdateBattleEvent(std::string & strCharID, uint8 bNation);
 	void AccountLogout(std::string & strAccountID);
@@ -124,12 +136,22 @@ public:
 	void ClearRemainUsers();
 	void InsertUserDailyOp(_USER_DAILY_OP * pUserDailyOp);
 	void UpdateUserDailyOp(std::string strUserId, uint8 type, int32 sUnixTime);
+<<<<<<< HEAD
+=======
+	void UpdateRanks();
+
+	int8 NationTransfer(std::string strAccountID);
+>>>>>>> koserver2
 
 	~CDBAgent();
 
 private:
 	OdbcConnection *m_GameDB, *m_AccountDB;
+<<<<<<< HEAD
 	FastMutex m_lock;
+=======
+	std::recursive_mutex m_lock;
+>>>>>>> koserver2
 
 	friend class CGameServerDlg;
 };

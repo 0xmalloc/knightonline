@@ -26,7 +26,11 @@ CN3ShapeMgr::~CN3ShapeMgr()
 	}
 }
 
+<<<<<<< HEAD
 void CN3ShapeMgr::Release()
+=======
+void CN3ShapeMgr::unlock()
+>>>>>>> koserver2
 {
 	m_fMapWidth = 0.0f;
 	m_fMapLength = 0.0f;
@@ -126,6 +130,7 @@ bool CN3ShapeMgr::Create(float fMapWidth, float fMapLength) // ∏ ¿« ≥ ∫ÒøÕ ≥Ù¿Ã∏
 
 	return true;
 }
+<<<<<<< HEAD
 
 bool CN3ShapeMgr::CheckCollision(	const __Vector3& vPos,		// √Êµπ ¿ßƒ°
 								 const __Vector3& vDir,		// πÊ«‚ ∫§≈Õ
@@ -638,3 +643,5 @@ void CN3ShapeMgr::SubCell(const __Vector3& vPos, __CellSub** ppSubCell)			// «ÿ¥
 	}	// for 
 }
 
+=======
+>>>>>>> koserver2

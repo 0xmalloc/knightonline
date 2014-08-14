@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "ConsoleInputThread.h"
+<<<<<<< HEAD
 
 #ifdef WIN32
 #	include <conio.h>
@@ -34,6 +35,9 @@ int _kbhit()
 	return bytesWaiting;
 }
 #endif
+=======
+#include <conio.h>
+>>>>>>> koserver2
 
 static Thread s_consoleInputThread;
 

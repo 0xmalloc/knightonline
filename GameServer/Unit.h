@@ -53,6 +53,7 @@ public:
 
 	virtual uint16 GetID() = 0;
 	INLINE uint8 GetZoneID() { return m_bZone; }
+<<<<<<< HEAD
 	INLINE int16 GetEventRoom() 
 	{ 
 		if (m_bEventRoom < 0 || m_bEventRoom > (int16)MAX_TEMPLE_EVENT_ROOM)
@@ -65,6 +66,17 @@ public:
 	}
 
 	INLINE bool isInTempleEventZone() {  return GetZoneID() == ZONE_BORDER_DEFENSE_WAR || GetZoneID() == ZONE_CHAOS_DUNGEON || GetZoneID() == ZONE_JURAD_MOUNTAIN; }
+=======
+	INLINE uint16 GetEventRoom() { return m_bEventRoom > (uint16)MAX_TEMPLE_EVENT_ROOM ? 0 : m_bEventRoom; }
+
+	INLINE bool isInTempleEventZone(uint8 nZoneID = 0) 
+	{
+		if (nZoneID == 0)
+			nZoneID = GetZoneID();
+
+		return nZoneID == ZONE_BORDER_DEFENSE_WAR || nZoneID == ZONE_CHAOS_DUNGEON || nZoneID == ZONE_JURAD_MOUNTAIN; 
+	}
+>>>>>>> koserver2
 
 	INLINE float GetX() { return m_curx; }
 	INLINE float GetY() { return m_cury; }
@@ -107,30 +119,74 @@ public:
 	INLINE bool canTeleport() { return m_bCanTeleport; }
 	INLINE bool isKaul() { return m_bIsKaul; }
 
+<<<<<<< HEAD
 	INLINE bool isBuffed()
 	{
 		FastGuard lock(m_buffLock);
 
 		// Check the buff counter.
 		// We cannot check the map itself, as the map contains both buffs and debuffs.
+=======
+	INLINE bool isBuffed(bool bIsOnlyScroll = false)
+	{
+		Guard lock(m_buffLock);
+
+		// Check the buff counter.
+		// We cannot check the map itself, as the map contains both buffs and debuffs.
+		if (bIsOnlyScroll)
+		{
+			foreach (itr, m_buffMap)
+				if (itr->second.m_nSkillID > 500000)
+					return true;
+		}
+>>>>>>> koserver2
 		return m_buffCount > 0;
 	}
 
 	INLINE bool isDebuffed()
 	{
+<<<<<<< HEAD
 		FastGuard lock(m_buffLock);
+=======
+		Guard lock(m_buffLock);
+>>>>>>> koserver2
 
 		// As the 'buff' map contains both buffs and debuffs, if the number of buffs/debuffs in the map doesn't 
 		// match the number of buffs we have, we can conclude we have some debuffs in there.
 		return (uint8) m_buffMap.size() != m_buffCount; 
 	}
 
+<<<<<<< HEAD
 	INLINE bool hasBuff(uint8 buff)
 	{
 		FastGuard lock(m_buffLock);
 		return m_buffMap.find(buff) != m_buffMap.end();
 	}
 
+=======
+	INLINE bool hasBuff(uint8 buff, bool isOnlyBuff = false)
+	{
+		Guard lock(m_buffLock);
+		if (isOnlyBuff)
+		{
+			auto itr = m_buffMap.find(buff);
+			if (itr != m_buffMap.end() && itr->second.isBuff())
+				return true;
+		}
+		return m_buffMap.find(buff) != m_buffMap.end();
+	}
+
+	INLINE bool hasDebuff(uint8 buff)
+	{
+		Guard lock(m_buffLock);
+		auto itr = m_buffMap.find(buff);
+		if (itr != m_buffMap.end() && itr->second.isDebuff())
+			return true;
+
+		return false;
+	}
+
+>>>>>>> koserver2
 	INLINE bool canInstantCast() { return m_bInstantCast; }
 	INLINE bool canStealth()	{ return m_bCanStealth; }
 
@@ -180,7 +236,11 @@ public:
 	void Send_AIServer(Packet *result);
 
 	void InitType3();
+<<<<<<< HEAD
 	void InitType4(bool bRemoveSavedMagic = false);
+=======
+	void InitType4(bool bRemoveSavedMagic = false, uint8 buffType = 0);
+>>>>>>> koserver2
 	void AddType4Buff(uint8 bBuffType, _BUFF_TYPE4_INFO & pBuffInfo);
 
 	virtual void StateChangeServerDirect(uint8 bType, uint32 nBuff) {}
@@ -199,7 +259,10 @@ public:
 	CRegion * m_pRegion;
 
 	uint8	m_bZone;
+<<<<<<< HEAD
 	int16	m_bEventRoom;
+=======
+>>>>>>> koserver2
 	float	m_curx, m_curz, m_cury;
 
 	uint16	m_sRegionX, m_sRegionZ; // this is probably redundant
@@ -253,7 +316,11 @@ public:
 	// It is indexed by slot ID (this should really work with the item container), and contains a map of each bonus (indexed by type)
 	// supported by this item (we support multiple bonuses, official most likely still overrides them).
 	EquippedItemBonuses m_equippedItemBonuses;
+<<<<<<< HEAD
 	FastMutex m_equippedItemBonusLock;
+=======
+	std::recursive_mutex m_equippedItemBonusLock;
+>>>>>>> koserver2
 
 	// Weapon resistances
 	int16 m_sDaggerR; 
@@ -296,7 +363,11 @@ public:
 
 	Type4BuffMap m_buffMap;
 	Type9BuffMap m_type9BuffMap;
+<<<<<<< HEAD
 	FastMutex	m_buffLock;
+=======
+	std::recursive_mutex	m_buffLock;
+>>>>>>> koserver2
 	uint8		m_buffCount; // counter for buffs (not debuffs). Used for identifying when the user is buffed.
 
 	bool	m_bIsBlinded;
@@ -313,4 +384,11 @@ public:
 
 	bool m_bBlockPhysical;
 	bool m_bBlockMagic;
+<<<<<<< HEAD
 };
+=======
+
+	int16	m_oSocketID; // owner user
+	uint16	m_bEventRoom;
+};
+>>>>>>> koserver2

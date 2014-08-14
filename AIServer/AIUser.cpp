@@ -29,7 +29,11 @@ void CUser::Initialize()
 	m_sPartyTotalLevel = 0;
 	m_byPartyTotalMan = 0;
 	m_sPartyNumber = -1;
+<<<<<<< HEAD
 	m_byIsOP = 1; //change by zealotyin  0->1
+=======
+	m_byIsOP = 0;
+>>>>>>> koserver2
 	m_bInvisibilityType = 0;
 
 	m_tLastRegeneTime = 0;
@@ -42,7 +46,10 @@ void CUser::Initialize()
 	m_sAddArmourAc = 0;
 	m_bPctArmourAc = 100;
 	m_bPremiumMerchant = false;
+<<<<<<< HEAD
 	m_bEventRoom = 0;
+=======
+>>>>>>> koserver2
 
 	InitNpcAttack();
 }
@@ -158,8 +165,17 @@ void CUser::HealAreaCheck(int rx, int rz)
 
 	static const float fRadius = 10.0f; // 30m
 
+<<<<<<< HEAD
 	FastGuard lock(pMap->m_lock);
 	CRegion *pRegion = &pMap->m_ppRegion[rx][rz];
+=======
+	Guard lock(pMap->m_lock);
+	CRegion *pRegion = &pMap->m_ppRegion[rx][rz];
+
+	if (pRegion == nullptr)
+		return;
+
+>>>>>>> koserver2
 	foreach_stlmap (itr, pRegion->m_RegionNpcArray)
 	{
 		CNpc * pNpc = g_pMain->GetNpcPtr(itr->first);

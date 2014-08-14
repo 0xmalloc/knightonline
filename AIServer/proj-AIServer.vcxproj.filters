@@ -157,6 +157,12 @@
     <ClInclude Include="..\shared\database\MakeItemGroupSet.h">
       <Filter>Database</Filter>
     </ClInclude>
+<<<<<<< HEAD
+=======
+    <ClInclude Include="..\shared\database\ObjectPosSet.h">
+      <Filter>Database</Filter>
+    </ClInclude>
+>>>>>>> koserver2
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="RES\AIServer.rc">

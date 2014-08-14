@@ -3,7 +3,10 @@
 #include "../shared/globals.h"
 
 #define CONF_LOGIN_SERVER	"./LogInServer.ini"
+<<<<<<< HEAD
 #define _LISTEN_PORT		15100
+=======
+>>>>>>> koserver2
 
 struct _SERVER_INFO
 {
@@ -36,5 +39,9 @@ struct _VERSION_INFO
 {
 	uint16 sVersion;
 	uint16 sHistoryVersion;
+<<<<<<< HEAD
 	std::string strFileName;
+=======
+	std::string strFilename;
+>>>>>>> koserver2
 };

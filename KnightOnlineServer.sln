@@ -20,6 +20,9 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Lua", "Scripting\Lua\Lua.vcxproj", "{476399DF-6832-45BE-86A7-DF43728B9938}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Shared", "shared\Shared.vcxproj", "{221DE5A1-4C5A-4DC7-82A0-0BB66E0ADD01}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Lua", "Scripting\Lua.vcxproj", "{476399DF-6832-45BE-86A7-DF43728B9938}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "shared", "shared\shared.vcxproj", "{221DE5A1-4C5A-4DC7-82A0-0BB66E0ADD01}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

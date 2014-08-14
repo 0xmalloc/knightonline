@@ -80,11 +80,14 @@ void CUser::ExchangeAgree(Packet & pkt)
 		pUser->m_sExchangeUser = -1;
 		bResult = 0;
 	}
+<<<<<<< HEAD
 	else 
 	{
 		InitExchange(true);
 		pUser->InitExchange(true);
 	}
+=======
+>>>>>>> koserver2
 
 	Packet result(WIZ_EXCHANGE, uint8(EXCHANGE_AGREE));
 	result << uint16(bResult);
@@ -148,7 +151,14 @@ void CUser::ExchangeAdd(Packet & pkt)
 	{
 		if (pSrcItem->sCount < count
 			|| pSrcItem->isRented()
+<<<<<<< HEAD
 			|| pSrcItem->isSealed())
+=======
+			|| pSrcItem->isSealed()
+			|| pSrcItem->isBound()
+			|| pSrcItem->isExpireItem()
+			|| pSrcItem->isDuplicate())
+>>>>>>> koserver2
 			goto add_fail;
 
 		if (pTable->m_bCountable)
@@ -233,10 +243,20 @@ void CUser::ExchangeDecide()
 	if (!CheckExchange() || !pUser->CheckExchange())
 	{
 		// At this stage, neither user has their items exchanged.
+<<<<<<< HEAD
 		// However, their coins were removed -- these will be removed by InitExchange().
 		result << uint8(EXCHANGE_DONE) << uint8(0);
 		Send(&result);
 		pUser->Send(&result);
+=======
+		// However, their coins were removed -- these will be removed by ExchangeFinish().
+		result << uint8(EXCHANGE_DONE) << uint8(0);
+		Send(&result);
+		pUser->Send(&result);
+
+		ExchangeCancel();
+		pUser->ExchangeCancel();
+>>>>>>> koserver2
 	}
 	else
 	{
@@ -266,12 +286,17 @@ void CUser::ExchangeDecide()
 		{
 			result	<< (*itr)->bDstPos << (*itr)->nItemID
 				<< uint16((*itr)->nCount) << (*itr)->sDurability
+<<<<<<< HEAD
 				<< uint32(0); //Unknown, maybe serial?
+=======
+				<< uint32(0); //Unknown, , maybe serial?
+>>>>>>> koserver2
 		}
 		pUser->Send(&result);
 
 		SetUserAbility(false);
 		SendItemWeight();
+<<<<<<< HEAD
 
 		pUser->SetUserAbility(false);
 		pUser->SendItemWeight();
@@ -301,6 +326,23 @@ void CUser::ExchangeCancel()
 
 void CUser::InitExchange(bool bStart)
 {
+=======
+		ExchangeFinish();
+
+		pUser->SetUserAbility(false);
+		pUser->SendItemWeight();
+		pUser->ExchangeFinish();
+	}
+}
+
+void CUser::ExchangeCancel(bool bIsOnDeath)
+{
+	if (!isTrading() 
+		|| (!bIsOnDeath && isDead()))
+		return;
+
+	// Restore coins and items...
+>>>>>>> koserver2
 	while (m_ExchangeItemList.size())
 	{
 		_EXCHANGE_ITEM *pItem = m_ExchangeItemList.front();
@@ -310,7 +352,10 @@ void CUser::InitExchange(bool bStart)
 			if (pItem->nItemID == ITEM_GOLD)
 				m_iGold += pItem->nCount;
 			// Restore items to owner
+<<<<<<< HEAD
 			// NOTE: Items are only completely removed when exchanging.
+=======
+>>>>>>> koserver2
 			else
 				GetItem(pItem->bSrcPos)->sCount += pItem->nCount;
 
@@ -320,6 +365,7 @@ void CUser::InitExchange(bool bStart)
 		m_ExchangeItemList.pop_front();
 	}
 
+<<<<<<< HEAD
 	if (!bStart)
 	{
 		m_sExchangeUser = -1;
@@ -328,6 +374,27 @@ void CUser::InitExchange(bool bStart)
 	}
 }
 
+=======
+	CUser *pUser = g_pMain->GetUserPtr(m_sExchangeUser);
+	ExchangeFinish();
+
+	if (pUser != nullptr)
+	{
+		pUser->ExchangeCancel();
+
+		Packet result(WIZ_EXCHANGE, uint8(EXCHANGE_CANCEL));
+		pUser->Send(&result);
+	}
+}
+
+void CUser::ExchangeFinish()
+{
+	m_sExchangeUser = -1;
+	m_bExchangeOK = 0;
+	m_ExchangeItemList.clear();
+}
+
+>>>>>>> koserver2
 /**
 * @brief	Determines if a trade will be successful.
 * 			If it's successful, we can exchange the items.

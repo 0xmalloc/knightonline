@@ -11,10 +11,15 @@ public:
 	void HandleLogin(Packet & pkt);
 	void HandleServerlist(Packet & pkt);
 	void HandleNews(Packet & pkt);
+<<<<<<< HEAD
 #if __VERSION >= 1453
 	void HandleSetEncryptionPublicKey(Packet & pkt);
 	void HandleUnkF7(Packet & pkt);
 #endif
+=======
+	void HandleSetEncryptionPublicKey(Packet & pkt);
+	void HandleUnkF7(Packet & pkt);
+>>>>>>> koserver2
 };
 
 enum LogonOpcodes

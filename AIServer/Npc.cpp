@@ -144,6 +144,12 @@ CNpc::CNpc() : Unit(UnitNPC), m_bDelete(false),
 	m_pPattenPos.x = m_pPattenPos.z = 0;
 
 	m_bMonster = false;
+<<<<<<< HEAD
+=======
+
+	m_oSocketID = -1;
+	m_bEventRoom = 0;
+>>>>>>> koserver2
 }
 
 CNpc::~CNpc()
@@ -235,7 +241,11 @@ void CNpc::InitPos()
 	m_fBattlePos_z = fz[m_byBattlePos][m_byPathCount - 1];
 }
 
+<<<<<<< HEAD
 void CNpc::Load(uint16 sNpcID, CNpcTable * proto, bool bMonster)
+=======
+void CNpc::Load(uint16 sNpcID, CNpcTable * proto, bool bMonster, uint8 nation)
+>>>>>>> koserver2
 {
 	m_sNid = sNpcID + NPC_BAND;
 	m_proto = proto;
@@ -245,7 +255,11 @@ void CNpc::Load(uint16 sNpcID, CNpcTable * proto, bool bMonster)
 	m_sSize				= proto->m_sSize;
 	m_iWeapon_1			= proto->m_iWeapon_1;
 	m_iWeapon_2			= proto->m_iWeapon_2;
+<<<<<<< HEAD
 	m_bNation			= proto->m_byGroup;
+=======
+	m_bNation			= nation == 0 ? proto->m_byGroup : nation;
+>>>>>>> koserver2
 	m_bLevel			= (uint8) proto->m_sLevel; // max level used that I know about is 250, no need for 2 bytes
 
 	// Monsters cannot, by design, be friendly to everybody.
@@ -505,19 +519,30 @@ time_t CNpc::NpcMoving()
 		m_curz = m_fPrevZ; 
 		if (GetX() < 0 || GetZ() < 0)	
 			TRACE("Npc-NpcMoving-2 : nid=(%d, %s), x=%.2f, z=%.2f\n", GetID(), GetName().c_str(), GetX(), GetZ());
+<<<<<<< HEAD
 		
 		SendMoveResult(m_fPrevX, m_fPrevY, m_fPrevZ);
 		m_NpcState = NPC_STANDING;
 		//return m_sStandTime;
 		return myrand(m_sStandTime, m_sStandTime*1.5); // add + rand by zealotyin
+=======
+
+		// SendMoveResult(m_fPrevX, m_fPrevY, m_fPrevZ);
+		m_NpcState = NPC_STANDING;
+		return m_sStandTime;
+>>>>>>> koserver2
 	}
 
 	if (  (!m_bPathFlag && !StepMove())
 		|| (m_bPathFlag && !StepNoPathMove()))
 	{
 		m_NpcState = NPC_STANDING;
+<<<<<<< HEAD
 		//return m_sStandTime;
 		return myrand(m_sStandTime/1.5, m_sStandTime*1.5); // add + rand by zealotyin
+=======
+		return m_sStandTime;
+>>>>>>> koserver2
 	}
 
 	SendMoveResult(m_fPrevX, m_fPrevY, m_fPrevZ, (float)(m_fSecForRealMoveMetor / ((double)m_sSpeed / 1000)));
@@ -551,7 +576,11 @@ time_t CNpc::NpcStanding()
 	{
 		m_iAniFrameCount = 0;
 		m_NpcState = NPC_MOVING;
+<<<<<<< HEAD
 		return  myrand(m_sStandTime/1.5, m_sStandTime*1.5); // add + rand by zealotyin
+=======
+		return m_sStandTime;
+>>>>>>> koserver2
 	}	
 
 	m_NpcState = NPC_STANDING;
@@ -561,7 +590,11 @@ time_t CNpc::NpcStanding()
 	{
 		m_byGateOpen = !m_byGateOpen;
 		Packet result(AG_NPC_GATE_OPEN);
+<<<<<<< HEAD
 		result << GetID() << m_byGateOpen;
+=======
+		result << GetID() << GetProtoID() << m_byGateOpen;
+>>>>>>> koserver2
 		g_pMain->Send(&result);
 	}
 
@@ -1323,7 +1356,16 @@ bool CNpc::isShowBox()
 		|| bType == NPC_ELMORAD_WARDER1
 		|| bType == NPC_ELMORAD_WARDER2
 		|| bType == NPC_KARUS_GATEKEEPER
+<<<<<<< HEAD
 		|| bType == NPC_ELMORAD_GATEKEEPER)
+=======
+		|| bType == NPC_ELMORAD_GATEKEEPER
+		|| bType == NPC_BATTLE_MONUMENT
+		|| bType == NPC_KARUS_MONUMENT
+		|| bType == NPC_HUMAN_MONUMENT
+		|| GetZoneID() == ZONE_FORGOTTEN_TEMPLE
+		|| GetZoneID() == ZONE_PRISON)
+>>>>>>> koserver2
 		return false;
 
 	return true;
@@ -1337,7 +1379,11 @@ bool CNpc::FindEnemy()
 	bool bIsGuard = isGuard();
 
 	// We shouldn't really need this anymore...
+<<<<<<< HEAD
 	bool bIsNeutralZone = (GetZoneID() == ZONE_MORADON || GetZoneID() == ZONE_ARENA); // Moradon/Arena
+=======
+	bool bIsNeutralZone = (GetZoneID() == ZONE_MORADON || GetZoneID() == ZONE_ARENA); 
+>>>>>>> koserver2
 
 	// Disable AI enemy finding (of users) in neutral zones.
 	// Guards and monsters are, however, allowed.
@@ -1420,7 +1466,12 @@ bool CNpc::FindEnemy()
 			fCompareDis = FindEnemyExpand(x, y, fCompareDis, UnitNPC);
 		}
 
+<<<<<<< HEAD
 		if (hasTarget() && (fCompareDis <= fSearchRange))	return true;
+=======
+		if (hasTarget() && (fCompareDis <= fSearchRange))
+			return true;
+>>>>>>> koserver2
 	}
 
 	// 아무도 없으므로 리스트에 관리하는 유저를 초기화한다.
@@ -1572,11 +1623,19 @@ float CNpc::FindEnemyExpand(int nRX, int nRZ, float fCompDis, UnitType unitType)
 	// Finding players
 	if (unitType == UnitPlayer)	
 	{
+<<<<<<< HEAD
 		FastGuard lock(pMap->m_lock);
 		CRegion *pRegion = &pMap->m_ppRegion[nRX][nRZ];
 
 		//TRACE("FindEnemyExpand type1,, region_x=%d, region_z=%d, user=%d, mon=%d\n", nRX, nRZ, nUser, nMonster);
 		if (pRegion->m_RegionUserArray.IsEmpty())
+=======
+		Guard lock(pMap->m_lock);
+		CRegion *pRegion = &pMap->m_ppRegion[nRX][nRZ];
+
+		//TRACE("FindEnemyExpand type1,, region_x=%d, region_z=%d, user=%d, mon=%d\n", nRX, nRZ, nUser, nMonster);
+		if (pRegion == nullptr || (pRegion && pRegion->m_RegionUserArray.IsEmpty()))
+>>>>>>> koserver2
 			return 0.0f;
 
 		foreach_stlmap (itr, pRegion->m_RegionUserArray)
@@ -1613,10 +1672,17 @@ float CNpc::FindEnemyExpand(int nRX, int nRZ, float fCompDis, UnitType unitType)
 	// Finding NPCs/monsters
 	else if (unitType == UnitNPC)		
 	{
+<<<<<<< HEAD
 		FastGuard lock(pMap->m_lock);
 		CRegion *pRegion = &pMap->m_ppRegion[nRX][nRZ];
 
 		if (pRegion->m_RegionNpcArray.IsEmpty())
+=======
+		Guard lock(pMap->m_lock);
+		CRegion *pRegion = &pMap->m_ppRegion[nRX][nRZ];
+
+		if (pRegion == nullptr || (pRegion && pRegion->m_RegionNpcArray.IsEmpty()))
+>>>>>>> koserver2
 			return 0.0f;
 
 		foreach_stlmap (itr, pRegion->m_RegionNpcArray)
@@ -1677,7 +1743,11 @@ bool CNpc::IsDamagedUserList(CUser *pUser)
 	if (pUser == nullptr) 
 		return false;
 
+<<<<<<< HEAD
 	FastGuard lock(m_damageListLock);
+=======
+	Guard lock(m_damageListLock);
+>>>>>>> koserver2
 	return (m_DamagedUserList.find(pUser->GetID()) != m_DamagedUserList.end());
 }
 
@@ -2327,7 +2397,13 @@ void CNpc::TracingAttack()
 		if (pUser == nullptr
 			|| pUser->isDead()
 			|| pUser->m_bInvisibilityType
+<<<<<<< HEAD
 			|| pUser->isGM())
+=======
+			|| pUser->isGM() 
+			|| !GetMap()->canAttackOtherNation() 
+			|| pUser->GetID() == m_oSocketID)
+>>>>>>> koserver2
 			return;
 	}
 	else // Target is an NPC/monster
@@ -2661,13 +2737,20 @@ void CNpc::RecvAttackReq(int nDamage, uint16 sAttackerID, AttributeType attribut
 		|| nDamage < 0)
 		return;
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> koserver2
 	Unit * pAttacker = g_pMain->GetUnitPtr(sAttackerID);
 
 	if (pAttacker != nullptr
 		&& pAttacker->isPlayer())
 	{
+<<<<<<< HEAD
 		FastGuard lock(m_damageListLock);
+=======
+		Guard lock(m_damageListLock);
+>>>>>>> koserver2
 		m_DamagedUserList[pAttacker->GetID()] += nDamage;
 	}
 
@@ -2738,7 +2821,11 @@ void CNpc::SendExpToUserList()
 	std::string strMaxDamageUser;
 	uint32 nMaxDamage = 0;
 
+<<<<<<< HEAD
 	FastGuard lock(m_damageListLock);
+=======
+	Guard lock(m_damageListLock);
+>>>>>>> koserver2
 	std::map<CUser *, uint32> filteredDamageList;
 	std::map<uint16, CUser *> partyIndex;
 
@@ -2909,8 +2996,17 @@ void CNpc::FindFriendRegion(int x, int z, MAP* pMap, _TargetHealer* pHealer, Mon
 		return;
 	}
 
+<<<<<<< HEAD
 	FastGuard lock(pMap->m_lock);
 	CRegion *pRegion = &pMap->m_ppRegion[x][z];
+=======
+	Guard lock(pMap->m_lock);
+	CRegion *pRegion = &pMap->m_ppRegion[x][z];
+
+	if (pRegion == nullptr)
+		return;
+
+>>>>>>> koserver2
 	__Vector3 vStart, vEnd;
 	float fDis = 0.0f, 
 		fSearchRange = (type == MonSearchNeedsHealing ? (float)m_byAttackRange : (float)m_byTracingRange);
@@ -3005,7 +3101,11 @@ void CNpc::FillNpcInfo(Packet & result)
 		<< m_fTotalHitrate << m_fTotalEvasionrate 
 		<< m_sTotalAc << m_sTotalHit
 		<< m_byObjectType << m_byTrapNumber 
+<<<<<<< HEAD
 		<< m_bMonster
+=======
+		<< m_bMonster << m_oSocketID << m_bEventRoom
+>>>>>>> koserver2
 		// Include resistance data, note that we don't need to send modified amounts as 
 		// there's no skill handling here - it happens in GameServer.
 		// We will probably need to update the AI server (from GameServer) with this data.
@@ -3160,8 +3260,17 @@ bool CNpc::GetUserInViewRange(int x, int z)
 		return false;
 	}
 
+<<<<<<< HEAD
 	FastGuard lock(pMap->m_lock);
 	CRegion * pRegion = pMap->GetRegion(x, z);
+=======
+	Guard lock(pMap->m_lock);
+	CRegion * pRegion = pMap->GetRegion(x, z);
+
+	if (pRegion == nullptr)
+		return false;
+
+>>>>>>> koserver2
 	float fDis = 0.0f; 
 
 	foreach_stlmap (itr, pRegion->m_RegionUserArray)

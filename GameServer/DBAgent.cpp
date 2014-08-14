@@ -2,6 +2,10 @@
 #include "../shared/database/OdbcConnection.h"
 #include "KnightsManager.h"
 #include "DBAgent.h"
+<<<<<<< HEAD
+=======
+#include "../shared/DateTime.h"
+>>>>>>> koserver2
 
 CDBAgent g_DBAgent;
 
@@ -33,6 +37,7 @@ bool CDBAgent::Startup(bool bMarsEnabled,
 		return false;
 	}
 
+<<<<<<< HEAD
 	// If MARS is enabled, we can use multiple database threads.
 	uint32 dwThreads = 1;
 	if (m_AccountDB->isMarsEnabled())
@@ -46,11 +51,18 @@ bool CDBAgent::Startup(bool bMarsEnabled,
 #endif
 	}
 	DatabaseThread::Startup(dwThreads);
+=======
+	DatabaseThread::Startup();
+>>>>>>> koserver2
 
 	return true;
 }
 
+<<<<<<< HEAD
 bool CDBAgent::Connect(bool bMarsEnabled,
+=======
+bool CDBAgent::Connect(bool bMarsEnabled, 
+>>>>>>> koserver2
 					   tstring & strAccountDSN, tstring & strAccountUID, tstring & strAccountPWD,
 					   tstring & strGameDSN, tstring & strGameUID, tstring & strGamePWD)
 {
@@ -60,8 +72,11 @@ bool CDBAgent::Connect(bool bMarsEnabled,
 		return false;
 	}
 
+<<<<<<< HEAD
 	// If MARS was turned off as it could not be used, don't bother trying it again.
 	bMarsEnabled = m_AccountDB->isMarsEnabled();
+=======
+>>>>>>> koserver2
 	if (!m_GameDB->Connect(strGameDSN, strGameUID, strGamePWD, bMarsEnabled))
 	{
 		ReportSQLError(m_GameDB->GetError());
@@ -76,12 +91,24 @@ void CDBAgent::ReportSQLError(OdbcError *pError)
 	if (pError == nullptr)
 		return;
 
+<<<<<<< HEAD
 	// This is *very* temporary.
 	string errorMessage = string_format(_T("ODBC error occurred.\r\nSource: %s\r\nError: %s\r\nDescription: %s\n"),
 		pError->Source.c_str(), pError->ExtendedErrorMessage.c_str(), pError->ErrorMessage.c_str());
 
 	FastGuard lock(m_lock);
 	FILE *fp = fopen("./errors.log", "a");
+=======
+	DateTime time;
+
+	// This is *very* temporary.
+	string errorMessage = string_format(_T("[ ODBC Error - %d.%d.%d %d:%d:%d ] ] Source: %s Error: %s Description: %s\n"),
+		time.GetDay(),time.GetMonth(),time.GetYear(),time.GetHour(),time.GetMinute(),time.GetSecond(),
+		pError->Source.c_str(), pError->ExtendedErrorMessage.c_str(), pError->ErrorMessage.c_str());
+
+	Guard lock(m_lock);
+	FILE *fp = fopen("./Logs/GameServer.log", "a");
+>>>>>>> koserver2
 	if (fp != nullptr)
 	{
 		fwrite(errorMessage.c_str(), errorMessage.length(), 1, fp);
@@ -94,6 +121,7 @@ void CDBAgent::ReportSQLError(OdbcError *pError)
 
 int8 CDBAgent::AccountLogin(string & strAccountID, string & strPasswd)
 {
+<<<<<<< HEAD
 	int16 nRet = 0;
 	unique_ptr<OdbcCommand> dbCommand(m_GameDB->CreateCommand());
 	if (dbCommand.get() == nullptr)
@@ -107,15 +135,35 @@ int8 CDBAgent::AccountLogin(string & strAccountID, string & strPasswd)
 		ReportSQLError(m_GameDB->GetError());
 
 	return (int8)(nRet - 1);
+=======
+	int8 bRet = -1;
+	unique_ptr<OdbcCommand> dbCommand(m_GameDB->CreateCommand());
+	if (dbCommand.get() == nullptr)
+		return bRet;
+
+	dbCommand->AddParameter(SQL_PARAM_OUTPUT, &bRet);
+	dbCommand->AddParameter(SQL_PARAM_INPUT, strAccountID.c_str(), strAccountID.length());
+	dbCommand->AddParameter(SQL_PARAM_INPUT, strPasswd.c_str(), strPasswd.length());
+
+	if (!dbCommand->Execute(_T("{? = CALL GAME_LOGIN(?, ?)}")))
+		ReportSQLError(m_GameDB->GetError());
+
+	return bRet;
+>>>>>>> koserver2
 }
 
 uint8 CDBAgent::NationSelect(string & strAccountID, uint8 bNation)
 {
+<<<<<<< HEAD
 	int16 nRet = 0;
+=======
+	uint8 bRet = 0;
+>>>>>>> koserver2
 	unique_ptr<OdbcCommand> dbCommand(m_GameDB->CreateCommand());
 	if (dbCommand.get() == nullptr)
 		return false;
 
+<<<<<<< HEAD
 	dbCommand->AddParameter(SQL_PARAM_OUTPUT, &nRet);
 	dbCommand->AddParameter(SQL_PARAM_INPUT, strAccountID.c_str(), strAccountID.length());
 
@@ -123,15 +171,28 @@ uint8 CDBAgent::NationSelect(string & strAccountID, uint8 bNation)
 		ReportSQLError(m_GameDB->GetError());
 
 	return (nRet > 0 ? bNation : 0);
+=======
+	dbCommand->AddParameter(SQL_PARAM_OUTPUT, &bRet);
+	dbCommand->AddParameter(SQL_PARAM_INPUT, strAccountID.c_str(), strAccountID.length());
+
+	if (!dbCommand->Execute(string_format(_T("{? = CALL NATION_SELECT(?, %d)}"), bNation)))
+		ReportSQLError(m_GameDB->GetError());
+
+	return (bRet > 0 ? bNation : 0);
+>>>>>>> koserver2
 }
 
 bool CDBAgent::GetAllCharID(string & strAccountID, string & strCharID1, string & strCharID2, string & strCharID3)
 {
+<<<<<<< HEAD
 	int16 nRet = 0;
+=======
+>>>>>>> koserver2
 	unique_ptr<OdbcCommand> dbCommand(m_GameDB->CreateCommand());
 	if (dbCommand.get() == nullptr)
 		return false;
 
+<<<<<<< HEAD
 	dbCommand->AddParameter(SQL_PARAM_OUTPUT, &nRet);
 	dbCommand->AddParameter(SQL_PARAM_INPUT, strAccountID.c_str(), strAccountID.length());
 
@@ -146,12 +207,34 @@ bool CDBAgent::GetAllCharID(string & strAccountID, string & strCharID1, string &
 	}
 
 	return (nRet > 0);
+=======
+	dbCommand->AddParameter(SQL_PARAM_INPUT, strAccountID.c_str(), strAccountID.length());
+
+	if (!dbCommand->Execute(_T("SELECT strCharID1, strCharID2, strCharID3 FROM ACCOUNT_CHAR WHERE strAccountID = ?")))
+	{
+		ReportSQLError(m_GameDB->GetError());
+		return false;
+	}
+
+	if (!dbCommand->hasData())
+		return false;
+
+	dbCommand->FetchString(1, strCharID1);
+	dbCommand->FetchString(2, strCharID2);
+	dbCommand->FetchString(3, strCharID3);
+
+	return true;
+>>>>>>> koserver2
 }
 
 void CDBAgent::LoadCharInfo(string & strCharID, ByteBuffer & result)
 {
 	uint32 nHair = 0;
+<<<<<<< HEAD
 	uint16 sClass = 0, nRet;
+=======
+	uint16 sClass = 0;
+>>>>>>> koserver2
 	uint8 bRace = 0, bLevel = 0, bFace = 0, bZone = 0; 
 	char strItem[INVENTORY_TOTAL * 8];
 	ByteBuffer itemData;
@@ -166,9 +249,14 @@ void CDBAgent::LoadCharInfo(string & strCharID, ByteBuffer & result)
 			return;
 
 		dbCommand->AddParameter(SQL_PARAM_INPUT, strCharID.c_str(), strCharID.length());
+<<<<<<< HEAD
 		dbCommand->AddParameter(SQL_PARAM_OUTPUT, &nRet);
 
 		if (!dbCommand->Execute(_T("{CALL LOAD_CHAR_INFO (?, ?)}")))
+=======
+
+		if (!dbCommand->Execute(_T("SELECT Race, Class, HairRGB, [Level], Face, Zone, strItem FROM USERDATA WHERE strUserID = ?")))
+>>>>>>> koserver2
 			ReportSQLError(m_GameDB->GetError());
 
 		if (dbCommand->hasData())
@@ -198,6 +286,7 @@ void CDBAgent::LoadCharInfo(string & strCharID, ByteBuffer & result)
 
 int8 CDBAgent::CreateNewChar(string & strAccountID, int index, string & strCharID, uint8 bRace, uint16 sClass, uint32 nHair, uint8 bFace, uint8 bStr, uint8 bSta, uint8 bDex, uint8 bInt, uint8 bCha)
 {
+<<<<<<< HEAD
 	int16 nRet = -1;
 	unique_ptr<OdbcCommand> dbCommand(m_GameDB->CreateCommand());
 	if (dbCommand.get() == nullptr)
@@ -212,10 +301,27 @@ int8 CDBAgent::CreateNewChar(string & strAccountID, int index, string & strCharI
 		ReportSQLError(m_GameDB->GetError());
 
 	return (int8)(nRet);
+=======
+	int8 bRet = -1;
+	unique_ptr<OdbcCommand> dbCommand(m_GameDB->CreateCommand());
+	if (dbCommand.get() == nullptr)
+		return bRet;
+
+	dbCommand->AddParameter(SQL_PARAM_OUTPUT, &bRet);
+	dbCommand->AddParameter(SQL_PARAM_INPUT, strAccountID.c_str(), strAccountID.length());
+	dbCommand->AddParameter(SQL_PARAM_INPUT, strCharID.c_str(), strCharID.length());
+
+	if (!dbCommand->Execute(string_format(_T("{? = CALL CREATE_NEW_CHAR(?, %d, ?, %d, %d, %d, %d, %d, %d, %d, %d, %d)}"), 
+		index, bRace, sClass, nHair, bFace, bStr, bSta, bDex, bInt, bCha)))
+		ReportSQLError(m_GameDB->GetError());
+
+	return bRet;
+>>>>>>> koserver2
 }
 
 int8 CDBAgent::ChangeHair(std::string & strAccountID, std::string & strCharID, uint8 bOpcode, uint8 bFace, uint32 nHair)
 {
+<<<<<<< HEAD
 	int8 nRet = 1; // failed
 	unique_ptr<OdbcCommand> dbCommand(m_GameDB->CreateCommand());
 	if (dbCommand.get() == nullptr)
@@ -230,10 +336,27 @@ int8 CDBAgent::ChangeHair(std::string & strAccountID, std::string & strCharID, u
 		ReportSQLError(m_GameDB->GetError());
 
 	return nRet;
+=======
+	int8 bRet = 1; // failed
+	unique_ptr<OdbcCommand> dbCommand(m_GameDB->CreateCommand());
+	if (dbCommand.get() == nullptr)
+		return bRet;
+
+	dbCommand->AddParameter(SQL_PARAM_OUTPUT, &bRet);
+	dbCommand->AddParameter(SQL_PARAM_INPUT, strAccountID.c_str(), strAccountID.length());
+	dbCommand->AddParameter(SQL_PARAM_INPUT, strCharID.c_str(), strCharID.length());
+
+	if (!dbCommand->Execute(string_format(_T("{? = CALL CHANGE_HAIR(?, ?, %d, %d, %d)}"), 
+		bOpcode, bFace, nHair)))
+		ReportSQLError(m_GameDB->GetError());
+
+	return bRet;
+>>>>>>> koserver2
 }
 
 int8 CDBAgent::DeleteChar(string & strAccountID, int index, string & strCharID, string & strSocNo)
 {
+<<<<<<< HEAD
 	int16 nRet = -2; // generic error
 	unique_ptr<OdbcCommand> dbCommand(m_GameDB->CreateCommand());
 	if (dbCommand.get() == nullptr)
@@ -248,6 +371,22 @@ int8 CDBAgent::DeleteChar(string & strAccountID, int index, string & strCharID, 
 		ReportSQLError(m_GameDB->GetError());
 
 	return (int8)(nRet);
+=======
+	int8 bRet = -2; // generic error
+	unique_ptr<OdbcCommand> dbCommand(m_GameDB->CreateCommand());
+	if (dbCommand.get() == nullptr)
+		return bRet;
+
+	dbCommand->AddParameter(SQL_PARAM_OUTPUT, &bRet);
+	dbCommand->AddParameter(SQL_PARAM_INPUT, strAccountID.c_str(), strAccountID.length());
+	dbCommand->AddParameter(SQL_PARAM_INPUT, strCharID.c_str(), strCharID.length());
+	dbCommand->AddParameter(SQL_PARAM_INPUT, strSocNo.c_str(), strSocNo.length());
+
+	if (!dbCommand->Execute(string_format(_T("{? = CALL DELETE_CHAR(?, %d, ?, ?)}"), index)))
+		ReportSQLError(m_GameDB->GetError());
+
+	return bRet;
+>>>>>>> koserver2
 }
 
 void CDBAgent::LoadRentalData(string & strAccountID, string & strCharID, UserRentalMap & rentalData)
@@ -306,7 +445,11 @@ void CDBAgent::LoadItemSealData(string & strAccountID, string & strCharID, UserI
 		return;
 
 	dbCommand->AddParameter(SQL_PARAM_INPUT, strAccountID.c_str(), strAccountID.length());
+<<<<<<< HEAD
 	if (!dbCommand->Execute(_T("SELECT nItemSerial, nItemID, bSealType FROM SEALED_ITEMS WHERE strAccountID=?")))
+=======
+	if (!dbCommand->Execute(_T("SELECT nItemSerial, nItemID, bSealType FROM SEALED_ITEMS WHERE strAccountID = ?")))
+>>>>>>> koserver2
 	{
 		ReportSQLError(m_GameDB->GetError());
 		return;
@@ -333,8 +476,11 @@ void CDBAgent::LoadItemSealData(string & strAccountID, string & strCharID, UserI
 
 bool CDBAgent::LoadUserData(string & strAccountID, string & strCharID, CUser *pUser)
 {
+<<<<<<< HEAD
 	uint16 nRet = 0;
 
+=======
+>>>>>>> koserver2
 	unique_ptr<OdbcCommand> dbCommand(m_GameDB->CreateCommand());
 	if (dbCommand.get() == nullptr)
 		return false;
@@ -348,15 +494,24 @@ bool CDBAgent::LoadUserData(string & strAccountID, string & strCharID, CUser *pU
 
 	dbCommand->AddParameter(SQL_PARAM_INPUT, strAccountID.c_str(), strAccountID.length());
 	dbCommand->AddParameter(SQL_PARAM_INPUT, strCharID.c_str(), strCharID.length());
+<<<<<<< HEAD
 	dbCommand->AddParameter(SQL_PARAM_OUTPUT, &nRet);
 
 	if (!dbCommand->Execute(_T("{CALL LOAD_USER_DATA(?, ?, ?)}")))
+=======
+
+	if (!dbCommand->Execute(_T("{CALL LOAD_USER_DATA(?, ?)}")))
+>>>>>>> koserver2
 		ReportSQLError(m_GameDB->GetError());
 
 	if (!dbCommand->hasData())
 		return false;
 
+<<<<<<< HEAD
 	char	strItem[INVENTORY_TOTAL * 8] = {0}, strSerial[INVENTORY_TOTAL * 8] = {0},
+=======
+	char	strItem[INVENTORY_TOTAL * 8] = {0}, strSerial[INVENTORY_TOTAL * 8] = {0},strItemEx[INVENTORY_TOTAL * 4] = {0},
+>>>>>>> koserver2
 		strQuest[QUEST_ARRAY_SIZE];
 
 	uint16 sQuestCount = 0;
@@ -395,9 +550,16 @@ bool CDBAgent::LoadUserData(string & strAccountID, string & strCharID, CUser *pU
 	pUser->m_oldy = pUser->m_cury;
 	pUser->m_oldz = pUser->m_curz;
 	pUser->m_dwTime = dbCommand->FetchUInt32(field++) + 1;
+<<<<<<< HEAD
 	dbCommand->FetchString(field++, (char *)pUser->m_bstrSkill, sizeof(pUser->m_bstrSkill));
 	dbCommand->FetchBinary(field++, strItem, sizeof(strItem));
 	dbCommand->FetchBinary(field++, strSerial, sizeof(strSerial));
+=======
+	dbCommand->FetchBinary(field++, (char *)pUser->m_bstrSkill, sizeof(pUser->m_bstrSkill));
+	dbCommand->FetchBinary(field++, strItem, sizeof(strItem));
+	dbCommand->FetchBinary(field++, strSerial, sizeof(strSerial));
+	dbCommand->FetchBinary(field++, strItemEx, sizeof(strItemEx));
+>>>>>>> koserver2
 	dbCommand->FetchUInt16(field++, sQuestCount);
 	dbCommand->FetchBinary(field++, strQuest, sizeof(strQuest));
 	dbCommand->FetchUInt32(field++, pUser->m_iMannerPoint);
@@ -422,15 +584,25 @@ bool CDBAgent::LoadUserData(string & strAccountID, string & strCharID, CUser *pU
 	if (pUser->CheckExistEvent(STARTER_SEED_QUEST, 0))
 		pUser->SaveEvent(STARTER_SEED_QUEST, 1);
 
+<<<<<<< HEAD
 	ByteBuffer itemBuffer, serialBuffer;
 	itemBuffer.append(strItem, sizeof(strItem));
+=======
+	ByteBuffer itemBuffer, itemExbuffer, serialBuffer;
+	itemBuffer.append(strItem, sizeof(strItem));
+	itemExbuffer.append(strItemEx, sizeof(strItemEx));
+>>>>>>> koserver2
 	serialBuffer.append(strSerial, sizeof(strSerial));
 
 	memset(pUser->m_sItemArray, 0x00, sizeof(pUser->m_sItemArray));
 
 	UserRentalMap rentalData;
 
+<<<<<<< HEAD
 	// For non-MARS connections, until this statement is cleaned up, 
+=======
+	// Until this statement is cleaned up, 
+>>>>>>> koserver2
 	// no other statements can be processed.
 	delete dbCommand.release();
 
@@ -440,11 +612,21 @@ bool CDBAgent::LoadUserData(string & strAccountID, string & strCharID, CUser *pU
 	for (int i = 0; i < INVENTORY_TOTAL; i++)
 	{ 
 		uint64 nSerialNum;
+<<<<<<< HEAD
 		uint32 nItemID;
 		int16 sDurability, sCount;
 
 		itemBuffer >> nItemID >> sDurability >> sCount;
 		serialBuffer >> nSerialNum;
+=======
+		uint32 nItemID, nExpireTime;
+		int16 sDurability, sCount;
+
+
+		itemBuffer >> nItemID >> sDurability >> sCount;
+		serialBuffer >> nSerialNum;
+		itemExbuffer >> nExpireTime;
+>>>>>>> koserver2
 
 		_ITEM_TABLE *pTable = g_pMain->GetItemPtr(nItemID);
 		if (pTable == nullptr || sCount <= 0)
@@ -460,10 +642,17 @@ bool CDBAgent::LoadUserData(string & strAccountID, string & strCharID, CUser *pU
 
 		_ITEM_DATA *pItem = pUser->GetItem(i);
 		pItem->nNum = nItemID;
+<<<<<<< HEAD
 		pItem->sDuration = sDurability;
 		pItem->sCount = sCount;
 		pItem->nSerialNum = nSerialNum;
 
+=======
+		pItem->sDuration = pTable->isAccessory() ? pTable->m_sDuration : sDurability;
+		pItem->sCount = sCount;
+		pItem->nSerialNum = nSerialNum;
+		pItem->nExpirationTime = nExpireTime;
+>>>>>>> koserver2
 		// If the serial was found in the rental data, mark as rented.
 		UserRentalMap::iterator itr = rentalData.find(nSerialNum);
 		if (itr != rentalData.end())
@@ -480,6 +669,14 @@ bool CDBAgent::LoadUserData(string & strAccountID, string & strCharID, CUser *pU
 			else if (sealitr->second->bSealType == 3)
 				pItem->bFlag = ITEM_FLAG_BOUND;
 		}
+<<<<<<< HEAD
+=======
+
+		g_pMain->AddUserItem(nItemID, nSerialNum);
+
+		if (g_pMain->IsDuplicateItem(nItemID,nSerialNum))
+			pItem->bFlag = ITEM_FLAG_DUPLICATE;
+>>>>>>> koserver2
 	}
 
 	// Clean up the rental data
@@ -548,7 +745,10 @@ bool CDBAgent::LoadUserData(string & strAccountID, string & strCharID, CUser *pU
 
 bool CDBAgent::LoadWarehouseData(string & strAccountID, CUser *pUser)
 {
+<<<<<<< HEAD
 	uint16 nRet = 0;
+=======
+>>>>>>> koserver2
 	char strItem[WAREHOUSE_MAX * 8], strSerial[WAREHOUSE_MAX * 8];
 
 	unique_ptr<OdbcCommand> dbCommand(m_GameDB->CreateCommand());
@@ -611,6 +811,14 @@ bool CDBAgent::LoadWarehouseData(string & strAccountID, CUser *pUser)
 			else if (sealitr->second->bSealType == 3)
 				pUser->m_sWarehouseArray[i].bFlag = ITEM_FLAG_BOUND;
 		}
+<<<<<<< HEAD
+=======
+
+		g_pMain->AddUserItem(nItemID, nSerialNum);
+
+		if (g_pMain->IsDuplicateItem(nItemID,nSerialNum))
+			pUser->m_sWarehouseArray[i].bFlag = ITEM_FLAG_DUPLICATE;
+>>>>>>> koserver2
 	}
 
 	return true;
@@ -648,7 +856,10 @@ bool CDBAgent::LoadSavedMagic(CUser *pUser)
 	if (dbCommand.get() == nullptr)
 		return false;
 
+<<<<<<< HEAD
 	uint16 nRet = 0;
+=======
+>>>>>>> koserver2
 	dbCommand->AddParameter(SQL_PARAM_INPUT, pUser->m_strUserID.c_str(), pUser->m_strUserID.length());
 	if (!dbCommand->Execute(_T("SELECT "
 		"nSkill1, nDuring1, nSkill2, nDuring2, nSkill3, nDuring3, nSkill4, nDuring4, nSkill5, nDuring5, "
@@ -659,7 +870,11 @@ bool CDBAgent::LoadSavedMagic(CUser *pUser)
 		return false;
 	}
 
+<<<<<<< HEAD
 	FastGuard lock(pUser->m_savedMagicLock);
+=======
+	Guard lock(pUser->m_savedMagicLock);
+>>>>>>> koserver2
 	pUser->m_savedMagicMap.clear();
 	if (!dbCommand->hasData())
 		return true;
@@ -686,7 +901,11 @@ bool CDBAgent::UpdateSavedMagic(CUser *pUser)
 	if (dbCommand.get() == nullptr)
 		return false;
 
+<<<<<<< HEAD
 	FastGuard lock(pUser->m_savedMagicLock);
+=======
+	Guard lock(pUser->m_savedMagicLock);
+>>>>>>> koserver2
 	uint32 nSkillID[10] = {0};
 	uint32 tExpiryTime[10] = {0};
 	uint32 i = 0;
@@ -714,6 +933,7 @@ bool CDBAgent::UpdateSavedMagic(CUser *pUser)
 
 bool CDBAgent::SetLogInInfo(string & strAccountID, string & strCharID, string & strServerIP, short sServerNo, string & strClientIP, uint8 bInit)
 {
+<<<<<<< HEAD
 	bool result = false;
 	unique_ptr<OdbcCommand> dbCommand(m_AccountDB->CreateCommand());
 	if (dbCommand.get() == nullptr)
@@ -742,6 +962,23 @@ bool CDBAgent::SetLogInInfo(string & strAccountID, string & strCharID, string & 
 		result = true;
 
 	return result;
+=======
+	uint8 result = 0;
+	unique_ptr<OdbcCommand> dbCommand(m_AccountDB->CreateCommand());
+	if (dbCommand.get() == nullptr)
+		return false;
+
+	dbCommand->AddParameter(SQL_PARAM_OUTPUT, &result);
+	dbCommand->AddParameter(SQL_PARAM_INPUT, strAccountID.c_str(), strAccountID.length());
+	dbCommand->AddParameter(SQL_PARAM_INPUT, strCharID.c_str(), strCharID.length());
+	dbCommand->AddParameter(SQL_PARAM_INPUT, strServerIP.c_str(), strServerIP.length());
+	dbCommand->AddParameter(SQL_PARAM_INPUT, strClientIP.c_str(), strClientIP.length());
+
+	if (!dbCommand->Execute(string_format(_T("{? = CALL SET_LOGIN_INFO(?, ?, %d, ?, ?, %d)}"), sServerNo, bInit)))
+		ReportSQLError(m_AccountDB->GetError());
+
+	return (bool)(result == 0 ? false : true);
+>>>>>>> koserver2
 }
 
 bool CDBAgent::LoadWebItemMall(std::vector<_ITEM_DATA> & itemList, CUser *pUser)
@@ -783,7 +1020,11 @@ bool CDBAgent::LoadSkillShortcut(Packet & result, CUser *pUser)
 	char strSkillData[260];
 
 	dbCommand->AddParameter(SQL_PARAM_INPUT, pUser->GetName().c_str(), pUser->GetName().length());
+<<<<<<< HEAD
 	if (!dbCommand->Execute(_T("SELECT nCount, strSkillData FROM USERDATA_SKILLSHORTCUT WHERE strCharID=?")))
+=======
+	if (!dbCommand->Execute(_T("SELECT nCount, strSkillData FROM USERDATA_SKILLSHORTCUT WHERE strCharID = ?")))
+>>>>>>> koserver2
 	{
 		ReportSQLError(m_GameDB->GetError());
 		return false;
@@ -793,12 +1034,24 @@ bool CDBAgent::LoadSkillShortcut(Packet & result, CUser *pUser)
 		return false;
 
 	dbCommand->FetchUInt16(1, sCount);
+<<<<<<< HEAD
 	dbCommand->FetchString(2, strSkillData, sizeof(strSkillData));
 
 	result << sCount;
 	for (uint32 i = 0; i < sCount; i++)
 		result << *(uint32 *)(strSkillData + (i * sizeof(uint32)));
 
+=======
+	dbCommand->FetchBinary(2, strSkillData, sizeof(strSkillData));
+
+	result << sCount;
+	for (uint32 i = 0; i < sCount; i++){
+		uint32 skillid = *(uint32 *)(strSkillData + (i * sizeof(uint32)));
+		//printf(" %u ", skillid);
+		result << skillid;
+	}
+	//printf("\n");
+>>>>>>> koserver2
 	return true;
 }
 
@@ -807,20 +1060,61 @@ void CDBAgent::SaveSkillShortcut(short sCount, char *buff, CUser *pUser)
 	unique_ptr<OdbcCommand> dbCommand(m_GameDB->CreateCommand());
 	if (dbCommand.get() == nullptr)
 		return;
+<<<<<<< HEAD
 
 	dbCommand->AddParameter(SQL_PARAM_INPUT, pUser->GetName().c_str(), pUser->GetName().length());
 	dbCommand->AddParameter(SQL_PARAM_INPUT, buff, 260);
+=======
+/*
+#ifdef DEBUG
+	for (uint32 i = 0; i < sCount; i++){
+		uint32 skillid = *(uint32 *)(buff + (i * sizeof(uint32)));
+		printf(" %u ", skillid);
+	}
+	printf("\n");
+#endif*/
+
+	dbCommand->AddParameter(SQL_PARAM_INPUT, pUser->GetName().c_str(), pUser->GetName().length());
+	dbCommand->AddParameter(SQL_PARAM_INPUT, buff, 260, SQL_BINARY);
+>>>>>>> koserver2
 
 	if (!dbCommand->Execute(string_format(_T("{CALL SKILLSHORTCUT_SAVE(?, %d, ?)}"), sCount)))
 		ReportSQLError(m_GameDB->GetError());
 }
 
+<<<<<<< HEAD
+=======
+bool CDBAgent::SavePremiumServiceUser(CUser *pUser)
+{
+	if (pUser == nullptr)
+		return false;
+
+	if (pUser->m_bPremiumType == 0 
+		&& pUser->m_sPremiumTime == 0)
+		return false;
+
+	unique_ptr<OdbcCommand> dbCommand(m_AccountDB->CreateCommand());
+	if (dbCommand.get() == nullptr)
+		return false;
+
+	dbCommand->AddParameter(SQL_PARAM_INPUT, pUser->GetAccountName().c_str(), pUser->GetAccountName().length());
+	dbCommand->AddParameter(SQL_PARAM_INPUT, pUser->GetName().c_str(), pUser->GetName().length());
+
+	if (!dbCommand->Execute(string_format(_T("{CALL SAVE_PREMIUM_SERVICE_USER(?, ?, %d, %d)}"), 
+		pUser->m_bPremiumType, pUser->m_sPremiumTime)))
+		ReportSQLError(m_GameDB->GetError());
+
+	return true;
+}
+
+>>>>>>> koserver2
 uint8 CDBAgent::SealItem(string strSealPasswd, uint64 nItemSerial, uint32 nItemID, uint8 bSealType, CUser *pUser)
 {
 	unique_ptr<OdbcCommand> dbCommand(m_GameDB->CreateCommand());
 	if (dbCommand.get() == nullptr)
 		return 3;
 
+<<<<<<< HEAD
 	uint8 nRet = 1;
 
 	dbCommand->AddParameter(SQL_PARAM_INPUT, pUser->GetAccountName().c_str(), pUser->GetAccountName().length());
@@ -832,6 +1126,19 @@ uint8 CDBAgent::SealItem(string strSealPasswd, uint64 nItemSerial, uint32 nItemI
 		ReportSQLError(m_GameDB->GetError());
 
 	return nRet;
+=======
+	uint8 bRet = 1;
+
+	dbCommand->AddParameter(SQL_PARAM_OUTPUT, &bRet);
+	dbCommand->AddParameter(SQL_PARAM_INPUT, pUser->GetAccountName().c_str(), pUser->GetAccountName().length());
+	dbCommand->AddParameter(SQL_PARAM_INPUT, pUser->GetName().c_str(), pUser->GetName().length());
+	dbCommand->AddParameter(SQL_PARAM_INPUT, strSealPasswd.c_str(), strSealPasswd.length());
+
+	if (!dbCommand->Execute(string_format(_T("{? = CALL USER_ITEM_SEAL(?, ?, ?, " I64FMTD ", %d, %d)}"), nItemSerial, nItemID, bSealType)))
+		ReportSQLError(m_GameDB->GetError());
+
+	return bRet;
+>>>>>>> koserver2
 }
 
 void CDBAgent::RequestFriendList(std::vector<string> & friendList, CUser *pUser)
@@ -841,7 +1148,11 @@ void CDBAgent::RequestFriendList(std::vector<string> & friendList, CUser *pUser)
 		return;
 
 	dbCommand->AddParameter(SQL_PARAM_INPUT, pUser->GetName().c_str(), pUser->GetName().length());
+<<<<<<< HEAD
 	if (!dbCommand->Execute(_T("SELECT * FROM FRIEND_LIST WHERE strUserID=?")))
+=======
+	if (!dbCommand->Execute(_T("SELECT * FROM FRIEND_LIST WHERE strUserID = ?")))
+>>>>>>> koserver2
 		ReportSQLError(m_GameDB->GetError());
 
 	if (!dbCommand->hasData())
@@ -859,13 +1170,19 @@ void CDBAgent::RequestFriendList(std::vector<string> & friendList, CUser *pUser)
 FriendAddResult CDBAgent::AddFriend(short sid, short tid)
 {
 	CUser *pSrcUser = g_pMain->GetUserPtr(sid), *pTargetUser = g_pMain->GetUserPtr(tid);
+<<<<<<< HEAD
 	if (pSrcUser == nullptr || pTargetUser == nullptr)
+=======
+	if (pSrcUser == nullptr 
+		|| pTargetUser == nullptr)
+>>>>>>> koserver2
 		return FRIEND_ADD_ERROR;
 
 	unique_ptr<OdbcCommand> dbCommand(m_GameDB->CreateCommand());
 	if (dbCommand.get() == nullptr)
 		return FRIEND_ADD_ERROR;
 
+<<<<<<< HEAD
 	int16 nRet = (int16)FRIEND_ADD_ERROR;
 
 	dbCommand->AddParameter(SQL_PARAM_INPUT, pSrcUser->GetName().c_str(), pSrcUser->GetName().length());
@@ -879,6 +1196,18 @@ FriendAddResult CDBAgent::AddFriend(short sid, short tid)
 		nRet = FRIEND_ADD_ERROR;
 
 	return (FriendAddResult)nRet;
+=======
+	int16 sRet = (int16)FRIEND_ADD_ERROR;
+
+	dbCommand->AddParameter(SQL_PARAM_OUTPUT, &sRet);
+	dbCommand->AddParameter(SQL_PARAM_INPUT, pSrcUser->GetName().c_str(), pSrcUser->GetName().length());
+	dbCommand->AddParameter(SQL_PARAM_INPUT, pTargetUser->GetName().c_str(), pTargetUser->GetName().length());
+
+	if (!dbCommand->Execute(_T("{? = CALL INSERT_FRIEND_LIST(?, ?)}")))
+		ReportSQLError(m_GameDB->GetError());
+
+	return (FriendAddResult)sRet;
+>>>>>>> koserver2
 }
 
 FriendRemoveResult CDBAgent::RemoveFriend(string & strCharID, CUser *pUser)
@@ -887,6 +1216,7 @@ FriendRemoveResult CDBAgent::RemoveFriend(string & strCharID, CUser *pUser)
 	if (dbCommand.get() == nullptr)
 		return FRIEND_REMOVE_ERROR;
 
+<<<<<<< HEAD
 	int16 nRet = (int16)FRIEND_REMOVE_ERROR;
 
 	dbCommand->AddParameter(SQL_PARAM_INPUT, pUser->m_strUserID.c_str(), pUser->m_strUserID.length());
@@ -900,6 +1230,18 @@ FriendRemoveResult CDBAgent::RemoveFriend(string & strCharID, CUser *pUser)
 		nRet = FRIEND_REMOVE_MAX;
 
 	return (FriendRemoveResult)nRet;
+=======
+	int16 sRet = (int16)FRIEND_REMOVE_ERROR;
+
+	dbCommand->AddParameter(SQL_PARAM_OUTPUT, &sRet);
+	dbCommand->AddParameter(SQL_PARAM_INPUT, pUser->m_strUserID.c_str(), pUser->m_strUserID.length());
+	dbCommand->AddParameter(SQL_PARAM_INPUT, strCharID.c_str(), strCharID.length());
+
+	if (!dbCommand->Execute(_T("{? = CALL DELETE_FRIEND_LIST(?, ?)}")))
+		ReportSQLError(m_GameDB->GetError());
+
+	return (FriendRemoveResult)sRet;
+>>>>>>> koserver2
 }
 
 bool CDBAgent::UpdateUser(string & strCharID, UserUpdateType type, CUser *pUser)
@@ -926,21 +1268,36 @@ bool CDBAgent::UpdateUser(string & strCharID, UserUpdateType type, CUser *pUser)
 		index += 3;
 	}
 
+<<<<<<< HEAD
 	ByteBuffer itemBuffer, serialBuffer;
+=======
+	ByteBuffer itemBuffer, itemExBuffer,serialBuffer;
+>>>>>>> koserver2
 	for (int i = 0; i < INVENTORY_TOTAL; i++)
 	{
 		_ITEM_DATA *pItem = &pUser->m_sItemArray[i];
 		itemBuffer << pItem->nNum << pItem->sDuration << pItem->sCount;
 		serialBuffer << pItem->nSerialNum;
+<<<<<<< HEAD
+=======
+		itemExBuffer << pItem->nExpirationTime;
+>>>>>>> koserver2
 	}
 
 	dbCommand->AddParameter(SQL_PARAM_INPUT, strCharID.c_str(), strCharID.length());
 	dbCommand->AddParameter(SQL_PARAM_INPUT, (char *)pUser->m_bstrSkill, sizeof(pUser->m_bstrSkill));
 	dbCommand->AddParameter(SQL_PARAM_INPUT, (char *)itemBuffer.contents(), itemBuffer.size(), SQL_BINARY);
 	dbCommand->AddParameter(SQL_PARAM_INPUT, (char *)serialBuffer.contents(), serialBuffer.size(), SQL_BINARY);
+<<<<<<< HEAD
 	dbCommand->AddParameter(SQL_PARAM_INPUT, (char *)strQuest, sizeof(strQuest), SQL_BINARY);
 
 	if (!dbCommand->Execute(string_format(_T("{CALL UPDATE_USER_DATA ("
+=======
+	dbCommand->AddParameter(SQL_PARAM_INPUT, (char *)itemExBuffer.contents(), itemExBuffer.size(), SQL_BINARY);
+	dbCommand->AddParameter(SQL_PARAM_INPUT, (char *)strQuest, sizeof(strQuest), SQL_BINARY);
+
+	if (!dbCommand->Execute(string_format(_T("{CALL UPDATE_USER_DATA("
+>>>>>>> koserver2
 		"?, " // strCharID 
 		"%d, %d, %d, %d, %d, "		// nation, race, class, hair, rank
 		"%d, %d, " I64FMTD ", %d, %d, "		// title, level, exp, loyalty, face
@@ -949,7 +1306,11 @@ bool CDBAgent::UpdateUser(string & strCharID, UserUpdateType type, CUser *pUser)
 		"%d, %d, %d, %d, %d, "		// str, sta, dex, int, cha
 		"%d, %d, %d, %d, %d, "		// authority, free points, gold, zone, bind
 		"%d, %d, %d, %d, %d, "		// x, z, y, dwTime, sQuestCount
+<<<<<<< HEAD
 		"?, ?, ?, ?, "				// strSkill, strItem, strSerial, strQuest
+=======
+		"?, ?, ?, ?, ?, "				// strSkill, strItem, strSerial,strItemEx, strQuest
+>>>>>>> koserver2
 		"%d, %d)}"),				// manner points, monthly NP
 		pUser->m_bNation, pUser->m_bRace, pUser->m_sClass, pUser->m_nHair, pUser->m_bRank, 
 		pUser->m_bTitle, pUser->m_bLevel, pUser->m_iExp /* temp hack, database needs to support it */, pUser->m_iLoyalty, pUser->m_bFace, 
@@ -1005,6 +1366,7 @@ bool CDBAgent::UpdateWarehouseData(string & strAccountID, UserUpdateType type, C
 
 int8 CDBAgent::CreateKnights(uint16 sClanID, uint8 bNation, string & strKnightsName, string & strChief, uint8 bFlag)
 {
+<<<<<<< HEAD
 	unique_ptr<OdbcCommand> dbCommand(m_GameDB->CreateCommand());
 	if (dbCommand.get() == nullptr)
 		return (int8)(-1);
@@ -1018,10 +1380,26 @@ int8 CDBAgent::CreateKnights(uint16 sClanID, uint8 bNation, string & strKnightsN
 		ReportSQLError(m_GameDB->GetError());
 
 	return (int8)(nRet);
+=======
+	int8 bRet = -1;
+	unique_ptr<OdbcCommand> dbCommand(m_GameDB->CreateCommand());
+	if (dbCommand.get() == nullptr)
+		return bRet;
+
+	dbCommand->AddParameter(SQL_PARAM_OUTPUT, &bRet);
+	dbCommand->AddParameter(SQL_PARAM_INPUT, strKnightsName.c_str(), strKnightsName.length());
+	dbCommand->AddParameter(SQL_PARAM_INPUT, strChief.c_str(), strChief.length());
+
+	if (!dbCommand->Execute(string_format(_T("{? = CALL CREATE_KNIGHTS(%d, %d, %d, ?, ?)}"), sClanID, bNation, bFlag)))
+		ReportSQLError(m_GameDB->GetError());
+
+	return bRet;
+>>>>>>> koserver2
 }
 
 int CDBAgent::UpdateKnights(uint8 bType, string & strCharID, uint16 sClanID, uint8 bDomination)
 {
+<<<<<<< HEAD
 	unique_ptr<OdbcCommand> dbCommand(m_GameDB->CreateCommand());
 	if (dbCommand.get() == nullptr)
 		return -1;
@@ -1043,10 +1421,39 @@ int CDBAgent::UpdateKnights(uint8 bType, string & strCharID, uint16 sClanID, uin
 	}
 
 	return nRet;
+=======
+	int16 sRet = -1;
+	unique_ptr<OdbcCommand> dbCommand(m_GameDB->CreateCommand());
+	if (dbCommand.get() == nullptr)
+		return sRet;
+
+	dbCommand->AddParameter(SQL_PARAM_OUTPUT, &sRet);
+	dbCommand->AddParameter(SQL_PARAM_INPUT, strCharID.c_str(), strCharID.length());
+
+	if (!dbCommand->Execute(string_format(_T("{? = CALL UPDATE_KNIGHTS(%d, ?, %d, %d)}"), bType + 0x10, sClanID, bDomination)))
+		ReportSQLError(m_GameDB->GetError());
+
+	if (bType == KNIGHTS_VICECHIEF && sRet == 0)
+	{
+		CKnights * pKnights = g_pMain->GetClanPtr(sClanID);
+		if (pKnights != nullptr)
+		{
+			if (pKnights->m_strViceChief_1 == "")
+				pKnights->m_strViceChief_1 = strCharID;
+			else if (pKnights->m_strViceChief_2 == "")
+				pKnights->m_strViceChief_2 = strCharID;
+			else if (pKnights->m_strViceChief_3 == "")
+				pKnights->m_strViceChief_3 = strCharID;
+		}
+	}
+
+	return sRet;
+>>>>>>> koserver2
 }
 
 int CDBAgent::DeleteKnights(uint16 sClanID)
 {
+<<<<<<< HEAD
 	int16 nRet = -1;
 	unique_ptr<OdbcCommand> dbCommand(m_GameDB->CreateCommand());
 	if (dbCommand.get() == nullptr)
@@ -1057,12 +1464,23 @@ int CDBAgent::DeleteKnights(uint16 sClanID)
 		ReportSQLError(m_GameDB->GetError());
 
 	return nRet;
+=======
+	unique_ptr<OdbcCommand> dbCommand(m_GameDB->CreateCommand());
+
+	int16 sRet = -1;
+	dbCommand->AddParameter(SQL_PARAM_OUTPUT, &sRet);
+	if (!dbCommand->Execute(string_format(_T("{? = CALL DELETE_KNIGHTS (%d)}"), sClanID)))
+		ReportSQLError(m_GameDB->GetError());
+
+	return sRet;
+>>>>>>> koserver2
 }
 
 uint16 CDBAgent::LoadKnightsAllMembers(uint16 sClanID, Packet & result)
 {
 	unique_ptr<OdbcCommand> dbCommand(m_GameDB->CreateCommand());
 	if (dbCommand.get() == nullptr)
+<<<<<<< HEAD
 		return false;
 
 	if (!dbCommand->Execute(string_format(_T("SELECT strUserId, Fame, Level, Class FROM USERDATA WHERE Knights = %d"), sClanID)))
@@ -1070,6 +1488,15 @@ uint16 CDBAgent::LoadKnightsAllMembers(uint16 sClanID, Packet & result)
 
 	if (!dbCommand->hasData())
 		return false;
+=======
+		return 0;
+
+	if (!dbCommand->Execute(string_format(_T("SELECT strUserID, Fame, [Level], Class FROM USERDATA WHERE Knights = %d"), sClanID)))
+		ReportSQLError(m_GameDB->GetError());
+
+	if (!dbCommand->hasData())
+		return 0;
+>>>>>>> koserver2
 
 	uint16 count = 0;
 	do
@@ -1170,7 +1597,11 @@ bool CDBAgent::UpdateClanSymbol(uint16 sClanID, uint16 sSymbolSize, char *clanSy
 		return false;
 
 	dbCommand->AddParameter(SQL_PARAM_INPUT, clanSymbol, MAX_KNIGHTS_MARK, SQL_BINARY);
+<<<<<<< HEAD
 	if (!dbCommand->Execute(string_format(_T("UPDATE KNIGHTS SET Mark=?, sMarkVersion = sMarkVersion + 1, sMarkLen=%d WHERE IDNum=%d"), sSymbolSize, sClanID)))
+=======
+	if (!dbCommand->Execute(string_format(_T("UPDATE KNIGHTS SET Mark=?, sMarkVersion += 1, sMarkLen=%d WHERE IDNum=%d"), sSymbolSize, sClanID)))
+>>>>>>> koserver2
 	{
 		ReportSQLError(m_GameDB->GetError());
 		return false;
@@ -1350,6 +1781,7 @@ NameChangeOpcode CDBAgent::UpdateCharacterName(std::string & strAccountID, std::
 	if (dbCommand.get() == nullptr)
 		return NameChangeInvalidName;
 
+<<<<<<< HEAD
 	int16 nRet = 1;
 
 	dbCommand->AddParameter(SQL_PARAM_INPUT, strAccountID.c_str(), strAccountID.length());
@@ -1362,6 +1794,19 @@ NameChangeOpcode CDBAgent::UpdateCharacterName(std::string & strAccountID, std::
 
 	// Procedure returns 0 for success, and 1 (or anything, really) for invalid name
 	return (nRet == 0 ? NameChangeSuccess : NameChangeInvalidName);
+=======
+	int16 sRet = 1;
+
+	dbCommand->AddParameter(SQL_PARAM_OUTPUT, &sRet);
+	dbCommand->AddParameter(SQL_PARAM_INPUT, strAccountID.c_str(), strAccountID.length());
+	dbCommand->AddParameter(SQL_PARAM_INPUT, strUserID.c_str(), strUserID.length());
+	dbCommand->AddParameter(SQL_PARAM_INPUT, strNewUserID.c_str(), strNewUserID.length());
+
+	if (!dbCommand->Execute(string_format(_T("{? = CALL CHANGE_NEW_ID(%d, ?, ?, ?)}"), g_pMain->m_nServerNo)))
+		ReportSQLError(m_GameDB->GetError());
+
+	return NameChangeOpcode(sRet);
+>>>>>>> koserver2
 }
 
 /**
@@ -1421,11 +1866,16 @@ void CDBAgent::AccountLogout(string & strAccountID)
 	if (dbCommand.get() == nullptr)
 		return;
 
+<<<<<<< HEAD
 	int16 nRet = 0;
 	dbCommand->AddParameter(SQL_PARAM_INPUT, strAccountID.c_str(), strAccountID.length());
 	dbCommand->AddParameter(SQL_PARAM_OUTPUT, &nRet);
 
 	if (!dbCommand->Execute(_T("{CALL ACCOUNT_LOGOUT(?, ?)}")))
+=======
+	dbCommand->AddParameter(SQL_PARAM_INPUT, strAccountID.c_str(), strAccountID.length());
+	if (!dbCommand->Execute(_T("{CALL ACCOUNT_LOGOUT(?)}")))
+>>>>>>> koserver2
 		ReportSQLError(m_AccountDB->GetError());
 }
 
@@ -1449,9 +1899,15 @@ uint8 CDBAgent::GetUnreadLetterCount(string & strCharID)
 
 	uint8 bCount = 0;
 
+<<<<<<< HEAD
 	dbCommand->AddParameter(SQL_PARAM_INPUT, strCharID.c_str(), strCharID.length());
 	dbCommand->AddParameter(SQL_PARAM_OUTPUT, &bCount);
 	if (!dbCommand->Execute(_T("{CALL MAIL_BOX_CHECK_COUNT(?, ?)}")))
+=======
+	dbCommand->AddParameter(SQL_PARAM_OUTPUT, &bCount);
+	dbCommand->AddParameter(SQL_PARAM_INPUT, strCharID.c_str(), strCharID.length());
+	if (!dbCommand->Execute(_T("{? = CALL MAIL_BOX_CHECK_COUNT(?)}")))
+>>>>>>> koserver2
 	{
 		ReportSQLError(m_GameDB->GetError());
 		return 0;
@@ -1467,9 +1923,15 @@ bool CDBAgent::GetLetterList(string & strCharID, Packet & result, bool bNewLette
 		return false;
 
 	int8 bCount = 0;
+<<<<<<< HEAD
 	dbCommand->AddParameter(SQL_PARAM_INPUT, strCharID.c_str(), strCharID.length());
 	dbCommand->AddParameter(SQL_PARAM_OUTPUT, &bCount);
 	if (!dbCommand->Execute(string_format(_T("{CALL MAIL_BOX_REQUEST_LIST(?, %d, ?)}"), bNewLettersOnly)))
+=======
+	dbCommand->AddParameter(SQL_PARAM_OUTPUT, &bCount);
+	dbCommand->AddParameter(SQL_PARAM_INPUT, strCharID.c_str(), strCharID.length());
+	if (!dbCommand->Execute(string_format(_T("{? = CALL MAIL_BOX_REQUEST_LIST(?, %d)}"), bNewLettersOnly)))
+>>>>>>> koserver2
 	{
 		ReportSQLError(m_GameDB->GetError());
 		return false;
@@ -1541,15 +2003,24 @@ int8 CDBAgent::SendLetter(string & strSenderID, string & strRecipientID, string 
 		nSerialNum = pItem->nSerialNum;
 	}
 
+<<<<<<< HEAD
+=======
+	dbCommand->AddParameter(SQL_PARAM_OUTPUT, &bRet);
+>>>>>>> koserver2
 	dbCommand->AddParameter(SQL_PARAM_INPUT, strSenderID.c_str(), strSenderID.length());
 	dbCommand->AddParameter(SQL_PARAM_INPUT, strRecipientID.c_str(), strRecipientID.length());
 	dbCommand->AddParameter(SQL_PARAM_INPUT, strSubject.c_str(), strSubject.length());
 	dbCommand->AddParameter(SQL_PARAM_INPUT, strMessage.c_str(), strMessage.length());
 
+<<<<<<< HEAD
 	dbCommand->AddParameter(SQL_PARAM_OUTPUT, &bRet);
 
 	// MSSQL uses signed types.
 	if (!dbCommand->Execute(string_format(_T("{CALL MAIL_BOX_SEND(?, ?, ?, ?, %d, %d, %d, %d, " I64FMTD ", ?)}"), 
+=======
+	// MSSQL uses signed types.
+	if (!dbCommand->Execute(string_format(_T("{? = CALL MAIL_BOX_SEND(?, ?, ?, ?, %d, %d, %d, %d, " I64FMTD ")}"), 
+>>>>>>> koserver2
 		bType, nItemID, sCount, sDurability, nSerialNum)))
 	{
 		ReportSQLError(m_GameDB->GetError());
@@ -1581,6 +2052,7 @@ bool CDBAgent::ReadLetter(string & strCharID, uint32 nLetterID, string & strMess
 
 int8 CDBAgent::GetItemFromLetter(string & strCharID, uint32 nLetterID, uint32 & nItemID, uint16 & sCount, uint16 & sDurability, uint32 & nCoins, uint64 & nSerialNum)
 {
+<<<<<<< HEAD
 	// Invalid letter ID
 	if (nLetterID == 0)
 		return -4;
@@ -1606,6 +2078,28 @@ int8 CDBAgent::GetItemFromLetter(string & strCharID, uint32 nLetterID, uint32 & 
 	dbCommand->FetchUInt64(5, nSerialNum);
 
 	return 1;
+=======
+	int8 bRet = -1; // error
+	unique_ptr<OdbcCommand> dbCommand(m_GameDB->CreateCommand());
+	if (dbCommand.get() == nullptr)
+		return bRet;
+
+	dbCommand->AddParameter(SQL_PARAM_OUTPUT, &bRet);
+	dbCommand->AddParameter(SQL_PARAM_INPUT, strCharID.c_str(), strCharID.length());
+	if (!dbCommand->Execute(string_format(_T("{? = CALL MAIL_BOX_GET_ITEM(?, %d)}"), nLetterID)))
+		ReportSQLError(m_GameDB->GetError());
+
+	if (dbCommand->hasData())
+	{
+		dbCommand->FetchUInt32(1, nItemID);
+		dbCommand->FetchUInt16(2, sCount);
+		dbCommand->FetchUInt16(3, sDurability);
+		dbCommand->FetchUInt32(4, nCoins);
+		dbCommand->FetchUInt64(5, nSerialNum);
+	}
+
+	return bRet;
+>>>>>>> koserver2
 }
 
 void CDBAgent::DeleteLetter(string & strCharID, uint32 nLetterID)
@@ -1616,7 +2110,11 @@ void CDBAgent::DeleteLetter(string & strCharID, uint32 nLetterID)
 
 	dbCommand->AddParameter(SQL_PARAM_INPUT, strCharID.c_str(), strCharID.length());
 	// NOTE: The official implementation passes all 5 letter IDs.
+<<<<<<< HEAD
 	if (!dbCommand->Execute(string_format(_T("UPDATE MAIL_BOX SET bDeleted = 1 WHERE id = %d AND strRecipientID = ?"), nLetterID)))
+=======
+	if (!dbCommand->Execute(string_format(_T("UPDATE MAIL_BOX SET bDeleted = 1 WHERE nLetterID = %d AND strRecipientID = ?"), nLetterID)))
+>>>>>>> koserver2
 		ReportSQLError(m_GameDB->GetError());
 }
 
@@ -1675,12 +2173,20 @@ int16 CDBAgent::UpdateCandidacyRecommend(std::string & strNominator, std::string
 	if (dbCommand.get() == nullptr)
 		return sRet;
 
+<<<<<<< HEAD
 	dbCommand->AddParameter(SQL_PARAM_INPUT, strNominee.c_str(), strNominee.length());
 	dbCommand->AddParameter(SQL_PARAM_INPUT, strNominator.c_str(), strNominator.length());
 
 	dbCommand->AddParameter(SQL_PARAM_OUTPUT, &sRet);
 
 	if (!dbCommand->Execute(string_format(_T("{CALL KING_CANDIDACY_RECOMMEND(?, ?, %d, ?)}"), byNation)))
+=======
+	dbCommand->AddParameter(SQL_PARAM_OUTPUT, &sRet);
+	dbCommand->AddParameter(SQL_PARAM_INPUT, strNominee.c_str(), strNominee.length());
+	dbCommand->AddParameter(SQL_PARAM_INPUT, strNominator.c_str(), strNominator.length());
+
+	if (!dbCommand->Execute(string_format(_T("{? = CALL KING_CANDIDACY_RECOMMEND(?, ?, %d)}"), byNation)))
+>>>>>>> koserver2
 		ReportSQLError(m_GameDB->GetError());
 
 	return sRet;
@@ -1794,4 +2300,50 @@ void CDBAgent::UpdateUserDailyOp(std::string strUserId, uint8 type, int32 sUnixT
 	dbCommand->AddParameter(SQL_PARAM_INPUT, strUserId.c_str(), strUserId.length());
 	if (!dbCommand->Execute(string_format(_T("{CALL UPDATE_USER_DAILY_OP(?, %d, %d)}"), type, sUnixTime)))
 		ReportSQLError(m_GameDB->GetError());	
+<<<<<<< HEAD
+=======
+}
+
+void CDBAgent::UpdateRanks()
+{
+	unique_ptr<OdbcCommand> dbCommand(m_GameDB->CreateCommand());
+	if (dbCommand.get() == nullptr)
+		return;
+
+	if (!dbCommand->Execute(_T("{CALL UPDATE_RANKS}")))
+		ReportSQLError(m_GameDB->GetError());
+}
+
+int8 CDBAgent::NationTransfer(std::string strAccountID)
+{
+	int8 bRet = 3;
+	unique_ptr<OdbcCommand> dbCommand(m_GameDB->CreateCommand());
+	if (dbCommand.get() == nullptr)
+		return false;
+
+	dbCommand->AddParameter(SQL_PARAM_OUTPUT, &bRet);
+	dbCommand->AddParameter(SQL_PARAM_INPUT, strAccountID.c_str(), strAccountID.length());
+
+	if (!dbCommand->Execute(_T("{? = CALL ACCOUNT_NATION_TRANSFER(?)}")))
+		ReportSQLError(m_GameDB->GetError());
+
+	return bRet;
+}
+
+/**
+* @brief	Change knight cash is account.
+*
+* @param	strAccountID	Character's Account name.
+* @param	KnightCash		Added knight cash amount
+*/
+void CDBAgent::UpdateAccountKnightCash(string & strAccountID, uint32 KnightCash)
+{
+	unique_ptr<OdbcCommand> dbCommand(m_AccountDB->CreateCommand());
+	if (dbCommand.get() == nullptr)
+		return;
+
+	dbCommand->AddParameter(SQL_PARAM_INPUT, strAccountID.c_str(), strAccountID.length());
+	if (!dbCommand->Execute(string_format(_T("{CALL UPDATE_KNIGHT_CASH (?, %d)}"), KnightCash)))
+		ReportSQLError(m_AccountDB->GetError());	
+>>>>>>> koserver2
 }

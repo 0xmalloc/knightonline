@@ -3,7 +3,10 @@
 //
 //	Defines About Communication
 //
+<<<<<<< HEAD
 #define AI_SERVER_PORT		10020
+=======
+>>>>>>> koserver2
 #define MAX_SOCKET					100
 #define MAX_PATH_LINE		100
 

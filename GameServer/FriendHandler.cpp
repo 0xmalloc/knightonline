@@ -35,8 +35,13 @@ void CUser::FriendModify(Packet & pkt, uint8 opcode)
 	CUser *pUser;
 	pkt >> strUserID;
 
+<<<<<<< HEAD
 	if (strUserID.empty() || strUserID.size() > MAX_ID_SIZE
 		|| (opcode == FRIEND_ADD && (pUser = g_pMain->GetUserPtr(strUserID, TYPE_CHARACTER)) == nullptr) && pUser->GetNation() != GetNation()) 
+=======
+	if (strUserID.empty() || strUserID.size() > MAX_ID_SIZE 
+		|| (opcode == FRIEND_ADD && (pUser = g_pMain->GetUserPtr(strUserID, TYPE_CHARACTER)) == nullptr))
+>>>>>>> koserver2
 		return;
 
 	Packet result(WIZ_FRIEND_PROCESS, opcode);

@@ -9,11 +9,24 @@ Desktop.ini
 $RECYCLE.BIN/
 
 # Windows Installer files
+<<<<<<< HEAD
+=======
+Release
+*.tlog
+*.ipch
+>>>>>>> koserver2
 *.cab
 *.msi
 *.msm
 *.msp
+<<<<<<< HEAD
 
+=======
+*DEBUG
+*.opensdf
+*.sdf
+*.suo
+>>>>>>> koserver2
 # =========================
 # Operating System Files
 # =========================
@@ -21,10 +34,13 @@ $RECYCLE.BIN/
 # OSX
 # =========================
 
+<<<<<<< HEAD
 *.opensdf
 *DEBUG
 *Release
 *.exe
+=======
+>>>>>>> koserver2
 .DS_Store
 .AppleDouble
 .LSOverride
@@ -39,5 +55,8 @@ Icon
 # Files that might appear on external disk
 .Spotlight-V100
 .Trashes
+<<<<<<< HEAD
 AIServer/NpcTable.h.dump.h
 ipch/shared-e8e507cc/shared-a6a5c463.ipch
+=======
+>>>>>>> koserver2

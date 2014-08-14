@@ -17,7 +17,11 @@ bool CDBProcess::LoadVersionList()
 	if (dbCommand.get() == nullptr)
 		return false;
 
+<<<<<<< HEAD
 	if (!dbCommand->Execute(_T("SELECT sVersion, sHistoryVersion, strFileName FROM VERSION")))
+=======
+	if (!dbCommand->Execute(_T("SELECT sVersion, sHistoryVersion, strFilename FROM VERSION")))
+>>>>>>> koserver2
 	{
 		g_pMain->ReportSQLError(m_dbConnection.GetError());
 		return false;
@@ -32,9 +36,15 @@ bool CDBProcess::LoadVersionList()
 
 			dbCommand->FetchUInt16(1, pVersion->sVersion);
 			dbCommand->FetchUInt16(2, pVersion->sHistoryVersion);
+<<<<<<< HEAD
 			dbCommand->FetchString(3, pVersion->strFileName);
 
 			g_pMain->m_VersionList.insert(make_pair(pVersion->strFileName, pVersion));
+=======
+			dbCommand->FetchString(3, pVersion->strFilename);
+
+			g_pMain->m_VersionList.insert(make_pair(pVersion->strFilename, pVersion));
+>>>>>>> koserver2
 
 			if (g_pMain->m_sLastVersion < pVersion->sVersion)
 				g_pMain->m_sLastVersion = pVersion->sVersion;
@@ -75,13 +85,20 @@ bool CDBProcess::LoadUserCountList()
 	return true;
 }
 
+<<<<<<< HEAD
 uint16 CDBProcess::AccountLogin(string & id, string & pwd)
 {
 	uint16 result = 2; // account not found
+=======
+uint16 CDBProcess::AccountLogin(string & strAccountID, string & strPasswd)
+{
+	uint16 result = 2;
+>>>>>>> koserver2
 	unique_ptr<OdbcCommand> dbCommand(m_dbConnection.CreateCommand());
 	if (dbCommand.get() == nullptr)
 		return 6;
 
+<<<<<<< HEAD
 	dbCommand->AddParameter(SQL_PARAM_INPUT, id.c_str(), id.length());
 	dbCommand->AddParameter(SQL_PARAM_INPUT, pwd.c_str(), pwd.length());
 	dbCommand->AddParameter(SQL_PARAM_OUTPUT, &result);
@@ -90,10 +107,19 @@ uint16 CDBProcess::AccountLogin(string & id, string & pwd)
 		g_pMain->ReportSQLError(m_dbConnection.GetError());
 		return 0x06;// DB³ö´íÊ±Ä¬ÈÏ·¶Î§auth_error
 	}
+=======
+	dbCommand->AddParameter(SQL_PARAM_OUTPUT, &result);
+	dbCommand->AddParameter(SQL_PARAM_INPUT, strAccountID.c_str(), strAccountID.length());
+	dbCommand->AddParameter(SQL_PARAM_INPUT, strPasswd.c_str(), strPasswd.length());
+
+	if (!dbCommand->Execute(_T("{? = CALL ACCOUNT_LOGIN(?, ?)}")))
+		g_pMain->ReportSQLError(m_dbConnection.GetError());
+>>>>>>> koserver2
 
 	return result;
 }
 
+<<<<<<< HEAD
 int16 CDBProcess::AccountPremium(string & id)
 {
 	int16 result = -1;
@@ -108,4 +134,20 @@ int16 CDBProcess::AccountPremium(string & id)
 		g_pMain->ReportSQLError(m_dbConnection.GetError());
 
 	return result;
+=======
+int16 CDBProcess::AccountPremium(string & strAccountID)
+{
+	int16 sHours = -1;
+	unique_ptr<OdbcCommand> dbCommand(m_dbConnection.CreateCommand());
+	if (dbCommand.get() == nullptr)
+		return sHours;
+	
+	dbCommand->AddParameter(SQL_PARAM_OUTPUT, &sHours);
+	dbCommand->AddParameter(SQL_PARAM_INPUT, strAccountID.c_str(), strAccountID.length());
+
+	if (!dbCommand->Execute(_T("{? = CALL ACCOUNT_PREMIUM(?)}")))
+		g_pMain->ReportSQLError(m_dbConnection.GetError());
+
+	return sHours;
+>>>>>>> koserver2
 }

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 //{{NO_DEPENDENCIES}}
 // Microsoft Visual C++ generated include file.
 // Used by Server.rc
@@ -25,3 +26,11 @@
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif
+=======
+#define IDS_KARUS_CATCH_1		102
+#define IDS_KARUS_CATCH_2		103
+#define IDS_ELMORAD_CATCH_1		104
+#define IDS_ELMORAD_CATCH_2		105
+#define IDS_KARUS_PATHWAY		106
+#define IDS_ELMORAD_PATHWAY		107
+>>>>>>> koserver2

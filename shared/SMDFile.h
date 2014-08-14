@@ -26,8 +26,11 @@ public:
 
 	bool IsValidPosition(float x, float z, float y);
 	bool CheckEvent( float x, float z, CUser* pUser = nullptr );
+<<<<<<< HEAD
 	bool ObjectCollision(float x1, float z1, float y1, float x2, float z2, float y2);
 	float GetHeight( float x, float y, float z );
+=======
+>>>>>>> koserver2
 
 	int GetEventID(int x, int z);
 

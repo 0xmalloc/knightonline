@@ -105,7 +105,11 @@
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <PrecompiledHeader>Use</PrecompiledHeader>
+<<<<<<< HEAD
       <DisableSpecificWarnings>4819</DisableSpecificWarnings>
+=======
+      <AdditionalIncludeDirectories>$(SolutionDir)../src/scripting/Lua/src</AdditionalIncludeDirectories>
+>>>>>>> koserver2
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -154,6 +158,10 @@
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <PrecompiledHeader>Use</PrecompiledHeader>
+<<<<<<< HEAD
+=======
+      <AdditionalIncludeDirectories>$(SolutionDir)../src/scripting/Lua/src</AdditionalIncludeDirectories>
+>>>>>>> koserver2
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -196,7 +204,11 @@
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
+<<<<<<< HEAD
       <PrecompiledHeader>Use</PrecompiledHeader>
+=======
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+>>>>>>> koserver2
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
       <PrecompiledHeaderOutputFile>.\Release/GameServer.pch</PrecompiledHeaderOutputFile>
       <AssemblerListingLocation>.\Release/</AssemblerListingLocation>
@@ -205,6 +217,10 @@
       <WarningLevel>Level3</WarningLevel>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+<<<<<<< HEAD
+=======
+      <AdditionalIncludeDirectories>$(SolutionDir)../src/scripting/Lua/src</AdditionalIncludeDirectories>
+>>>>>>> koserver2
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -253,6 +269,10 @@
       <WarningLevel>Level3</WarningLevel>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+<<<<<<< HEAD
+=======
+      <AdditionalIncludeDirectories>$(SolutionDir)../src/scripting/Lua/src</AdditionalIncludeDirectories>
+>>>>>>> koserver2
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -350,6 +370,10 @@
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release-XP|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <ClCompile Include="NPCHandler.cpp" />
+<<<<<<< HEAD
+=======
+    <ClCompile Include="CharacterHandler.cpp" />
+>>>>>>> koserver2
     <ClCompile Include="PartyHandler.cpp" />
     <ClCompile Include="QuestHandler.cpp" />
     <ClCompile Include="Region.cpp" />
@@ -381,7 +405,10 @@
     <ClInclude Include="..\shared\database\CoefficientSet.h" />
     <ClInclude Include="..\shared\database\EventSet.h" />
     <ClInclude Include="..\shared\database\EventTriggerSet.h" />
+<<<<<<< HEAD
     <ClInclude Include="..\shared\database\HomeSet.h" />
+=======
+>>>>>>> koserver2
     <ClInclude Include="..\shared\database\ItemExchangeSet.h" />
     <ClInclude Include="..\shared\database\ItemOpSet.h" />
     <ClInclude Include="..\shared\database\ItemTableSet.h" />
@@ -405,9 +432,19 @@
     <ClInclude Include="..\shared\database\MagicType7Set.h" />
     <ClInclude Include="..\shared\database\MagicType8Set.h" />
     <ClInclude Include="..\shared\database\MagicType9Set.h" />
+<<<<<<< HEAD
     <ClInclude Include="..\shared\database\MonsterRespawnListSet.h" />
     <ClInclude Include="..\shared\database\MonsterSummonListZoneSet.h" />
     <ClInclude Include="..\shared\database\MonsterSummonListSet.h" />
+=======
+    <ClInclude Include="..\shared\database\MonsterChallenge.h" />
+    <ClInclude Include="..\shared\database\MonsterChallengeSummonList.h" />
+    <ClInclude Include="..\shared\database\MonsterRespawnListInformationSet.h" />
+    <ClInclude Include="..\shared\database\MonsterRespawnListSet.h" />
+    <ClInclude Include="..\shared\database\MonsterSummonListZoneSet.h" />
+    <ClInclude Include="..\shared\database\MonsterSummonListSet.h" />
+    <ClInclude Include="..\shared\database\ObjectPosSet.h" />
+>>>>>>> koserver2
     <ClInclude Include="..\shared\database\PremiumItemExpSet.h" />
     <ClInclude Include="..\shared\database\PremiumItemSet.h" />
     <ClInclude Include="..\shared\database\QuestHelperSet.h" />
@@ -415,6 +452,10 @@
     <ClInclude Include="..\shared\database\RentalItemSet.h" />
     <ClInclude Include="..\shared\database\ServerResourceSet.h" />
     <ClInclude Include="..\shared\database\SetItemTableSet.h" />
+<<<<<<< HEAD
+=======
+    <ClInclude Include="..\shared\database\StartPositionRandomSet.h" />
+>>>>>>> koserver2
     <ClInclude Include="..\shared\database\StartPositionSet.h" />
     <ClInclude Include="..\shared\database\UserDailyOpSet.h" />
     <ClInclude Include="..\shared\database\UserKnightsRankSet.h" />

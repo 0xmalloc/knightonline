@@ -144,6 +144,10 @@ void CUser::MerchantItemAdd(Packet & pkt)
 		|| pSrcItem->isRented()
 		|| pSrcItem->isSealed()
 		|| pSrcItem->isBound()
+<<<<<<< HEAD
+=======
+		|| pSrcItem->isExpireItem()
+>>>>>>> koserver2
 		|| pSrcItem->isDuplicate())
 		goto fail_return;
 

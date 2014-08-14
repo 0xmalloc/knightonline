@@ -16,6 +16,10 @@ public:
 
 public:
 	NpcSet m_pNpcs;
+<<<<<<< HEAD
 	FastMutex m_lock;
+=======
+	std::recursive_mutex m_lock;
+>>>>>>> koserver2
 	Thread m_thread;
 };

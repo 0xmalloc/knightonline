@@ -101,7 +101,11 @@
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
+<<<<<<< HEAD
       <PrecompiledHeader>Use</PrecompiledHeader>
+=======
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+>>>>>>> koserver2
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
       <PrecompiledHeaderOutputFile>.\Release/Server.pch</PrecompiledHeaderOutputFile>
       <AssemblerListingLocation>.\Release/</AssemblerListingLocation>
@@ -409,6 +413,10 @@
     <ClInclude Include="..\shared\database\NpcItemSet.h" />
     <ClInclude Include="..\shared\database\NpcPosSet.h" />
     <ClInclude Include="..\shared\database\NpcTableSet.h" />
+<<<<<<< HEAD
+=======
+    <ClInclude Include="..\shared\database\ObjectPosSet.h" />
+>>>>>>> koserver2
     <ClInclude Include="..\shared\database\ZoneInfoSet.h" />
     <ClInclude Include="Define.h" />
     <ClInclude Include="Extern.h" />

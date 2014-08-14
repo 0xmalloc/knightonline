@@ -12,6 +12,10 @@
 #include "../shared/database/MagicType1Set.h"
 #include "../shared/database/MagicType2Set.h"
 #include "../shared/database/MagicType4Set.h"
+<<<<<<< HEAD
+=======
+#include "../shared/database/ObjectPosSet.h"
+>>>>>>> koserver2
 #include "../shared/database/NpcPosSet.h"
 #include "../shared/database/ZoneInfoSet.h"
 #include "../shared/database/NpcItemSet.h"
@@ -52,20 +56,32 @@ CServerDlg::CServerDlg()
 bool CServerDlg::Startup()
 {
 	g_timerThreads.push_back(new Thread(Timer_CheckAliveTest));
+<<<<<<< HEAD
+=======
+	g_timerThreads.push_back(new Thread(Timer_CheckLiveTimes));
+>>>>>>> koserver2
 
 	m_sMapEventNpc = 0;
 	m_bFirstServerFlag = false;			
 
 	// Server Start
 	DateTime time;
+<<<<<<< HEAD
 	printf("Server started on %02d-%02d-%04d at %02d:%02d.\n\n", time.GetDay(), time.GetMonth(), time.GetYear(), time.GetHour(), time.GetMinute());
+=======
+	printf("Server started on %04d-%02d-%02d at %02d:%02d\n\n", time.GetYear(), time.GetMonth(), time.GetDay(), time.GetHour(), time.GetMinute());
+>>>>>>> koserver2
 
 	//----------------------------------------------------------------------
 	//	DB part initialize
 	//----------------------------------------------------------------------
 	GetServerInfoIni();
 
+<<<<<<< HEAD
 	if (!m_GameDB.Connect(m_strGameDSN, m_strGameUID, m_strGamePWD, false))
+=======
+	if (!m_GameDB.Connect(m_strGameDSN, m_strGameUID, m_strGamePWD))
+>>>>>>> koserver2
 	{
 		OdbcError *pError = m_GameDB.GetError();
 		printf("ERROR: Could not connect to the database server, received error:\n%s\n", 
@@ -77,7 +93,11 @@ bool CServerDlg::Startup()
 	//----------------------------------------------------------------------
 	//	Communication Part Initialize ...
 	//----------------------------------------------------------------------
+<<<<<<< HEAD
 	if (!m_socketMgr.Listen(AI_SERVER_PORT, MAX_SOCKET))
+=======
+	if (!m_socketMgr.Listen(m_AIServerPort, MAX_SOCKET))
+>>>>>>> koserver2
 		return false;
 
 	//----------------------------------------------------------------------
@@ -94,6 +114,10 @@ bool CServerDlg::Startup()
 		|| !GetMakeGradeItemTableData()
 		|| !GetMakeLareItemTableData()
 		|| !GetServerResourceTable()
+<<<<<<< HEAD
+=======
+		|| !GetObjectPostTableData()
+>>>>>>> koserver2
 		|| !GetNpcTableData(false)
 		|| !GetNpcTableData(true)
 		// Load maps
@@ -111,63 +135,117 @@ bool CServerDlg::Startup()
 
 bool CServerDlg::GetMagicTableData()
 {
+<<<<<<< HEAD
 	LOAD_TABLE(CMagicTableSet, &m_GameDB, &m_MagictableArray, false);
+=======
+	LOAD_TABLE(CMagicTableSet, &m_GameDB, &m_MagictableArray, false, false);
+>>>>>>> koserver2
 }
 
 bool CServerDlg::GetMagicType1Data()
 {
+<<<<<<< HEAD
 	LOAD_TABLE(CMagicType1Set, &m_GameDB, &m_Magictype1Array, false);
+=======
+	LOAD_TABLE(CMagicType1Set, &m_GameDB, &m_Magictype1Array, false, false);
+>>>>>>> koserver2
 }
 
 bool CServerDlg::GetMagicType2Data()
 {
+<<<<<<< HEAD
 	LOAD_TABLE(CMagicType2Set, &m_GameDB, &m_Magictype2Array, false);
+=======
+	LOAD_TABLE(CMagicType2Set, &m_GameDB, &m_Magictype2Array, false, false);
+>>>>>>> koserver2
 }
 
 bool CServerDlg::GetMagicType4Data()
 {
+<<<<<<< HEAD
 	LOAD_TABLE(CMagicType4Set, &m_GameDB, &m_Magictype4Array, false);
+=======
+	LOAD_TABLE(CMagicType4Set, &m_GameDB, &m_Magictype4Array, false, false);
+>>>>>>> koserver2
 }
 
 bool CServerDlg::GetMakeWeaponItemTableData()
 {
+<<<<<<< HEAD
 	LOAD_TABLE(CMakeWeaponTableSet, &m_GameDB, &m_MakeWeaponItemArray, true);
+=======
+	LOAD_TABLE(CMakeWeaponTableSet, &m_GameDB, &m_MakeWeaponItemArray, true, false);
+>>>>>>> koserver2
 }
 
 bool CServerDlg::GetMakeDefensiveItemTableData()
 {
+<<<<<<< HEAD
 	LOAD_TABLE(CMakeDefensiveTableSet, &m_GameDB, &m_MakeDefensiveItemArray, true);
+=======
+	LOAD_TABLE(CMakeDefensiveTableSet, &m_GameDB, &m_MakeDefensiveItemArray, true, false);
+>>>>>>> koserver2
 }
 
 bool CServerDlg::GetMakeGradeItemTableData()
 {
+<<<<<<< HEAD
 	LOAD_TABLE(CMakeGradeItemTableSet, &m_GameDB, &m_MakeGradeItemArray, false);
+=======
+	LOAD_TABLE(CMakeGradeItemTableSet, &m_GameDB, &m_MakeGradeItemArray, false, false);
+>>>>>>> koserver2
 }
 
 bool CServerDlg::GetMakeLareItemTableData()
 {
+<<<<<<< HEAD
 	LOAD_TABLE(CMakeLareItemTableSet, &m_GameDB, &m_MakeLareItemArray, false);
+=======
+	LOAD_TABLE(CMakeLareItemTableSet, &m_GameDB, &m_MakeLareItemArray, false, false);
+>>>>>>> koserver2
 }
 
 bool CServerDlg::GetServerResourceTable()
 {
+<<<<<<< HEAD
 	LOAD_TABLE(CServerResourceSet, &m_GameDB, &m_ServerResourceArray, false);
+=======
+	LOAD_TABLE(CServerResourceSet, &m_GameDB, &m_ServerResourceArray, false, false);
+>>>>>>> koserver2
 }
 
 bool CServerDlg::GetNpcItemTable()
 {
+<<<<<<< HEAD
 	LOAD_TABLE(CNpcItemSet, &m_GameDB, &m_NpcItemArray, false);
+=======
+	LOAD_TABLE(CNpcItemSet, &m_GameDB, &m_NpcItemArray, false, false);
+>>>>>>> koserver2
 }
 
 bool CServerDlg::GetMakeItemGroupTable()
 {
+<<<<<<< HEAD
 	LOAD_TABLE(CMakeItemGroupSet, &m_GameDB, &m_MakeItemGroupArray, false);
+=======
+	LOAD_TABLE(CMakeItemGroupSet, &m_GameDB, &m_MakeItemGroupArray, false, false);
+}
+
+bool CServerDlg::GetObjectPostTableData()
+{
+	LOAD_TABLE(CObjectPosSet, &m_GameDB, &m_ObjectEventArray, false, false);
+>>>>>>> koserver2
 }
 
 bool CServerDlg::GetNpcTableData(bool bNpcData /*= true*/)
 {
+<<<<<<< HEAD
 	if (bNpcData)	{ LOAD_TABLE(CNpcTableSet, &m_GameDB, &m_arNpcTable, false); }
 	else			{ LOAD_TABLE(CMonTableSet, &m_GameDB, &m_arMonTable, false); }
+=======
+	if (bNpcData)	{ LOAD_TABLE(CNpcTableSet, &m_GameDB, &m_arNpcTable, false, false); }
+	else			{ LOAD_TABLE(CMonTableSet, &m_GameDB, &m_arMonTable, false, false); }
+>>>>>>> koserver2
 }
 
 bool CServerDlg::CreateNpcThread()
@@ -175,9 +253,16 @@ bool CServerDlg::CreateNpcThread()
 	m_TotalNPC = m_sMapEventNpc;
 	m_CurrentNPC = 0;
 
+<<<<<<< HEAD
 	LOAD_TABLE_ERROR_ONLY(CNpcPosSet, &m_GameDB, nullptr, false);
 
 	FastGuard lock(m_eventThreadLock);
+=======
+	LOAD_TABLE_ERROR_ONLY(CNpcPosSet, &m_GameDB, nullptr, false, false);
+
+	Guard lock(m_npcThreadLock);
+	Guard lock2(m_eventThreadLock);
+>>>>>>> koserver2
 	foreach_stlmap (itr, g_arZone)
 	{
 		CNpcThread * pNpcThread = new CNpcThread();
@@ -232,8 +317,13 @@ bool CServerDlg::LoadSpawnCallback(OdbcCommand *dbCommand)
 	dbCommand->FetchInt32(9, iTopZ);
 	dbCommand->FetchInt32(10, iRightX);
 	dbCommand->FetchInt32(11, iBottomZ);
+<<<<<<< HEAD
 	dbCommand->FetchInt32(12, iLimitMinZ);
 	dbCommand->FetchInt32(13, iLimitMinX);
+=======
+	dbCommand->FetchInt32(12, iLimitMinX);
+	dbCommand->FetchInt32(13, iLimitMinZ);
+>>>>>>> koserver2
 	dbCommand->FetchInt32(14, iLimitMaxX);
 	dbCommand->FetchInt32(15, iLimitMaxZ);
 	dbCommand->FetchByte(16, bNumNpc);
@@ -242,6 +332,10 @@ bool CServerDlg::LoadSpawnCallback(OdbcCommand *dbCommand)
 	dbCommand->FetchByte(19, bDotCnt);
 	dbCommand->FetchString(20, szPath, sizeof(szPath));
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> koserver2
 	uint8 bPathSerial = 1;
 	for (uint8 j = 0; j < bNumNpc; j++)
 	{
@@ -280,7 +374,10 @@ bool CServerDlg::LoadSpawnCallback(OdbcCommand *dbCommand)
 		pNpc->InitPos();
 
 		pNpc->m_bZone = bZoneID;
+<<<<<<< HEAD
 		pNpc->m_bEventRoom = 0;
+=======
+>>>>>>> koserver2
 
 		nRandom = abs(iLeftX - iRightX);
 		if (nRandom <= 1)
@@ -349,6 +446,12 @@ bool CServerDlg::LoadSpawnCallback(OdbcCommand *dbCommand)
 		pNpc->m_byRegenType		= bRegenType;
 		pNpc->m_byTrapNumber    = bTrapNumber;
 
+<<<<<<< HEAD
+=======
+		pNpc->m_oSocketID = -1;
+		pNpc->m_bEventRoom = 0;
+
+>>>>>>> koserver2
 		if (pNpc->m_byDungeonFamily > 0)
 		{
 			pNpc->m_nLimitMinX = iLimitMinX;
@@ -360,11 +463,17 @@ bool CServerDlg::LoadSpawnCallback(OdbcCommand *dbCommand)
 		pNpc->m_pMap = GetZoneByID(pNpc->GetZoneID());
 		if (pNpc->GetMap() == nullptr)
 		{
+<<<<<<< HEAD
 			printf(_T("ERROR: NPC %d in zone %d that does not exist.\n"), sSid, bZoneID);
 			//CodeChange by zealot
 			/*delete pNpc;
 			return false;*/
 			continue;
+=======
+			printf(_T("ERROR: NPC %d in zone %d that does not exist."), sSid, bZoneID);
+			delete pNpc;
+			return false;
+>>>>>>> koserver2
 		}
 
 		if (!m_arNpc.PutData(pNpc->GetID(), pNpc))
@@ -396,16 +505,27 @@ bool CServerDlg::LoadSpawnCallback(OdbcCommand *dbCommand)
 			}
 		}
 	}
+<<<<<<< HEAD
 
+=======
+>>>>>>> koserver2
 	return true;
 }
 
 void CServerDlg::ResumeAI()
 {
+<<<<<<< HEAD
 	foreach (itr, m_arNpcThread)
 		itr->second->m_thread.start(NpcThreadProc, itr->second);
 
 	FastGuard lock(m_eventThreadLock);
+=======
+	Guard lock(m_npcThreadLock);
+	foreach (itr, m_arNpcThread)
+		itr->second->m_thread.start(NpcThreadProc, itr->second);
+
+	Guard lock2(m_eventThreadLock);
+>>>>>>> koserver2
 	foreach (itr, m_arEventNpcThread)
 		itr->second->m_thread.start(NpcThreadProc, itr->second);
 
@@ -417,7 +537,11 @@ bool CServerDlg::MapFileLoad()
 	ZoneInfoMap zoneMap;
 
 	m_sTotalMap = 0;
+<<<<<<< HEAD
 	LOAD_TABLE_ERROR_ONLY(CZoneInfoSet, &m_GameDB, &zoneMap, false); 
+=======
+	LOAD_TABLE_ERROR_ONLY(CZoneInfoSet, &m_GameDB, &zoneMap, false, false); 
+>>>>>>> koserver2
 
 	foreach (itr, zoneMap)
 	{
@@ -523,7 +647,11 @@ CNpc * CServerDlg::GetNpcPtr(uint16 npcId)
 
 CUser* CServerDlg::GetUserPtr(uint16 sessionId)
 {
+<<<<<<< HEAD
 	FastGuard lock(m_userLock);
+=======
+	Guard lock(m_userLock);
+>>>>>>> koserver2
 	auto itr = m_pUser.find(sessionId);
 	if (itr == m_pUser.end())
 		return nullptr;
@@ -536,7 +664,11 @@ bool CServerDlg::SetUserPtr(uint16 sessionId, CUser * pUser)
 	if (sessionId >= MAX_USER)
 		return false;
 
+<<<<<<< HEAD
 	FastGuard lock(m_userLock);
+=======
+	Guard lock(m_userLock);
+>>>>>>> koserver2
 	auto itr = m_pUser.find(sessionId);
 	if (itr != m_pUser.end())
 	{
@@ -550,7 +682,11 @@ bool CServerDlg::SetUserPtr(uint16 sessionId, CUser * pUser)
 
 void CServerDlg::DeleteUserPtr(uint16 sessionId)
 {
+<<<<<<< HEAD
 	FastGuard lock(m_userLock);
+=======
+	Guard lock(m_userLock);
+>>>>>>> koserver2
 	auto itr = m_pUser.find(sessionId);
 	if (itr != m_pUser.end())
 	{
@@ -559,6 +695,24 @@ void CServerDlg::DeleteUserPtr(uint16 sessionId)
 	}
 }
 
+<<<<<<< HEAD
+=======
+void CServerDlg::CheckAliveTest()
+{
+	Packet result(AG_CHECK_ALIVE_REQ);
+	SessionMap sessMap = m_socketMgr.GetActiveSessionMap();
+	uint32 count = 0, sessCount = sessMap.size();
+	foreach (itr, sessMap)
+	{
+		if (itr->second->Send(&result))
+			count++;
+	}
+
+	if (sessCount > 0 && count == 0)
+		DeleteAllUserList();
+}
+
+>>>>>>> koserver2
 uint32 THREADCALL CServerDlg::Timer_CheckAliveTest(void * lpParam)
 {
 	while (g_bRunning)
@@ -569,6 +723,7 @@ uint32 THREADCALL CServerDlg::Timer_CheckAliveTest(void * lpParam)
 	return 0;
 }
 
+<<<<<<< HEAD
 void CServerDlg::CheckAliveTest()
 {
 	Packet result(AG_CHECK_ALIVE_REQ);
@@ -583,6 +738,37 @@ void CServerDlg::CheckAliveTest()
 
 	if (sessCount > 0 && count == 0)
 		DeleteAllUserList();
+=======
+uint32 THREADCALL CServerDlg::Timer_CheckLiveTimes(void * lpParam)
+{
+	while (g_bRunning)
+	{
+		g_pMain->CheckLiveTimes();
+		sleep(1 * SECOND);
+	}
+	return 0;
+}
+
+void CServerDlg::CheckLiveTimes()
+{
+	std::vector<uint16> deleted;
+
+	foreach_stlmap_nolock (itr, m_NpcLiveTimeArray)
+	{
+		if (int32(UNIXTIME) - itr->second->SpawnedTime > itr->second->Duration)
+		{
+			CNpc *pNpc = GetNpcPtr(itr->second->Nid);
+
+			if (pNpc)
+				pNpc->Dead();
+
+			deleted.push_back(itr->second->nIndex);
+		}
+	}
+
+	foreach (itr, deleted)
+		m_NpcLiveTimeArray.DeleteData(*itr);
+>>>>>>> koserver2
 }
 
 void CServerDlg::DeleteAllUserList(CGameSocket *pSock)
@@ -590,7 +776,11 @@ void CServerDlg::DeleteAllUserList(CGameSocket *pSock)
 	// If a server disconnected, show it...
 	if (pSock != nullptr)
 	{
+<<<<<<< HEAD
 		printf("Game Server disconnected - %s]\n", pSock->GetRemoteIP().c_str());
+=======
+		printf("Game Server disconnected - %s\n", pSock->GetRemoteIP().c_str());
+>>>>>>> koserver2
 		return;
 	}
 
@@ -612,7 +802,11 @@ void CServerDlg::DeleteAllUserList(CGameSocket *pSock)
 		}
 	}
 
+<<<<<<< HEAD
 	FastGuard lock(m_userLock);
+=======
+	Guard lock(m_userLock);
+>>>>>>> koserver2
 	foreach (itr, m_pUser)
 	{
 		if (itr->second == nullptr)  
@@ -643,8 +837,22 @@ void CServerDlg::GameServerAcceptThread()
 
 bool CServerDlg::AddObjectEventNpc(_OBJECT_EVENT* pEvent, MAP * pMap)
 {
+<<<<<<< HEAD
 	int sSid = (pEvent->sType == OBJECT_ANVIL || pEvent->sType == OBJECT_ARTIFACT 
 		? pEvent->sIndex : pEvent->sControlNpcID);
+=======
+	int sSid = 0;
+
+	if (pEvent->sType == OBJECT_GATE 
+		|| pEvent->sType == OBJECT_GATE2
+		|| pEvent->sType == OBJECT_GATE_LEVER
+		|| pEvent->sType == OBJECT_ANVIL 
+		|| pEvent->sType == OBJECT_ARTIFACT)
+		sSid = pEvent->sIndex;
+	else 
+		sSid =pEvent->sControlNpcID;
+
+>>>>>>> koserver2
 	if (sSid <= 0)
 		return false;
 
@@ -688,7 +896,11 @@ bool CServerDlg::AddObjectEventNpc(_OBJECT_EVENT* pEvent, MAP * pMap)
 	return true;
 }
 
+<<<<<<< HEAD
 CNpc * CServerDlg::SpawnEventNpc(uint16 sSid, bool bIsMonster, uint8 byZone, float fX, float fY, float fZ, int16 nEventRoom)
+=======
+CNpc * CServerDlg::SpawnEventNpc(uint16 sSid, bool bIsMonster, uint8 byZone, float fX, float fY, float fZ, uint16 sDuration, uint8 nation, int16 socketID, uint16 nEventRoom)
+>>>>>>> koserver2
 {
 	CNpcTable * proto = nullptr;
 	MAP * pZone = GetZoneByID(byZone);
@@ -704,7 +916,11 @@ CNpc * CServerDlg::SpawnEventNpc(uint16 sSid, bool bIsMonster, uint8 byZone, flo
 	if (proto == nullptr)
 		return nullptr;
 
+<<<<<<< HEAD
 	FastGuard lock(m_eventThreadLock);
+=======
+	Guard lock(m_eventThreadLock);
+>>>>>>> koserver2
 	auto itr = m_arEventNpcThread.find(byZone);
 	if (itr == m_arEventNpcThread.end())
 		return false;
@@ -719,20 +935,46 @@ CNpc * CServerDlg::SpawnEventNpc(uint16 sSid, bool bIsMonster, uint8 byZone, flo
 	pNpc->m_bZone = byZone;
 	pNpc->SetPosition(fX, fY, fZ);
 	pNpc->m_pMap = pZone;
+<<<<<<< HEAD
 	pNpc->m_bEventRoom = nEventRoom;
 
 	pNpc->Load(++m_TotalNPC, proto, bIsMonster);
+=======
+	pNpc->m_oSocketID = socketID;
+	pNpc->m_bEventRoom = nEventRoom;
+
+	pNpc->Load(++m_TotalNPC, proto, bIsMonster, nation);
+>>>>>>> koserver2
 	pNpc->InitPos();
 
 	itr->second->AddNPC(pNpc);
 	m_arNpc.PutData(pNpc->GetID(), pNpc);
 
+<<<<<<< HEAD
+=======
+	if (sDuration > 0) // Duration npc or monsters
+	{
+		_NPC_LIVE_TIME * pData = new _NPC_LIVE_TIME();
+		pData->nIndex = m_NpcLiveTimeArray.GetSize() + 1;
+		pData->SocketID = socketID;
+		pData->Nid = pNpc->m_sNid;
+		pData->Duration = sDuration;
+		pData->SpawnedTime = int32(UNIXTIME);
+		if (!m_NpcLiveTimeArray.PutData(pData->nIndex,pData))
+			delete pData;
+	}
+
+>>>>>>> koserver2
 	return pNpc;
 }
 
 void CServerDlg::RemoveEventNPC(CNpc * pNpc)
 {
+<<<<<<< HEAD
 	FastGuard lock(m_eventThreadLock);
+=======
+	Guard lock(m_eventThreadLock);
+>>>>>>> koserver2
 	auto itr = m_arEventNpcThread.find(pNpc->GetZoneID());
 	if (itr == m_arEventNpcThread.end())
 		return;
@@ -770,6 +1012,11 @@ void CServerDlg::GetServerInfoIni()
 	ini.GetString("ODBC", "GAME_DSN", "KO_GAME", m_strGameDSN, false);
 	ini.GetString("ODBC", "GAME_UID", "username", m_strGameUID, false);
 	ini.GetString("ODBC", "GAME_PWD", "password", m_strGamePWD, false);
+<<<<<<< HEAD
+=======
+
+	m_AIServerPort = ini.GetInt("SETTINGS","PORT", 10020);
+>>>>>>> koserver2
 }
 
 void CServerDlg::SendSystemMsg(std::string & pMsg, int type)
@@ -798,6 +1045,11 @@ CServerDlg::~CServerDlg()
 	g_bNpcExit = true;
 
 	printf("Waiting for NPC threads to exit...");
+<<<<<<< HEAD
+=======
+
+	Guard lock(m_npcThreadLock);
+>>>>>>> koserver2
 	foreach (itr, m_arNpcThread)
 	{
 		CNpcThread * pThread = itr->second;
@@ -806,7 +1058,11 @@ CServerDlg::~CServerDlg()
 	}
 	m_arNpcThread.clear();
 
+<<<<<<< HEAD
 	FastGuard lock(m_eventThreadLock);
+=======
+	Guard lock2(m_eventThreadLock);
+>>>>>>> koserver2
 	foreach (itr, m_arEventNpcThread)
 	{
 		CNpcThread * pThread = itr->second;
@@ -845,4 +1101,8 @@ CServerDlg::~CServerDlg()
 	printf("Shutting down socket system...");
 	m_socketMgr.Shutdown();
 	printf(" done.\n");
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> koserver2

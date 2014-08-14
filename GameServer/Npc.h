@@ -17,6 +17,7 @@ public:
 	int		m_iWeapon_1;
 	int		m_iWeapon_2;
 	std::string m_strName;		// MONSTER(NPC) Name
+<<<<<<< HEAD
 	int		m_iMaxHP;			// ÃÖ´ë HP
 	int		m_iHP;				// ÇöÀç HP
 	uint8	m_byState;			// ¸ó½ºÅÍ (NPC) »óÅÂ
@@ -31,12 +32,34 @@ public:
 	bool	m_byGateOpen;		// Gate status: true is open, false is closed.
 
 	uint8    m_byObjectType;     // º¸ÅëÀº 0, objectÅ¸ÀÔ(¼º¹®, ·¹¹ö)Àº 1
+=======
+	int		m_iMaxHP;			// ï¿½Ö´ï¿½ HP
+	int		m_iHP;				// ï¿½ï¿½ï¿½ï¿½ HP
+	uint8	m_byState;			// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ (NPC) ï¿½ï¿½ï¿½ï¿½
+	uint8	m_tNpcType;			// NPC Type
+	// 0 : Normal Monster
+	// 1 : NPC
+	// 2 : ï¿½ï¿½ ï¿½Ô±ï¿½,ï¿½â±¸ NPC
+	// 3 : ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	int   m_iSellingGroup;		// ItemGroup
+
+	uint8	m_NpcState;			// NPCï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ - ï¿½ï¿½ï¿½Ò´ï¿½, ï¿½×¾ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½ï¿½...
+	bool	m_byGateOpen;		// Gate status: true is open, false is closed.
+
+	uint8    m_byObjectType;     // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 0, objectÅ¸ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½)ï¿½ï¿½ 1
+>>>>>>> koserver2
 	int16	m_byDirection;
 
 	uint8   m_byTrapNumber;
 
 	bool	m_bMonster; // are we a monster or an NPC?
 
+<<<<<<< HEAD
+=======
+	int16	m_oSocketID; // owner user
+	uint16	m_bEventRoom;
+
+>>>>>>> koserver2
 public:
 	CNpc();
 
@@ -48,7 +71,11 @@ public:
 	void SendInOut(uint8 bType, float fx, float fz, float fy);
 	void GetNpcInfo(Packet & pkt);
 
+<<<<<<< HEAD
 	void SendGateFlag(uint8 objectType = 4, uint8 bFlag = -1, bool bSendAI = true);
+=======
+	void SendGateFlag(uint8 bFlag = -1, bool bSendAI = true);
+>>>>>>> koserver2
 
 	void HpChange(int amount, Unit *pAttacker = nullptr, bool bSendToAI = true); 
 	void HpChangeMagic(int amount, Unit *pAttacker = nullptr, AttributeType attributeType = AttributeNone);
@@ -61,6 +88,12 @@ public:
 	void OnDeathProcess(Unit *pKiller);
 	void ChaosStoneProcess(CUser *pUser, uint16 MonsterCount);
 	void PVPMonumentProcess(CUser *pUser);
+<<<<<<< HEAD
+=======
+	void BattleMonumentProcess(CUser *pUser);
+	void NationMonumentProcess(CUser *pUser);
+	void OnRespawn();
+>>>>>>> koserver2
 
 	bool isDead() { return m_NpcState == NPC_DEAD || m_iHP <= 0; };
 
@@ -107,4 +140,8 @@ public:
 			LUA_ARG(uint32, 3)
 			));
 	}
+<<<<<<< HEAD
 };
+=======
+};
+>>>>>>> koserver2

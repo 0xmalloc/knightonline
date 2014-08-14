@@ -38,9 +38,17 @@ public:
 	void RecvTimeAndWeather(Packet & pkt);
 	void RecvBattleEvent(Packet & pkt);
 	void RecvNpcSpawnRequest(Packet & pkt);
+<<<<<<< HEAD
+=======
+	void RecvNpcKillRequest(Packet & pkt);
+>>>>>>> koserver2
 	void RecvNpcUpdate(Packet & pkt);
 
 	bool SetUid(float x, float z, int id, int speed);
 
 	virtual ~CGameSocket();
+<<<<<<< HEAD
 };
+=======
+};
+>>>>>>> koserver2

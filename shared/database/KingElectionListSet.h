@@ -44,7 +44,11 @@ public:
 		std::string strUserID;
 		_dbCommand->FetchString(3, strUserID);
 
+<<<<<<< HEAD
 		FastGuard lock(pData->m_lock);
+=======
+		Guard lock(pData->m_lock);
+>>>>>>> koserver2
 		KingElectionList * pList = (byType == 3 ? &pData->m_senatorList : &pData->m_candidateList);
 
 		// Is this user added to the list already?

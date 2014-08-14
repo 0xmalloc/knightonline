@@ -1,5 +1,8 @@
 #include "stdafx.h"
+<<<<<<< HEAD
 #ifdef CONFIG_USE_IOCP
+=======
+>>>>>>> koserver2
 
 namespace SocketOps
 {
@@ -38,6 +41,7 @@ namespace SocketOps
 		return (setsockopt(fd, 0x6, TCP_NODELAY, (const char*)&arg, sizeof(arg)) == 0);
 	}
 
+<<<<<<< HEAD
 	// Set internal buffer size to socket.
 	bool SetSendBufferSize(SOCKET fd, uint32 size)
 	{
@@ -50,6 +54,8 @@ namespace SocketOps
 		return (setsockopt(fd, SOL_SOCKET, SO_RCVBUF, (const char*)&size, sizeof(size)) == 0);
 	}
 
+=======
+>>>>>>> koserver2
 	// Closes a socket fully.
 	void CloseSocket(SOCKET fd)
 	{
@@ -57,6 +63,7 @@ namespace SocketOps
 		closesocket(fd);
 	}
 
+<<<<<<< HEAD
 	// Sets reuseaddr
 	void ReuseAddr(SOCKET fd)
 	{
@@ -66,3 +73,6 @@ namespace SocketOps
 }
 
 #endif
+=======
+}
+>>>>>>> koserver2

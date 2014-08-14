@@ -1,11 +1,19 @@
 #include "stdafx.h"
 #include <sstream>
 #include "../shared/Ini.h"
+<<<<<<< HEAD
+=======
+#include "../shared/DateTime.h"
+>>>>>>> koserver2
 
 extern bool g_bRunning;
 std::vector<Thread *> g_timerThreads;
 
+<<<<<<< HEAD
 LoginServer::LoginServer() : m_sLastVersion(__VERSION), m_fp(nullptr)
+=======
+LoginServer::LoginServer() : m_sLastVersion(__VERSION), m_fpLoginServer(nullptr)
+>>>>>>> koserver2
 {
 }
 
@@ -13,13 +21,32 @@ bool LoginServer::Startup()
 {
 	GetInfoFromIni();
 
+<<<<<<< HEAD
 	m_fp = fopen("./Login.log", "a");
 	if (m_fp == nullptr)
+=======
+	DateTime time;
+
+	CreateDirectory("Logs",NULL);
+
+	m_fpLoginServer = fopen("./Logs/LoginServer.log", "a");
+	if (m_fpLoginServer == nullptr)
+>>>>>>> koserver2
 	{
 		printf("ERROR: Unable to open log file.\n");
 		return false;
 	}
 
+<<<<<<< HEAD
+=======
+	m_fpUser = fopen(string_format("./Logs/Login_%d_%d_%d.log",time.GetDay(),time.GetMonth(),time.GetYear()).c_str(), "a");
+	if (m_fpUser == nullptr)
+	{
+		printf("ERROR: Unable to open user log file.\n");
+		return false;
+	}
+
+>>>>>>> koserver2
 	if (!m_DBProcess.Connect(m_ODBCName, m_ODBCLogin, m_ODBCPwd)) 
 	{
 		printf("ERROR: Unable to connect to the database using the details configured.\n");
@@ -36,7 +63,11 @@ bool LoginServer::Startup()
 	printf("Latest version in database: %d\n", GetVersion());
 	InitPacketHandlers();
 
+<<<<<<< HEAD
 	if (!m_socketMgr.Listen(_LISTEN_PORT, MAX_USER))
+=======
+	if (!m_socketMgr.Listen(m_LoginServerPort, MAX_USER))
+>>>>>>> koserver2
 	{
 		printf("ERROR: Failed to listen on server port.\n");
 		return false;
@@ -59,7 +90,11 @@ uint32 LoginServer::Timer_UpdateUserCount(void * lpParam)
 
 void LoginServer::GetServerList(Packet & result)
 {
+<<<<<<< HEAD
 	FastGuard lock(m_serverListLock);
+=======
+	Guard lock(m_serverListLock);
+>>>>>>> koserver2
 	result.append(m_serverListPacket.contents(), m_serverListPacket.size());
 }
 
@@ -68,7 +103,11 @@ void LoginServer::UpdateServerList()
 	// Update the user counts first
 	m_DBProcess.LoadUserCountList();
 
+<<<<<<< HEAD
 	FastGuard lock(m_serverListLock);
+=======
+	Guard lock(m_serverListLock);
+>>>>>>> koserver2
 	Packet & result = m_serverListPacket;
 
 	result.clear();
@@ -87,6 +126,7 @@ void LoginServer::UpdateServerList()
 			result << pServer->sUserCount;
 		else
 			result << int16(-1);
+<<<<<<< HEAD
 #if __VERSION >= 1453
 		result << pServer->sServerID << pServer->sGroupID;
 		result << pServer->sPlayerCap << pServer->sFreePlayerCap;
@@ -96,11 +136,21 @@ void LoginServer::UpdateServerList()
 #else
 		result << uint8(0); 
 #endif
+=======
+
+		result << pServer->sServerID << pServer->sGroupID;
+		result << pServer->sPlayerCap << pServer->sFreePlayerCap;
+
+		result << uint8(0); 
+>>>>>>> koserver2
 
 		// we read all this stuff from ini, TODO: make this more versatile.
 		result	<< pServer->strKarusKingName << pServer->strKarusNotice 
 			<< pServer->strElMoradKingName << pServer->strElMoradNotice;
+<<<<<<< HEAD
 #endif
+=======
+>>>>>>> koserver2
 	}
 }
 
@@ -111,10 +161,19 @@ void LoginServer::GetInfoFromIni()
 	ini.GetString("DOWNLOAD", "URL", "ftp.yoursite.net", m_strFtpUrl, false);
 	ini.GetString("DOWNLOAD", "PATH", "/", m_strFilePath, false);
 
+<<<<<<< HEAD
 	ini.GetString("ODBC", "DSN", "KO_GAME", m_ODBCName, false);
 	ini.GetString("ODBC", "UID", "username", m_ODBCLogin, false);
 	ini.GetString("ODBC", "PWD", "password", m_ODBCPwd, false);
 
+=======
+	ini.GetString("ODBC", "DSN", "KO_MAIN", m_ODBCName, false);
+	ini.GetString("ODBC", "UID", "username", m_ODBCLogin, false);
+	ini.GetString("ODBC", "PWD", "password", m_ODBCPwd, false);
+
+	m_LoginServerPort = ini.GetInt("SETTINGS","PORT", 15100);
+
+>>>>>>> koserver2
 	int nServerCount = ini.GetInt("SERVER_LIST", "COUNT", 1);
 	if (nServerCount <= 0) 
 		nServerCount = 1;
@@ -207,9 +266,22 @@ void LoginServer::GetInfoFromIni()
 
 void LoginServer::WriteLogFile(string & logMessage)
 {
+<<<<<<< HEAD
 	FastGuard lock(m_lock);
 	fwrite(logMessage.c_str(), logMessage.length(), 1, m_fp);
 	fflush(m_fp);
+=======
+	Guard lock(m_lock);
+	fwrite(logMessage.c_str(), logMessage.length(), 1, m_fpLoginServer);
+	fflush(m_fpLoginServer);
+}
+
+void LoginServer::WriteUserLogFile(string & logMessage)
+{
+	Guard lock(m_lock);
+	fwrite(logMessage.c_str(), logMessage.length(), 1, m_fpUser);
+	fflush(m_fpUser);
+>>>>>>> koserver2
 }
 
 void LoginServer::ReportSQLError(OdbcError *pError)
@@ -244,8 +316,16 @@ LoginServer::~LoginServer()
 		delete itr->second;
 	m_VersionList.clear();
 
+<<<<<<< HEAD
 	if (m_fp != nullptr)
 		fclose(m_fp);
+=======
+	if (m_fpLoginServer != nullptr)
+		fclose(m_fpLoginServer);
+
+	if (m_fpUser != nullptr)
+		fclose(m_fpUser);
+>>>>>>> koserver2
 
 	printf("Shutting down socket system...");
 	m_socketMgr.Shutdown();

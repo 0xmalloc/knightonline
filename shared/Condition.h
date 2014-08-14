@@ -1,11 +1,15 @@
 #pragma once
 
+<<<<<<< HEAD
 #ifdef USE_STD_CONDITION_VARIABLE
 #	include <condition_variable>
 #else
 #	include "Mutex.h"
 #endif
 
+=======
+#include <condition_variable>
+>>>>>>> koserver2
 #include <deque>
 
 class Condition
@@ -21,6 +25,7 @@ public:
 	void Broadcast();
 
 private:
+<<<<<<< HEAD
 	bool LockHeldByCallingThread();
 
 	int m_nLockCount;
@@ -37,3 +42,10 @@ private:
 	HANDLE Pop();
 #endif
 };
+=======
+	int m_nLockCount;
+
+	std::condition_variable m_condition;
+	std::mutex m_lock;
+};
+>>>>>>> koserver2

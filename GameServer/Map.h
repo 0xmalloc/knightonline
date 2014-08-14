@@ -28,8 +28,11 @@ public:
 	bool CheckEvent( float x, float z, CUser* pUser = nullptr );
 	void RegionItemRemove(CRegion * pRegion, _LOOT_BUNDLE * pBundle, _LOOT_ITEM * pItem);
 	bool RegionItemAdd(uint16 rx, uint16 rz, _LOOT_BUNDLE * pBundle);
+<<<<<<< HEAD
 	bool ObjectCollision(float x1, float z1, float y1, float x2, float z2, float y2);
 	float GetHeight( float x, float y, float z );
+=======
+>>>>>>> koserver2
 	virtual ~C3DMap();
 
 	EventArray	m_EventArray;
@@ -43,7 +46,11 @@ public:
 	uint32	m_wBundle;	// Zone Item Max Count
 
 	SMDFile *m_smdFile;
+<<<<<<< HEAD
 	FastMutex m_lock;
+=======
+	std::recursive_mutex m_lock;
+>>>>>>> koserver2
 
 	INLINE uint16 GetID() { return m_nZoneNumber; }
 

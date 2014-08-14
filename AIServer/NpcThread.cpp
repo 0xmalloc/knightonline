@@ -1,8 +1,12 @@
 #include "stdafx.h"
 #include "NpcThread.h"
 #include "Npc.h"
+<<<<<<< HEAD
 //change by zealotyin
 //#define DELAY				250
+=======
+
+>>>>>>> koserver2
 #define DELAY				250
 
 //////////////////////////////////////////////////////////////////////
@@ -18,6 +22,7 @@ uint32 THREADCALL NpcThreadProc(void * pParam /* CNpcThread ptr */)
 		time_t				dwDiffTime	= 0, dwTickTime  = 0, fTime2 = 0;
 		int    duration_damage=0;
 
+<<<<<<< HEAD
 		if(!pInfo) return 0;
 
 		while (!g_bNpcExit)
@@ -31,6 +36,22 @@ uint32 THREADCALL NpcThreadProc(void * pParam /* CNpcThread ptr */)
 				foreach (itr, pInfo->m_pNpcs)
 				{
 					pNpc = *itr;
+=======
+		if(!pInfo) 
+			return 0;
+
+		while (!g_bNpcExit)
+		{
+			pInfo->m_lock.lock();
+			fTime2 = getMSTime();
+
+			foreach (itr, pInfo->m_pNpcs)
+			{
+				try
+				{
+					pNpc = *itr;
+
+>>>>>>> koserver2
 					if (pNpc == nullptr)
 						continue;
 
@@ -124,6 +145,7 @@ uint32 THREADCALL NpcThreadProc(void * pParam /* CNpcThread ptr */)
 					if (pNpc->m_bDelete)
 						g_pMain->m_arNpc.DeleteData(pNpc->GetID());
 				}
+<<<<<<< HEAD
 			}
 
 			pInfo->m_lock.Release();
@@ -134,6 +156,22 @@ uint32 THREADCALL NpcThreadProc(void * pParam /* CNpcThread ptr */)
 	catch (std::exception & ex)
 	{
 		TRACE("### ERROR - NpcThread :%s\n ###", ex.what());
+=======
+				catch (std::system_error & ex)
+				{
+					TRACE("### ERROR - NpcThread  - 1 : %s\n ###", ex.what());
+					continue;
+				}
+			}
+
+			pInfo->m_lock.unlock();
+			sleep(DELAY);
+		}
+	}
+	catch (std::system_error & ex)
+	{
+		TRACE("### ERROR - NpcThread - 2 : %s\n ###", ex.what());
+>>>>>>> koserver2
 	}
 	return 0;
 }
@@ -142,7 +180,11 @@ uint32 THREADCALL ZoneEventThreadProc(void * pParam /* = nullptr */)
 {
 	while (!g_bNpcExit)
 	{
+<<<<<<< HEAD
 		g_pMain->g_arZone.m_lock.Acquire();
+=======
+		g_pMain->g_arZone.m_lock.lock();
+>>>>>>> koserver2
 		foreach_stlmap_nolock (itr, g_pMain->g_arZone)
 		{
 			MAP *pMap = itr->second;
@@ -161,7 +203,11 @@ uint32 THREADCALL ZoneEventThreadProc(void * pParam /* = nullptr */)
 				pRoom->MainRoom();
 			}
 		}
+<<<<<<< HEAD
 		g_pMain->g_arZone.m_lock.Release();
+=======
+		g_pMain->g_arZone.m_lock.unlock();
+>>>>>>> koserver2
 
 		sleep(1000);
 	}
@@ -171,13 +217,21 @@ uint32 THREADCALL ZoneEventThreadProc(void * pParam /* = nullptr */)
 
 void CNpcThread::AddNPC(CNpc * pNpc)
 {
+<<<<<<< HEAD
 	FastGuard lock(m_lock);
+=======
+	Guard lock(m_lock);
+>>>>>>> koserver2
 	m_pNpcs.insert(pNpc);
 }
 
 void CNpcThread::RemoveNPC(CNpc * pNpc)
 {
+<<<<<<< HEAD
 	FastGuard lock(m_lock);
+=======
+	Guard lock(m_lock);
+>>>>>>> koserver2
 	m_pNpcs.erase(pNpc);
 }
 
@@ -187,6 +241,10 @@ CNpcThread::CNpcThread()
 
 CNpcThread::~CNpcThread()
 {
+<<<<<<< HEAD
 	FastGuard lock(m_lock);
+=======
+	Guard lock(m_lock);
+>>>>>>> koserver2
 	m_pNpcs.clear();
 }

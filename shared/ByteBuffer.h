@@ -27,6 +27,7 @@ public:
 
 	// unsigned
 	ByteBuffer &operator<<(uint8 value)		{ append<uint8> (value); return *this; }
+<<<<<<< HEAD
 	ByteBuffer &operator<<(uint16 value)	{ append<uint16>(swap16(value)); return *this; }
 	ByteBuffer &operator<<(uint32 value)	{ append<uint32>(swap32(value)); return *this; }
 	ByteBuffer &operator<<(uint64 value)	{ append<uint64>(swap64(value)); return *this; }
@@ -37,6 +38,17 @@ public:
 	ByteBuffer &operator<<(int64 value)		{ append<int64>(swap64(value)); return *this; }
 	ByteBuffer &operator<<(float value)		{ append<float>(swapfloat(value)); return *this; }
 	ByteBuffer &operator<<(double value)	{ append<double>(swapdouble(value)); return *this; }
+=======
+	ByteBuffer &operator<<(uint16 value)	{ append<uint16>(value); return *this; }
+	ByteBuffer &operator<<(uint32 value)	{ append<uint32>(value); return *this; }
+	ByteBuffer &operator<<(uint64 value)	{ append<uint64>(value); return *this; }
+	// signed as in 2e complement
+	ByteBuffer &operator<<(int8 value)		{ append<int8> (value); return *this; }
+	ByteBuffer &operator<<(int16 value)		{ append<int16>(value); return *this; }
+	ByteBuffer &operator<<(int32 value)		{ append<int32>(value); return *this; }
+	ByteBuffer &operator<<(int64 value)		{ append<int64>(value); return *this; }
+	ByteBuffer &operator<<(float value)		{ append<float>(value); return *this; }
+>>>>>>> koserver2
 
 	ByteBuffer &operator<<(ByteBuffer &value)
 	{
@@ -49,6 +61,7 @@ public:
 	ByteBuffer &operator>>(bool &value)		{ value = read<char>() > 0 ? true : false; return *this; }
 	// unsigned
 	ByteBuffer &operator>>(uint8 &value)	{ value = read<uint8>(); return *this; }
+<<<<<<< HEAD
 	ByteBuffer &operator>>(uint16 &value)	{ value = swap16(read<uint16>()); return *this; }
 	ByteBuffer &operator>>(uint32 &value)	{ value = swap32(read<uint32>()); return *this; }
 	ByteBuffer &operator>>(uint64 &value)	{ value = swap64(read<uint64>()); return *this; }
@@ -59,6 +72,17 @@ public:
 	ByteBuffer &operator>>(int64 &value)	{ value = swap64(read<int64>()); return *this; }
 	ByteBuffer &operator>>(float &value)	{ value = swapfloat(read<float>()); return *this; }
 	ByteBuffer &operator>>(double &value)	{ value = swapdouble(read<double>()); return *this; }
+=======
+	ByteBuffer &operator>>(uint16 &value)	{ value = read<uint16>(); return *this; }
+	ByteBuffer &operator>>(uint32 &value)	{ value = read<uint32>(); return *this; }
+	ByteBuffer &operator>>(uint64 &value)	{ value = read<uint64>(); return *this; }
+	// signed as in 2e complement
+	ByteBuffer &operator>>(int8 &value)		{ value = read<int8>(); return *this; }
+	ByteBuffer &operator>>(int16 &value)	{ value = read<int16>(); return *this; }
+	ByteBuffer &operator>>(int32 &value)	{ value = read<int32>(); return *this; }
+	ByteBuffer &operator>>(int64 &value)	{ value = read<int64>(); return *this; }
+	ByteBuffer &operator>>(float &value)	{ value = read<float>(); return *this; }
+>>>>>>> koserver2
 
 	// Hacky KO string flag - either it's a single byte length, or a double byte.
 	void SByte() { m_doubleByte = false; }

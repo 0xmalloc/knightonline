@@ -1,5 +1,6 @@
 #include "stdafx.h"
 
+<<<<<<< HEAD
 /*
 NOTE: 
 std::thread allow for threads to be spawned with a variety of 
@@ -13,18 +14,27 @@ Thread::Thread()
 #ifndef USE_STD_THREAD
 	: m_thread(nullptr)
 #endif
+=======
+Thread::Thread()
+>>>>>>> koserver2
 {
 }
 
 Thread::Thread(lpfnThreadFunc lpThreadFunc, void * lpParam /*= nullptr*/)
+<<<<<<< HEAD
 #ifndef USE_STD_THREAD
 	: m_thread(nullptr)
 #endif
+=======
+>>>>>>> koserver2
 {
 	start(lpThreadFunc, lpParam);
 }
 
+<<<<<<< HEAD
 #ifdef USE_STD_THREAD
+=======
+>>>>>>> koserver2
 bool Thread::start(lpfnThreadFunc lpThreadFunc, void * lpParam /*= nullptr*/)
 {
 	try
@@ -61,6 +71,7 @@ bool Thread::waitForExit()
 		return false;
 	}
 }
+<<<<<<< HEAD
 
 #else // not using std::thread, no C++11 support.
 
@@ -100,3 +111,5 @@ void Thread::resume()
 #	endif
 #endif
 }
+=======
+>>>>>>> koserver2

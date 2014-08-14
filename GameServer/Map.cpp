@@ -7,7 +7,10 @@
 int C3DMap::GetXRegionMax() { return m_smdFile->GetXRegionMax(); }
 int C3DMap::GetZRegionMax() { return m_smdFile->GetZRegionMax(); }
 bool C3DMap::IsValidPosition(float x, float z, float y) { return m_smdFile->IsValidPosition(x, z, y); }
+<<<<<<< HEAD
 _OBJECT_EVENT * C3DMap::GetObjectEvent(int objectindex) { return m_smdFile->GetObjectEvent(objectindex); }
+=======
+>>>>>>> koserver2
 _REGENE_EVENT * C3DMap::GetRegeneEvent(int objectindex) { return m_smdFile->GetRegeneEvent(objectindex); }
 _WARP_INFO * C3DMap::GetWarp(int warpID) { return m_smdFile->GetWarp(warpID); }
 void C3DMap::GetWarpList(int warpGroup, std::set<_WARP_INFO *> & warpEntries) { m_smdFile->GetWarpList(warpGroup, warpEntries); }
@@ -44,7 +47,11 @@ CRegion * C3DMap::GetRegion(uint16 regionX, uint16 regionZ)
 		|| regionZ > GetZRegionMax())
 		return nullptr;
 
+<<<<<<< HEAD
 	FastGuard lock(m_lock);
+=======
+	Guard lock(m_lock);
+>>>>>>> koserver2
 	return &m_ppRegion[regionX][regionZ];
 }
 
@@ -53,8 +60,14 @@ bool C3DMap::RegionItemAdd(uint16 rx, uint16 rz, _LOOT_BUNDLE * pBundle)
 	if (pBundle == nullptr)
 		return false;
 
+<<<<<<< HEAD
 	FastGuard lock(m_lock);
 	CRegion * pRegion = GetRegion(rx, rz);
+=======
+	Guard lock(m_lock);
+	CRegion * pRegion = GetRegion(rx, rz);
+
+>>>>>>> koserver2
 	if (pRegion == nullptr)
 		return false;
 
@@ -82,7 +95,11 @@ void C3DMap::RegionItemRemove(CRegion * pRegion, _LOOT_BUNDLE * pBundle, _LOOT_I
 		|| pBundle == nullptr)
 		return;
 
+<<<<<<< HEAD
 	FastGuard lock(pRegion->m_RegionItemArray.m_lock);
+=======
+	Guard lock(pRegion->m_RegionItemArray.m_lock);
+>>>>>>> koserver2
 
 	// If the bundle exists, and the item matches what the user's removing
 	// we can remove this item from the bundle.
@@ -109,11 +126,19 @@ bool C3DMap::CheckEvent(float x, float z, CUser* pUser)
 	int event_index = m_smdFile->GetEventID((int)(x / m_smdFile->GetUnitDistance()), (int)(z / m_smdFile->GetUnitDistance()));
 	if (event_index < 2)
 	{
+<<<<<<< HEAD
 		if (g_pMain->m_byBattleOpen == NATION_BATTLE && pUser->GetMap()->isWarZone())
 		{
 			pEvent = m_EventArray.GetData(1010 + (pUser->GetNation() == ELMORAD ? 1 : 2));
 
 			if (pEvent)
+=======
+		if (g_pMain->m_byBattleOpen == NATION_BATTLE && pUser->GetMap()->isWarZone() && g_pMain->m_byBattleZoneType == 0)
+		{
+			pEvent = m_EventArray.GetData(1010 + (pUser->GetNation() == ELMORAD ? 1 : 2));
+
+			if (pEvent != nullptr)
+>>>>>>> koserver2
 			{
 				if ((x > pEvent->m_iCond[0] && x < pEvent->m_iCond[1]) && (z > pEvent->m_iCond[2] && z < pEvent->m_iCond[3]))
 					pUser->ZoneChange(pEvent->m_iExec[0],(float)pEvent->m_iExec[1],(float)pEvent->m_iExec[2]);
@@ -121,7 +146,11 @@ bool C3DMap::CheckEvent(float x, float z, CUser* pUser)
 				{
 					pEvent = m_EventArray.GetData(1010 + pUser->GetNation());
 
+<<<<<<< HEAD
 					if (pEvent)
+=======
+					if (pEvent != nullptr)
+>>>>>>> koserver2
 					{
 						if ((x > pEvent->m_iCond[0] && x < pEvent->m_iCond[1]) && (z > pEvent->m_iCond[2] && z < pEvent->m_iCond[3]))
 							if (g_pMain->m_bVictory == pUser->GetNation())
@@ -155,12 +184,33 @@ bool C3DMap::CheckEvent(float x, float z, CUser* pUser)
 			TRACE("%s cannot enter war zone %d, too many users.\n", pUser->GetName().c_str(), pEvent->m_iExec[0]);
 			return false;
 		}
+<<<<<<< HEAD
+=======
+
+		if (g_pMain->m_byBattleZoneType == ZONE_ARDREAM && (pUser->GetLevel() < MIN_LEVEL_NIEDS_TRIANGLE || pUser->GetLevel() > MAX_LEVEL_NIEDS_TRIANGLE || !pUser->CanLevelQualify(MAX_LEVEL_NIEDS_TRIANGLE)))
+			return false;
+>>>>>>> koserver2
 	}
 
 	pEvent->RunEvent(pUser);
 	return true;
 }
 
+<<<<<<< HEAD
+=======
+_OBJECT_EVENT * C3DMap::GetObjectEvent(int objectindex) 
+{ 
+	foreach_stlmap(itr, g_pMain->m_ObjectEventArray)
+	{
+		if (itr->second->sZoneID == m_nZoneNumber
+			&& itr->second->sIndex == objectindex)
+			return itr->second;
+	}
+
+	return nullptr;
+}
+
+>>>>>>> koserver2
 C3DMap::~C3DMap()
 {
 	m_EventArray.DeleteAllData();

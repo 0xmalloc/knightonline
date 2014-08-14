@@ -47,7 +47,11 @@ void CUser::ItemRepair(Packet & pkt)
 
 		money = (unsigned int)((((pTable->m_iBuyPrice-10) / 10000.0f) + pow((float)pTable->m_iBuyPrice, 0.75f)) * quantity / (double)durability);
 
+<<<<<<< HEAD
 		if (m_bPremiumType != 0)
+=======
+		if (GetPremiumProperty(PremiumRepairDiscountPercent) > 0)
+>>>>>>> koserver2
 			money = money * GetPremiumProperty(PremiumRepairDiscountPercent) / 100;
 
 		if (!GoldLose(money, false))
@@ -84,14 +88,50 @@ void CUser::ClientEvent(uint16 sNpcID)
 	m_sEventNid = sNpcID;
 	m_sEventSid = pNpc->GetProtoID(); // For convenience purposes with Lua scripts.
 
+<<<<<<< HEAD
 	// Aww.
 	if (pNpc->GetType() == NPC_KISS)
+=======
+	if (pNpc->GetProtoID() == SAW_BLADE_SSID)
+	{
+		HpChange(-5000 / 10);
+		return;
+	}
+	else if (pNpc->GetProtoID() == CHAOS_CUBE_SSID && !pNpc->isDead())
+	{ 
+		uint8 nEventRoomUserCount = g_pMain->TempleEventGetRoomUsers(GetEventRoom());
+		uint8 nItemRewardRankFirst = nEventRoomUserCount / 3;
+		uint8 nItemRewardRankSecond = (nEventRoomUserCount  - 1) * 2;
+
+		int32 nUserRank = GetPlayerRank(RANK_TYPE_CHAOS_DUNGEON);
+		uint32 nItemID = 0;
+
+		if (nUserRank == 0)
+			nItemID = ITEM_KILLING_BLADE;
+		else if (nUserRank < nItemRewardRankFirst)
+			nItemID = ITEM_LIGHT_PIT;
+		else if (nUserRank >= nItemRewardRankFirst && nUserRank <= nItemRewardRankSecond)
+			nItemID = ITEM_DRAIN_RESTORE;
+		else if (nUserRank > nItemRewardRankSecond)
+			nItemID = ITEM_KILLING_BLADE;
+
+		GiveItem(nItemID);
+		g_pMain->ShowNpcEffect(GetSocketID(),251,GetZoneID());
+		g_pMain->KillNpc(sNpcID);
+		return;
+	}
+	else if (pNpc->GetType() == NPC_KISS)
+>>>>>>> koserver2
 	{
 		KissUser();
 		return;
 	}
 
+<<<<<<< HEAD
 	FastGuard lock(g_pMain->m_questNpcLock);
+=======
+	Guard lock(g_pMain->m_questNpcLock);
+>>>>>>> koserver2
 	QuestNpcList::iterator itr = g_pMain->m_QuestNpcList.find(pNpc->GetProtoID());
 	if (itr == g_pMain->m_QuestNpcList.end())
 		return;
@@ -206,7 +246,11 @@ void CUser::ClassChange(Packet & pkt, bool bFromClient /*= true */)
 		break;
 	case BERSERKER:
 		if (classcode == GUARDIAN)
+<<<<<<< HEAD
 		    bSuccess = true;
+=======
+			bSuccess = true;
+>>>>>>> koserver2
 		break;
 	case HUNTER:
 		if (classcode == PENETRATOR)
@@ -546,6 +590,10 @@ void CUser::ItemTrade(Packet & pkt)
 		_ITEM_DATA *pItem = &m_sItemArray[SLOT_MAX+pos];
 		if (pItem->nNum != itemid
 			|| pItem->isSealed() // need to check the error codes for these
+<<<<<<< HEAD
+=======
+			|| pItem->isExpireItem()
+>>>>>>> koserver2
 			|| pItem->isRented())
 		{
 			errorCode = 2;

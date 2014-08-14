@@ -8,10 +8,15 @@ Socket::Socket(SOCKET fd, uint32 sendbuffersize, uint32 recvbuffersize)
 	readBuffer.Allocate(recvbuffersize);
 	writeBuffer.Allocate(sendbuffersize);
 
+<<<<<<< HEAD
 #ifdef CONFIG_USE_IOCP
 	// IOCP member variables
 	m_completionPort = 0;
 #endif
+=======
+	// IOCP member variables
+	m_completionPort = 0;
+>>>>>>> koserver2
 	m_writeLock = 0;
 
 	// Check for needed fd allocation.
@@ -38,9 +43,13 @@ bool Socket::Connect(const char * Address, uint32 Port)
 		return false;
 
 	// at this point the connection was established
+<<<<<<< HEAD
 #ifdef CONFIG_USE_IOCP
 	m_completionPort = m_socketMgr->GetCompletionPort();
 #endif
+=======
+	m_completionPort = m_socketMgr->GetCompletionPort();
+>>>>>>> koserver2
 
 	_OnConnect();
 	return true;
@@ -54,6 +63,7 @@ void Socket::Accept(sockaddr_in * address)
 void Socket::_OnConnect()
 {
 	// set common parameters on the file descriptor
+<<<<<<< HEAD
 	SocketOps::Nonblocking(m_fd);
 	SocketOps::EnableBuffering(m_fd);
 	m_connected = true;
@@ -68,15 +78,28 @@ void Socket::_OnConnect()
 #else
 	GetSocketMgr()->AddSocket(this);
 #endif
+=======
+	m_connected = true;
+
+	m_writeLockMutex.lock();
+	m_writeLock = 0;
+	m_writeLockMutex.unlock();
+
+	AssignToCompletionPort();
+>>>>>>> koserver2
 	m_socketMgr->OnConnect(this);
 
 	// Call virtual onconnect
 	OnConnect();
 
 	// Setting the read event up after calling OnConnect() ensures OnConnect() & subsequent connection setup code is run first (which is NOT GUARANTEED otherwise)
+<<<<<<< HEAD
 #ifdef CONFIG_USE_IOCP
 	SetupReadEvent();
 #endif
+=======
+	SetupReadEvent();
+>>>>>>> koserver2
 }
 
 bool Socket::Send(const uint8 * Bytes, uint32 Size)
@@ -114,6 +137,7 @@ void Socket::Disconnect()
 
 	m_connected = false;
 
+<<<<<<< HEAD
 #ifdef CONFIG_USE_IOCP
 	m_readEvent.Unmark();
 #endif
@@ -125,21 +149,36 @@ void Socket::Disconnect()
 #ifndef CONFIG_USE_IOCP // TODO: clean this up
 	GetSocketMgr()->RemoveSocket(this);
 #endif
+=======
+	m_readEvent.Unmark();
+
+	// Call virtual ondisconnect
+	OnDisconnect();
+>>>>>>> koserver2
 	GetSocketMgr()->OnDisconnect(this);
 
 	SocketOps::CloseSocket(m_fd);
 	m_fd = 0;
 
+<<<<<<< HEAD
 	m_writeLockMutex.Acquire();
 	m_writeLock = 0;
 	m_writeLockMutex.Release();
+=======
+	m_writeLockMutex.lock();
+	m_writeLock = 0;
+	m_writeLockMutex.unlock();
+>>>>>>> koserver2
 
 	// Reset the read/write buffers
 	GetReadBuffer().Remove(GetReadBuffer().GetSize());
 	GetWriteBuffer().Remove(GetWriteBuffer().GetSize());
+<<<<<<< HEAD
 
 	//if (!IsDeleted())
 	//	Delete();
+=======
+>>>>>>> koserver2
 }
 
 void Socket::Delete()
@@ -153,7 +192,10 @@ void Socket::Delete()
 		Disconnect();
 
 	delete this;
+<<<<<<< HEAD
 	// sSocketGarbageCollector.QueueSocket(this);
+=======
+>>>>>>> koserver2
 }
 
 Socket::~Socket()

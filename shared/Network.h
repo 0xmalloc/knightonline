@@ -5,6 +5,7 @@
 #include "SocketOps.h"
 #include "Socket.h"
 #include "SocketMgr.h"
+<<<<<<< HEAD
 
 #if defined(CONFIG_USE_IOCP)
 #	include "SocketMgrWin32.h"
@@ -16,6 +17,9 @@
 #	include "SocketMgrBSD.h"
 #	include "ListenSocketBSD.h" 
 #endif
+=======
+#include "ListenSocketWin32.h"
+>>>>>>> koserver2
 
 #include "JvCryption.h"
 #include "KOSocket.h"
