@@ -263,6 +263,11 @@ bool CUser::HandlePacket(Packet & pkt)
 		return true;
 	}
 
+	//check expire_item
+	if(rand()%200 == 0){
+		check_expire_item();
+	}
+
 	// Otherwise, assume we're authed & in-game.
 	switch (command)
 	{
@@ -5556,4 +5561,16 @@ void CUser::RobChaosSkillItems()
 		RobItem(ITEM_DRAIN_RESTORE, GetItemCount(ITEM_DRAIN_RESTORE));
 	if (GetItemCount(ITEM_KILLING_BLADE) > 0)
 		RobItem(ITEM_KILLING_BLADE, GetItemCount(ITEM_KILLING_BLADE));
+}
+
+void CUser::check_expire_item()
+{
+	//check expire item
+	for (int i = 0; i < INVENTORY_TOTAL; i++)
+	{
+		_ITEM_DATA *pItem = &(m_sItemArray[i]);
+		if(pItem->nExpirationTime <= UNIXTIME && 0 != pItem->nExpirationTime){
+			RobItem(pItem->nNum, 1);
+		}
+	}
 }

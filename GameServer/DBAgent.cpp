@@ -343,7 +343,7 @@ bool CDBAgent::LoadUserData(string & strAccountID, string & strCharID, CUser *pU
 	if (!dbCommand->hasData())
 		return false;
 
-	char	strItem[INVENTORY_TOTAL * 8] = {0}, strSerial[INVENTORY_TOTAL * 8] = {0},
+	char	strItem[INVENTORY_TOTAL * 8] = {0}, strSerial[INVENTORY_TOTAL * 8] = {0},strItemEx[INVENTORY_TOTAL * 4] = {0},
 		strQuest[QUEST_ARRAY_SIZE];
 
 	uint16 sQuestCount = 0;
@@ -385,6 +385,7 @@ bool CDBAgent::LoadUserData(string & strAccountID, string & strCharID, CUser *pU
 	dbCommand->FetchBinary(field++, (char *)pUser->m_bstrSkill, sizeof(pUser->m_bstrSkill));
 	dbCommand->FetchBinary(field++, strItem, sizeof(strItem));
 	dbCommand->FetchBinary(field++, strSerial, sizeof(strSerial));
+	dbCommand->FetchBinary(field++, strItemEx, sizeof(strItemEx));
 	dbCommand->FetchUInt16(field++, sQuestCount);
 	dbCommand->FetchBinary(field++, strQuest, sizeof(strQuest));
 	dbCommand->FetchUInt32(field++, pUser->m_iMannerPoint);
@@ -409,8 +410,9 @@ bool CDBAgent::LoadUserData(string & strAccountID, string & strCharID, CUser *pU
 	if (pUser->CheckExistEvent(STARTER_SEED_QUEST, 0))
 		pUser->SaveEvent(STARTER_SEED_QUEST, 1);
 
-	ByteBuffer itemBuffer, serialBuffer;
+	ByteBuffer itemBuffer, itemExbuffer, serialBuffer;
 	itemBuffer.append(strItem, sizeof(strItem));
+	itemExbuffer.append(strItemEx, sizeof(strItemEx));
 	serialBuffer.append(strSerial, sizeof(strSerial));
 
 	memset(pUser->m_sItemArray, 0x00, sizeof(pUser->m_sItemArray));
@@ -427,11 +429,13 @@ bool CDBAgent::LoadUserData(string & strAccountID, string & strCharID, CUser *pU
 	for (int i = 0; i < INVENTORY_TOTAL; i++)
 	{ 
 		uint64 nSerialNum;
-		uint32 nItemID;
+		uint32 nItemID, nExpireTime;
 		int16 sDurability, sCount;
+
 
 		itemBuffer >> nItemID >> sDurability >> sCount;
 		serialBuffer >> nSerialNum;
+		itemExbuffer >> nExpireTime;
 
 		_ITEM_TABLE *pTable = g_pMain->GetItemPtr(nItemID);
 		if (pTable == nullptr || sCount <= 0)
@@ -450,7 +454,7 @@ bool CDBAgent::LoadUserData(string & strAccountID, string & strCharID, CUser *pU
 		pItem->sDuration = pTable->isAccessory() ? pTable->m_sDuration : sDurability;
 		pItem->sCount = sCount;
 		pItem->nSerialNum = nSerialNum;
-
+		pItem->nExpirationTime = nExpireTime;
 		// If the serial was found in the rental data, mark as rented.
 		UserRentalMap::iterator itr = rentalData.find(nSerialNum);
 		if (itr != rentalData.end())
@@ -937,18 +941,20 @@ bool CDBAgent::UpdateUser(string & strCharID, UserUpdateType type, CUser *pUser)
 		index += 3;
 	}
 
-	ByteBuffer itemBuffer, serialBuffer;
+	ByteBuffer itemBuffer, itemExBuffer,serialBuffer;
 	for (int i = 0; i < INVENTORY_TOTAL; i++)
 	{
 		_ITEM_DATA *pItem = &pUser->m_sItemArray[i];
 		itemBuffer << pItem->nNum << pItem->sDuration << pItem->sCount;
 		serialBuffer << pItem->nSerialNum;
+		itemExBuffer << pItem->nExpirationTime;
 	}
 
 	dbCommand->AddParameter(SQL_PARAM_INPUT, strCharID.c_str(), strCharID.length());
 	dbCommand->AddParameter(SQL_PARAM_INPUT, (char *)pUser->m_bstrSkill, sizeof(pUser->m_bstrSkill));
 	dbCommand->AddParameter(SQL_PARAM_INPUT, (char *)itemBuffer.contents(), itemBuffer.size(), SQL_BINARY);
 	dbCommand->AddParameter(SQL_PARAM_INPUT, (char *)serialBuffer.contents(), serialBuffer.size(), SQL_BINARY);
+	dbCommand->AddParameter(SQL_PARAM_INPUT, (char *)itemExBuffer.contents(), itemExBuffer.size(), SQL_BINARY);
 	dbCommand->AddParameter(SQL_PARAM_INPUT, (char *)strQuest, sizeof(strQuest), SQL_BINARY);
 
 	if (!dbCommand->Execute(string_format(_T("{CALL UPDATE_USER_DATA("
@@ -960,7 +966,7 @@ bool CDBAgent::UpdateUser(string & strCharID, UserUpdateType type, CUser *pUser)
 		"%d, %d, %d, %d, %d, "		// str, sta, dex, int, cha
 		"%d, %d, %d, %d, %d, "		// authority, free points, gold, zone, bind
 		"%d, %d, %d, %d, %d, "		// x, z, y, dwTime, sQuestCount
-		"?, ?, ?, ?, "				// strSkill, strItem, strSerial, strQuest
+		"?, ?, ?, ?, ?, "				// strSkill, strItem, strSerial,strItemEx, strQuest
 		"%d, %d)}"),				// manner points, monthly NP
 		pUser->m_bNation, pUser->m_bRace, pUser->m_sClass, pUser->m_nHair, pUser->m_bRank, 
 		pUser->m_bTitle, pUser->m_bLevel, pUser->m_iExp /* temp hack, database needs to support it */, pUser->m_iLoyalty, pUser->m_bFace, 

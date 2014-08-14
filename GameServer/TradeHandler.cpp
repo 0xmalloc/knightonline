@@ -145,6 +145,7 @@ void CUser::ExchangeAdd(Packet & pkt)
 			|| pSrcItem->isRented()
 			|| pSrcItem->isSealed()
 			|| pSrcItem->isBound()
+			|| pSrcItem->isExpireItem()
 			|| pSrcItem->isDuplicate())
 			goto add_fail;
 

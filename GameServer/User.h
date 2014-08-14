@@ -621,6 +621,8 @@ public:
 	void SendAllKnightsID();
 	void SendStackChange(uint32 nItemID, uint32 nCount /* needs to be 4 bytes, not a bug */, uint16 sDurability, uint8 bPos, bool bNewItem = false, uint32 nExpirationTime = 0 /*in unix time*/);
 
+	void check_expire_item();
+
 	void Type4Duration();
 	void HPTimeChange();
 	void HPTimeChangeType3();

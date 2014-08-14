@@ -144,6 +144,7 @@ void CUser::MerchantItemAdd(Packet & pkt)
 		|| pSrcItem->isRented()
 		|| pSrcItem->isSealed()
 		|| pSrcItem->isBound()
+		|| pSrcItem->isExpireItem()
 		|| pSrcItem->isDuplicate())
 		goto fail_return;
 

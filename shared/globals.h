@@ -297,6 +297,7 @@ struct	_ITEM_DATA
 	INLINE bool isBound() { return bFlag == ITEM_FLAG_BOUND; }
 	INLINE bool isRented() { return bFlag == ITEM_FLAG_RENTED; }
 	INLINE bool isDuplicate() { return bFlag == ITEM_FLAG_DUPLICATE; }
+	INLINE bool isExpireItem() { return 0 != nExpirationTime;}
 };
 
 enum HairData

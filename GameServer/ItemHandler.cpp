@@ -92,6 +92,7 @@ void CUser::WarehouseProcess(Packet & pkt)
 			|| (pSrcItem = GetItem(SLOT_MAX + bSrcPos))->nNum != nItemID
 			// Rented items cannot be placed in the inn.
 			|| pSrcItem->isRented()
+			|| pSrcItem->isExpireItem()
 			|| pSrcItem->isDuplicate())
 			goto fail_return;
 

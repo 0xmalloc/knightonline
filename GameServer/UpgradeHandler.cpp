@@ -106,6 +106,7 @@ void CUser::ItemUpgrade(Packet & pkt, uint8 nUpgradeType)
 	|| (proto = g_pMain->GetItemPtr(nItemID[0])) == nullptr)
 		goto fail_return; // error with error code UpgradeNoMatch ("Items required for upgrade do not match")
 	else if (pOriginItem->isRented() 
+		||pOriginItem->isExpireItem()
 		|| pOriginItem->isSealed()) // unsure if there's another error code for sealed items
 	{
 		bResult = UpgradeRental;
