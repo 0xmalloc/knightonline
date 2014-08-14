@@ -2422,7 +2422,9 @@ void CGameServerDlg::TempleEventFinish()
 				if (pUser->GetLevel() < 58)
 					nChangeExp = int64((pUser->GetLevel()-20) * (3000 + 100/* Temp Score */* 1000));
 				else
-					nChangeExp = int64((pUser->GetLevel()+55) * (20000 + 100/* Temp Score */ * 500));				
+					nChangeExp = int64((pUser->GetLevel()+55) * (20000 + 100/* Temp Score */ * 500));
+				//国境都给红箱子
+				pUser->GiveItem(RED_TREASURE_CHEST);
 			}
 			else if (pRankInfo->m_bZone == ZONE_CHAOS_DUNGEON)
 			{
