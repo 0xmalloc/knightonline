@@ -19,6 +19,7 @@ Release
 *.msi
 *.msm
 *.msp
+ipch
 <<<<<<< HEAD
 
 =======
