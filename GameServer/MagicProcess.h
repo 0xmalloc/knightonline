@@ -15,10 +15,6 @@ public:
 	static void RemoveStealth(Unit * pTarget, InvisibilityType bInvisibilityType);
 	static bool UserRegionCheck(Unit * pSkillCaster, Unit * pSkillTarget, _MAGIC_TABLE * pSkill, int radius, short mousex = 0, short mousez = 0);
 	static bool GrantType4Buff(_MAGIC_TABLE * pSkill, _MAGIC_TYPE4 *pType, Unit * pCaster, Unit *pTarget, bool bIsRecastingSavedMagic = false);
-<<<<<<< HEAD
-	static bool RemoveType4Buff(uint8 byBuffType, Unit *pTarget, bool bRemoveSavedMagic = true);
-=======
 	static bool RemoveType4Buff(uint8 byBuffType, Unit *pTarget, bool bRemoveSavedMagic = true, bool bRecastSavedMagic = false);
->>>>>>> koserver2
 	static bool IsBuff(_MAGIC_TYPE4 * pType);
 };

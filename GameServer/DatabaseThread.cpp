@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-#include "stdafx.h"
-=======
 ﻿#include "stdafx.h"
->>>>>>> koserver2
 #include "../shared/Condition.h"
 #include "KnightsManager.h"
 #include "KingSystem.h"
@@ -14,18 +10,6 @@ using std::string;
 
 static std::queue<Packet *> _queue;
 static bool _running = true;
-<<<<<<< HEAD
-static FastMutex _lock;
-
-static Condition s_hEvent;
-
-static std::vector<Thread *> s_threads;
-
-void DatabaseThread::Startup(uint32 dwThreads)
-{
-	for (unsigned long i = 0; i < dwThreads; i++)
-		s_threads.push_back(new Thread(ThreadProc, (void *)i));
-=======
 static std::recursive_mutex _lock;
 
 static Condition s_hEvent;
@@ -34,20 +18,13 @@ static Thread * s_thread;
 void DatabaseThread::Startup()
 {
 	s_thread = new Thread(ThreadProc, (void *)1);
->>>>>>> koserver2
 }
 
 void DatabaseThread::AddRequest(Packet * pkt)
 {
-<<<<<<< HEAD
-	_lock.Acquire();
-	_queue.push(pkt);
-	_lock.Release();
-=======
 	_lock.lock();
 	_queue.push(pkt);
 	_lock.unlock();
->>>>>>> koserver2
 	s_hEvent.Signal();
 }
 
@@ -58,21 +35,13 @@ uint32 THREADCALL DatabaseThread::ThreadProc(void * lpParam)
 		Packet *p = nullptr;
 
 		// Pull the next packet from the shared queue
-<<<<<<< HEAD
-		_lock.Acquire();
-=======
 		_lock.lock();
->>>>>>> koserver2
 		if (_queue.size())
 		{
 			p = _queue.front();
 			_queue.pop();
 		}
-<<<<<<< HEAD
-		_lock.Release();
-=======
 		_lock.unlock();
->>>>>>> koserver2
 
 		// If there's no more packets to handle, wait until there are.
 		if (p == nullptr)
@@ -198,11 +167,7 @@ void CUser::ReqAccountLogIn(Packet & pkt)
 		m_strAccountID.clear();
 
 	Packet result(WIZ_LOGIN);
-<<<<<<< HEAD
-	result << nation;  // return 1choose nation  2 for SS  3 for RR 
-=======
 	result << nation;
->>>>>>> koserver2
 	Send(&result);
 }
 
@@ -329,12 +294,7 @@ void CUser::ReqSkillDataLoad(Packet & pkt)
 	Packet result(WIZ_SKILLDATA, uint8(SKILL_DATA_LOAD));
 	if (!g_DBAgent.LoadSkillShortcut(result, this))
 		result << uint16(0);
-<<<<<<< HEAD
-
-	return;   //added by zealot    use local mode 
-=======
 	
->>>>>>> koserver2
 	Send(&result);
 }
 
@@ -387,11 +347,7 @@ void CUser::ReqRequestFriendList(Packet & pkt)
 	foreach (itr, friendList)
 		result << (*itr);
 
-<<<<<<< HEAD
-	FriendReport(pkt);
-=======
 	FriendReport(result);
->>>>>>> koserver2
 }
 
 void CUser::ReqAddFriend(Packet & pkt)
@@ -481,11 +437,6 @@ void CUser::ReqChangeCape(Packet & pkt)
 void CUser::ReqUserLogOut()
 {
 	PlayerRankingProcess(GetZoneID(), true);
-<<<<<<< HEAD
-
-	if (isInTempleEventZone())
-		RemoveEventUser(GetSocketID());
-=======
 	g_pMain->KillNpc(GetSocketID());
 
 	if (g_pMain->pTempleEvent.ActiveEvent != -1)
@@ -495,7 +446,6 @@ void CUser::ReqUserLogOut()
 		if (!g_pMain->pTempleEvent.isActive)
 			TempleOperations(TEMPLE_EVENT_COUNTER);
 	}
->>>>>>> koserver2
 
 	if (m_bLevel == 0)
 		TRACE("### ReqUserLogOut - Level is Zero : bRoom=%d, bNation=%d, bZone=%d ####\n", GetEventRoom(), GetNation(), GetZoneID());
@@ -587,11 +537,7 @@ void CKnightsManager::ReqCreateKnights(CUser *pUser, Packet & pkt)
 	pkt >> bFlag >> sClanID >> bNation >> strKnightsName >> strChief;
 	bResult = g_DBAgent.CreateKnights(sClanID, bNation, strKnightsName, strChief, bFlag);
 
-<<<<<<< HEAD
-	if (bResult < 0)
-=======
 	if (bResult > 0)
->>>>>>> koserver2
 	{
 		result << bResult;
 		pUser->Send(&result);
@@ -1002,23 +948,6 @@ void DatabaseThread::Shutdown()
 {
 	_running = false;
 
-<<<<<<< HEAD
-	if (!s_threads.empty())
-	{
-		// Wake them up in case they're sleeping.
-		s_hEvent.Broadcast();
-
-		foreach (itr, s_threads)
-		{
-			(*itr)->waitForExit();
-			delete (*itr);
-		}
-
-		s_threads.clear();
-	}
-
-	_lock.Acquire();
-=======
 	// Wake them up in case they're sleeping.
 	s_hEvent.Broadcast();
 
@@ -1026,16 +955,11 @@ void DatabaseThread::Shutdown()
 	delete s_thread;
 
 	_lock.lock();
->>>>>>> koserver2
 	while (_queue.size())
 	{
 		Packet *p = _queue.front();
 		_queue.pop();
 		delete p;
 	}
-<<<<<<< HEAD
-	_lock.Release();
-=======
 	_lock.unlock();
->>>>>>> koserver2
 }

@@ -1,9 +1,5 @@
 #pragma once
 
-<<<<<<< HEAD
-#include "../shared/Mutex.h"
-=======
->>>>>>> koserver2
 #include <set>
 #include <map>
 
@@ -131,11 +127,7 @@ public:
 	std::string m_strKingName;
 	std::string m_strImRequestID;
 
-<<<<<<< HEAD
-	FastMutex m_lock;
-=======
 	std::recursive_mutex m_lock;
->>>>>>> koserver2
 	ClanIDSet m_top10ClanSet;
 
 	KingCandidacyNoticeBoardMap m_noticeBoardMap;

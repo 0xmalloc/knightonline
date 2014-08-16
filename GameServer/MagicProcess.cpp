@@ -3,15 +3,10 @@
 #include "MagicInstance.h"
 #include "Map.h"
 
-<<<<<<< HEAD
-#if defined(GAMESERVER)
-#	include "GameServerDlg.h"
-=======
 
 #if defined(GAMESERVER)
 #	include "GameServerDlg.h"
 #	include "../shared/DateTime.h"
->>>>>>> koserver2
 #else
 #	include "../AIServer/ServerDlg.h"
 #	include "../AIServer/User.h"
@@ -20,12 +15,9 @@
 #if defined(GAMESERVER)
 void CMagicProcess::MagicPacket(Packet & pkt, Unit * pCaster /*= nullptr*/)
 {
-<<<<<<< HEAD
-=======
 	if (g_pMain->m_IsMagicTableInUpdateProcess)
 		return;
 
->>>>>>> koserver2
 	MagicInstance instance;
 	pkt >> instance.bOpcode >> instance.nSkillID;
 
@@ -35,8 +27,6 @@ void CMagicProcess::MagicPacket(Packet & pkt, Unit * pCaster /*= nullptr*/)
 		if (pCaster != nullptr)
 			TRACE("[%s] Used skill %d but it does not exist.\n", pCaster->GetName().c_str(), instance.nSkillID);
 
-<<<<<<< HEAD
-=======
 		if (pCaster->isPlayer() && instance.nSkillID < 0)
 		{
 			DateTime time;
@@ -45,7 +35,6 @@ void CMagicProcess::MagicPacket(Packet & pkt, Unit * pCaster /*= nullptr*/)
 			TO_USER(pCaster)->Disconnect();
 		}
 
->>>>>>> koserver2
 		return;
 	}
 
@@ -160,8 +149,6 @@ bool CMagicProcess::UserRegionCheck(Unit * pSkillCaster, Unit * pSkillTarget, _M
 		if (pSkillCaster->isHostileTo(pSkillTarget))
 			goto final_test;
 		break;
-<<<<<<< HEAD
-=======
 	
 	case MORAL_AREA_ALL:
 		if (pSkillCaster->isNPC()
@@ -181,7 +168,6 @@ bool CMagicProcess::UserRegionCheck(Unit * pSkillCaster, Unit * pSkillTarget, _M
 			&& TO_USER(pSkillTarget)->isInSafetyArea())
 			return false;
 		break;
->>>>>>> koserver2
 
 	case MORAL_AREA_FRIEND:
 		if (!pSkillCaster->isHostileTo(pSkillTarget))
@@ -233,11 +219,7 @@ void CMagicProcess::CheckExpiredType9Skills(Unit * pTarget, bool bForceExpiratio
 	if (!pTarget->isPlayer())
 		return;
 
-<<<<<<< HEAD
-	FastGuard lock(pTarget->m_buffLock);
-=======
 	Guard lock(pTarget->m_buffLock);
->>>>>>> koserver2
 	Type9BuffMap & buffMap = pTarget->m_type9BuffMap;
 
 	MagicInstance instance;
@@ -265,11 +247,7 @@ void CMagicProcess::RemoveStealth(Unit * pTarget, InvisibilityType bInvisibility
 		&& bInvisibilityType != INVIS_DISPEL_ON_ATTACK)
 		return;
 
-<<<<<<< HEAD
-	FastGuard lock(pTarget->m_buffLock);
-=======
 	Guard lock(pTarget->m_buffLock);
->>>>>>> koserver2
 	Type9BuffMap & buffMap = pTarget->m_type9BuffMap;
 	MagicInstance instance;
 
@@ -290,11 +268,7 @@ void CMagicProcess::RemoveStealth(Unit * pTarget, InvisibilityType bInvisibility
 bool CMagicProcess::GrantType4Buff(_MAGIC_TABLE * pSkill, _MAGIC_TYPE4 *pType, Unit * pCaster, Unit *pTarget, bool bIsRecastingSavedMagic /*= false*/)
 {
 	// Buff mustn't already be added at this point.
-<<<<<<< HEAD
-	FastGuard lock(pTarget->m_buffLock);
-=======
 	Guard lock(pTarget->m_buffLock);
->>>>>>> koserver2
 	if (!bIsRecastingSavedMagic
 		&& pTarget->m_buffMap.find(pType->bBuffType) != pTarget->m_buffMap.end())
 		return false;
@@ -503,8 +477,6 @@ bool CMagicProcess::GrantType4Buff(_MAGIC_TABLE * pSkill, _MAGIC_TYPE4 *pType, U
 
 	case BUFF_TYPE_VARIOUS_EFFECTS: //... whatever the event item grants.
 		// what is tweaked in the database: AC, Attack, MaxHP, resistances
-<<<<<<< HEAD
-=======
 		// AC
 		if (pType->sAC == 0 && pType->sACPct > 100)
 			pTarget->m_sACPercent += (pType->sACPct - 100);
@@ -518,7 +490,6 @@ bool CMagicProcess::GrantType4Buff(_MAGIC_TABLE * pSkill, _MAGIC_TYPE4 *pType, U
 		// NP Bonus
 		if (pTarget->isPlayer() && pType->sSpecialAmount > 0)
 			TO_USER(pTarget)->m_bSkillNPBonus += pType->sSpecialAmount;
->>>>>>> koserver2
 		break;
 
 	case BUFF_TYPE_IGNORE_WEAPON:		// Weapon cancellation
@@ -659,17 +630,10 @@ bool CMagicProcess::GrantType4Buff(_MAGIC_TABLE * pSkill, _MAGIC_TYPE4 *pType, U
 	return true;
 }
 
-<<<<<<< HEAD
-bool CMagicProcess::RemoveType4Buff(uint8 byBuffType, Unit *pTarget, bool bRemoveSavedMagic /*= true*/)
-{
-	// Buff must be added at this point. If it doesn't exist, we can't remove it twice.
-	FastGuard lock(pTarget->m_buffLock);
-=======
 bool CMagicProcess::RemoveType4Buff(uint8 byBuffType, Unit *pTarget, bool bRemoveSavedMagic /*= true*/, bool bRecastSavedMagic /*= false*/)
 {
 	// Buff must be added at this point. If it doesn't exist, we can't remove it twice.
 	Guard lock(pTarget->m_buffLock);
->>>>>>> koserver2
 	auto itr = pTarget->m_buffMap.find(byBuffType);
 	if (itr == pTarget->m_buffMap.end())
 		return false;
@@ -712,14 +676,10 @@ bool CMagicProcess::RemoveType4Buff(uint8 byBuffType, Unit *pTarget, bool bRemov
 		break;
 
 	case BUFF_TYPE_DAMAGE:
-<<<<<<< HEAD
-		pTarget->m_bAttackAmount = 100;
-=======
 		if (pType->bAttack > 100)
 			pTarget->m_bAttackAmount -= (pType->bAttack - 100);
 		else
 			pTarget->m_bAttackAmount -= pType->bAttack;
->>>>>>> koserver2
 		break;
 
 	case BUFF_TYPE_ATTACK_SPEED:
@@ -848,11 +808,8 @@ bool CMagicProcess::RemoveType4Buff(uint8 byBuffType, Unit *pTarget, bool bRemov
 
 	case BUFF_TYPE_RESIS_AND_MAGIC_DMG: // Elysian Web
 		pTarget->m_bMagicDamageReduction = 100;
-<<<<<<< HEAD
-=======
 		if(pTarget->isPlayer())
 			TO_USER(pTarget)->SendUserStatusUpdate(USER_STATUS_POISON,USER_STATUS_CURE);
->>>>>>> koserver2
 		break;
 
 	case BUFF_TYPE_TRIPLEAC_HALFSPEED:	// Wall of Iron
@@ -895,8 +852,6 @@ bool CMagicProcess::RemoveType4Buff(uint8 byBuffType, Unit *pTarget, bool bRemov
 
 	case BUFF_TYPE_VARIOUS_EFFECTS: //... whatever the event item grants.
 		// what is tweaked in the database: AC, Attack, MaxHP, resistances
-<<<<<<< HEAD
-=======
 		// AC
 		if (pType->sAC == 0 && pType->sACPct > 100)
 			pTarget->m_sACPercent -= (pType->sACPct - 100);
@@ -910,7 +865,6 @@ bool CMagicProcess::RemoveType4Buff(uint8 byBuffType, Unit *pTarget, bool bRemov
 		// NP Bonus
 		if (pTarget->isPlayer() && pType->sSpecialAmount > 0)
 			TO_USER(pTarget)->m_bSkillNPBonus -= pType->sSpecialAmount;
->>>>>>> koserver2
 		break;
 
 	case BUFF_TYPE_PASSION_OF_SOUL:		// Passion of the Soul
@@ -1030,14 +984,6 @@ bool CMagicProcess::RemoveType4Buff(uint8 byBuffType, Unit *pTarget, bool bRemov
 
 		TO_USER(pTarget)->SetUserAbility();
 
-<<<<<<< HEAD
-		Packet result(WIZ_MAGIC_PROCESS, uint8(MAGIC_DURATION_EXPIRED));
-		result << byBuffType;
-		TO_USER(pTarget)->Send(&result);
-	}
-
-#if defined(GAMESERVER) // update the target data in the AI server.
-=======
 		if (bRemoveSavedMagic && pType->bBuffType != BUFF_TYPE_MAGE_ARMOR)
 		{
 			Packet result(WIZ_MAGIC_PROCESS, uint8(MAGIC_DURATION_EXPIRED));
@@ -1054,7 +1000,6 @@ bool CMagicProcess::RemoveType4Buff(uint8 byBuffType, Unit *pTarget, bool bRemov
 		TO_USER(pTarget)->RecastLockableScrolls(pType->bBuffType);
 	}
 
->>>>>>> koserver2
 	UpdateAIServer(pType->iNum, AISkillOpcodeRemoveBuff, pTarget);
 #endif
 
@@ -1224,8 +1169,4 @@ bool CMagicProcess::IsBuff(_MAGIC_TYPE4 * pType)
 
 	printf("WARNING: Unhandled buff type (%d) for skill %d, assuming it's a debuff.\n", pType->bBuffType, pType->iNum);
 	return false;
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> koserver2

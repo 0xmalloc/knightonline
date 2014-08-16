@@ -150,12 +150,9 @@
     <ClCompile Include="EventHandler.cpp">
       <Filter>Source Files\Handlers</Filter>
     </ClCompile>
-<<<<<<< HEAD
-=======
     <ClCompile Include="CharacterHandler.cpp">
       <Filter>Source Files\Handlers</Filter>
     </ClCompile>
->>>>>>> koserver2
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Define.h">
@@ -221,12 +218,6 @@
     <ClInclude Include="..\shared\database\EventSet.h">
       <Filter>Database</Filter>
     </ClInclude>
-<<<<<<< HEAD
-    <ClInclude Include="..\shared\database\HomeSet.h">
-      <Filter>Database</Filter>
-    </ClInclude>
-=======
->>>>>>> koserver2
     <ClInclude Include="..\shared\database\ItemTableSet.h">
       <Filter>Database</Filter>
     </ClInclude>
@@ -371,8 +362,6 @@
     <ClInclude Include="..\shared\database\EventTriggerSet.h">
       <Filter>Database</Filter>
     </ClInclude>
-<<<<<<< HEAD
-=======
     <ClInclude Include="..\shared\database\MonsterRespawnListInformationSet.h">
       <Filter>Database</Filter>
     </ClInclude>
@@ -388,7 +377,12 @@
     <ClInclude Include="..\shared\database\ObjectPosSet.h">
       <Filter>Database</Filter>
     </ClInclude>
->>>>>>> koserver2
+    <ClInclude Include="..\scripting\Lua\src\lua.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\scripting\Lua\src\lualib.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\GameServer.ico">

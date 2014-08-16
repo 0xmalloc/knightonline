@@ -85,21 +85,13 @@ public:
 	bool	bInstantCast;
 
 	bool	bSkillSuccessful;
-<<<<<<< HEAD
-	bool	bSendSpeedSkill;
-=======
->>>>>>> koserver2
 
 	uint32	nConsumeItem;
 
 	MagicInstance() : bOpcode(MAGIC_EFFECTING), nSkillID(0), pSkill(nullptr), 
 		sCasterID(-1), sTargetID(-1), pSkillCaster(nullptr), pSkillTarget(nullptr),
 		bSendFail(true), bIsRecastingSavedMagic(false), bIsItemProc(false), bInstantCast(false),
-<<<<<<< HEAD
-		bSkillSuccessful(true), bSendSpeedSkill(true), nConsumeItem(0)
-=======
 		bSkillSuccessful(true), nConsumeItem(0)
->>>>>>> koserver2
 	{
 		memset(&sData, 0, sizeof(sData));
 	}
@@ -108,10 +100,7 @@ public:
 
 	bool IsAvailable();
 	SkillUseResult UserCanCast();
-<<<<<<< HEAD
-=======
 	SkillUseResult CheckSkillPrerequisites();
->>>>>>> koserver2
 
 	bool CheckType3Prerequisites();
 	bool CheckType4Prerequisites();

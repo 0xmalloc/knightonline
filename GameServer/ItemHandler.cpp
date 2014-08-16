@@ -14,8 +14,6 @@ void CUser::WarehouseProcess(Packet & pkt)
 	uint8 opcode;
 	bool bResult = false;
 
-<<<<<<< HEAD
-=======
 	if (isInPKZone())
 	{
 		if (hasCoins(10000))
@@ -27,7 +25,6 @@ void CUser::WarehouseProcess(Packet & pkt)
 		}
 	}
 
->>>>>>> koserver2
 	if (isDead())
 		return;
 
@@ -94,13 +91,9 @@ void CUser::WarehouseProcess(Packet & pkt)
 			// Check that the source item we're moving is what the client says it is.
 			|| (pSrcItem = GetItem(SLOT_MAX + bSrcPos))->nNum != nItemID
 			// Rented items cannot be placed in the inn.
-<<<<<<< HEAD
-			|| pSrcItem->isRented())
-=======
 			|| pSrcItem->isRented()
 			|| pSrcItem->isExpireItem()
 			|| pSrcItem->isDuplicate())
->>>>>>> koserver2
 			goto fail_return;
 
 		pDstItem = &m_sWarehouseArray[reference_pos + bDstPos];
@@ -350,7 +343,8 @@ bool CUser::RobItem(uint32 nItemID, uint16 sCount /*= 1*/)
 		return false;
 
 	// Search for the existance of all items in the player's inventory storage and onwards (includes magic bags)
-	for (int i = SLOT_MAX; i < INVENTORY_TOTAL; i++)
+	//for (int i = SLOT_MAX; i < INVENTORY_TOTAL; i++)
+	for (int i = 0; i < INVENTORY_TOTAL; i++)
 	{
 		if (RobItem(i, pTable, sCount))
 			return true;
@@ -391,7 +385,12 @@ bool CUser::RobItem(uint8 bPos, _ITEM_TABLE * pTable, uint16 sCount /*= 1*/)
 		|| (bIsConsumableScroll && pItem->sDuration == 0))
 		memset(pItem, 0, sizeof(_ITEM_DATA));
 
-	SendStackChange(pTable->m_iNum, pItem->sCount, pItem->sDuration, bPos - SLOT_MAX);
+	if(bPos > SLOT_MAX){
+		SendStackChange(pTable->m_iNum, pItem->sCount, pItem->sDuration, bPos - SLOT_MAX);
+	}else{
+		SendStackChange(pTable->m_iNum, pItem->sCount, pItem->sDuration, bPos, false, pItem->nExpirationTime, 0);
+	}
+
 	return true;
 }
 
@@ -457,18 +456,7 @@ bool CUser::GiveItem(uint32 itemid, uint16 count, bool send_packet /*= true*/)
 	if (pItem->sCount > MAX_ITEM_COUNT)
 		pItem->sCount = MAX_ITEM_COUNT;
 
-<<<<<<< HEAD
-	/*if (pItem->nNum == CHAOS_MAP)
-	pItem->nExpirationTime = int32(UNIXTIME) + 86400; // 1 day */
-=======
-
-	if (pItem->nNum == CHAOS_MAP)
-		pItem->nExpirationTime = int32(UNIXTIME) + 86400; // 1 day 
-	else{
-		pItem->nExpirationTime = 0;
-	}
->>>>>>> koserver2
-
+	pItem->nExpirationTime = get_expire_time(pTable->expiretime);
 	pItem->sDuration = pTable->m_sDuration;
 
 	// This is really silly, but match the count up with the duration
@@ -477,13 +465,7 @@ bool CUser::GiveItem(uint32 itemid, uint16 count, bool send_packet /*= true*/)
 		pItem->sCount = pItem->sDuration;
 
 	if (send_packet)
-<<<<<<< HEAD
-	{
-		SendStackChange(itemid, m_sItemArray[pos].sCount, m_sItemArray[pos].sDuration, pos - SLOT_MAX, true);
-	}
-=======
 		SendStackChange(itemid, m_sItemArray[pos].sCount, m_sItemArray[pos].sDuration, pos - SLOT_MAX, true, pItem->nExpirationTime);
->>>>>>> koserver2
 	else
 	{
 		SetUserAbility(false);
@@ -523,14 +505,10 @@ void CUser::ItemMove(Packet & pkt)
 
 	pkt >> dir >> nItemID >> bSrcPos >> bDstPos;
 
-<<<<<<< HEAD
-	if (isTrading() || isMerchanting() || isMining() || GetZoneID() == ZONE_CHAOS_DUNGEON)
-=======
 	if (isTrading() 
 		|| isMerchanting() 
 		|| isMining() 
 		|| GetZoneID() == ZONE_CHAOS_DUNGEON)
->>>>>>> koserver2
 		goto fail_return;
 
 	pTable = g_pMain->GetItemPtr(nItemID);
@@ -622,11 +600,8 @@ void CUser::ItemMove(Packet & pkt)
 		if (bDstPos >= SLOT_MAX || bSrcPos >= HAVE_MAX
 			// Make sure that the item actually exists there.
 				|| nItemID != m_sItemArray[INVENTORY_INVENT + bSrcPos].nNum
-<<<<<<< HEAD
-=======
 				// Disable duplicate item moving to slot.
 				|| m_sItemArray[INVENTORY_INVENT + bSrcPos].isDuplicate()
->>>>>>> koserver2
 				// Ensure the item is able to be equipped in that slot
 				|| !IsValidSlotPos(pTable, bDstPos))
 				goto fail_return;
@@ -1103,29 +1078,29 @@ bool CUser::IsValidSlotPos(_ITEM_TABLE* pTable, int destpos)
 	return true;
 }
 
-<<<<<<< HEAD
-void CUser::SendStackChange(uint32 nItemID, uint32 nCount /* needs to be 4 bytes, not a bug */, uint16 sDurability, uint8 bPos, bool bNewItem /* = false */)
-=======
-void CUser::SendStackChange(uint32 nItemID, uint32 nCount /* needs to be 4 bytes, not a bug */, uint16 sDurability, uint8 bPos, bool bNewItem /* = false */,uint32	nExpirationTime )
->>>>>>> koserver2
+void CUser::SendStackChange(uint32 nItemID, uint32 nCount /* needs to be 4 bytes, not a bug */, uint16 sDurability, uint8 bPos, bool bNewItem /* = false */,uint32	nExpirationTime, uint8 bagtype /*=1*/)
 {
+	// bagtype 0 装备身上  1 背包
+	bool bSendPacket = false;
+	if(0 == bagtype){
+		bSendPacket = true;
+	}
 	Packet result(WIZ_ITEM_COUNT_CHANGE);
-
 	result << uint16(1);
-	result << uint8(1);
+	result << uint8(bagtype);
 	result << uint8(bPos);
 	result << nItemID << nCount;
 	result << uint8(bNewItem ? 100 : 0);
 	result << sDurability;
-<<<<<<< HEAD
-=======
-	result<< uint32(0); // unknown; 
-	result<< nExpirationTime; // expiration date in unix time
->>>>>>> koserver2
+	//result<< uint32(0); // unknown; 
+	if(0 != nExpirationTime){
+		result<< nExpirationTime;
+		result<< nExpirationTime; // expiration date in unix time
+	}
 
-	SetUserAbility(false);
+	SetUserAbility(bSendPacket);
 	SendItemWeight();
-
+	
 	Send(&result);
 }
 
@@ -1181,4 +1156,14 @@ void CUser::ItemRemove(Packet & pkt)
 fail_return:
 	result << uint8(0);
 	Send(&result);
+}
+
+
+uint32 CUser::get_expire_time(uint32 expiretime)
+{
+	if(0 == expiretime ){
+		return  0;
+	}else{
+		return  int32(UNIXTIME) +  expiretime;
+	}	
 }

@@ -5,10 +5,7 @@
 #include "MagicInstance.h"
 #include "DBAgent.h"
 #include <algorithm>
-<<<<<<< HEAD
-=======
 #include "../shared/DateTime.h"
->>>>>>> koserver2
 
 using namespace std;
 
@@ -119,11 +116,8 @@ void CUser::Initialize()
 	m_bHPDurationNormal = 0;
 	m_bHPIntervalNormal = 5;
 
-<<<<<<< HEAD
-=======
 	m_tGameStartTimeSavedMagic = 0;
 
->>>>>>> koserver2
 	m_fSpeedHackClientTime = 0;
 	m_fSpeedHackServerTime = 0;
 	m_bSpeedHackCheck = 0;
@@ -165,13 +159,6 @@ void CUser::Initialize()
 	m_bWeaponsDisabled = false;
 
 	m_teamColour = TeamColourNone;
-<<<<<<< HEAD
-	m_fLastSkillUseTime = UNIXTIME;
-	m_bLastSkillType = 0;
-	m_iLoyaltyDaily = 0;
-	m_iLoyaltyPremiumBonus = 0;
-	m_bEventRoom = 0;
-=======
 	m_iLoyaltyDaily = 0;
 	m_iLoyaltyPremiumBonus = 0;
 	m_KillCount = 0;
@@ -179,7 +166,6 @@ void CUser::Initialize()
 
 	m_LastX = 0;
 	m_LastZ = 0;
->>>>>>> koserver2
 }
 
 /**
@@ -225,12 +211,6 @@ bool CUser::HandlePacket(Packet & pkt)
 	uint8 command = pkt.GetOpcode();
 	TRACE("[SID=%d] Packet: %X (len=%d)\n", GetSocketID(), command, pkt.size());
 
-<<<<<<< HEAD
-	if (command == WIZ_MAGIC_PROCESS && !isAlive())
-		return false;
-
-=======
->>>>>>> koserver2
 	// If crypto's not been enabled yet, force the version packet to be sent.
 	if (!isCryptoEnabled())
 	{
@@ -283,14 +263,6 @@ bool CUser::HandlePacket(Packet & pkt)
 		return true;
 	}
 
-<<<<<<< HEAD
-=======
-	//check expire_item
-	if(rand()%200 == 0){
-		check_expire_item();
-	}
-
->>>>>>> koserver2
 	// Otherwise, assume we're authed & in-game.
 	switch (command)
 	{
@@ -307,6 +279,10 @@ bool CUser::HandlePacket(Packet & pkt)
 		SkillDataProcess(pkt);
 		break;
 	case WIZ_MOVE:
+		//check expire_item
+		if(rand()%10 ==0){
+			check_expire_item();
+		}
 		MoveProcess(pkt);
 		break;
 	case WIZ_ROTATE:
@@ -484,8 +460,6 @@ bool CUser::HandlePacket(Packet & pkt)
 */
 void CUser::Update()
 {
-<<<<<<< HEAD
-=======
 	if (m_tGameStartTimeSavedMagic != 0 && (UNIXTIME - m_tGameStartTimeSavedMagic) >= 2)
 	{
 		m_tGameStartTimeSavedMagic = 0;
@@ -494,7 +468,6 @@ void CUser::Update()
 		RecastSavedMagic();
 	}
 
->>>>>>> koserver2
 	if (!isBlinking() && m_tHPLastTimeNormal != 0 && (UNIXTIME - m_tHPLastTimeNormal) > m_bHPIntervalNormal)
 		HPTimeChange();	// For Sitdown/Standup HP restoration.
 
@@ -539,13 +512,8 @@ void CUser::SetRival(CUser * pRival)
 	result	<< pRival->GetID()
 		<< GetCoins() << GetLoyalty();
 
-<<<<<<< HEAD
-	if (isInClan() 
-		&& (pKnights = g_pMain->GetClanPtr(GetClanID())) != nullptr)
-=======
 	if (pRival->isInClan() 
 		&& (pKnights = g_pMain->GetClanPtr(pRival->GetClanID())))
->>>>>>> koserver2
 		result << pKnights->GetName();
 	else
 		result << uint16(0); // 0 length clan name;
@@ -583,47 +551,28 @@ void CUser::RemoveRival()
 * @param	bIsKillReward	When set to true, enables the use of NP-modifying buffs
 *							and includes monthly NP gains.
 */
-<<<<<<< HEAD
-void CUser::SendLoyaltyChange(int32 nChangeAmount /*= 0*/, bool bIsKillReward /*= false*/)
-=======
 void CUser::SendLoyaltyChange(int32 nChangeAmount /*= 0*/, bool bIsKillReward /* false */, bool bIsBonusReward /* false */, bool bIsAddLoyaltyMonthly /* true */)
->>>>>>> koserver2
 {
 	Packet result(WIZ_LOYALTY_CHANGE, uint8(LOYALTY_NATIONAL_POINTS));
 	uint32 nClanLoyaltyAmount = 0;
 
-<<<<<<< HEAD
-	// If we're taking NP, we need to prevent us from hitting values below 0.
-	if (nChangeAmount < 0)
-	{
-		// Negate the value so it becomes positive (i.e. -50 -> 50) 
-=======
 	int32 nChangeAmountLoyaltyMonthly = nChangeAmount;
 
 	// If we're taking NP, we need to prevent us from hitting values below 0.
 	if (nChangeAmount < 0)
 	{
 		// Negate the value so it becomes positive (i.e. -50 -> 50)
->>>>>>> koserver2
 		// so we can determine if we're trying to take more NP than we have.
 		uint32 amt = -nChangeAmount; /* avoids unsigned/signed comparison warning */
 
 		if (amt > m_iLoyalty)
 			m_iLoyalty = 0;
-<<<<<<< HEAD
-		else 
-=======
 		else
->>>>>>> koserver2
 			m_iLoyalty += nChangeAmount;
 
 		// We should only adjust monthly NP when NP was lost when killing a player.
 		if (bIsKillReward)
 		{
-<<<<<<< HEAD
-			if (amt > m_iLoyaltyMonthly) m_iLoyaltyMonthly = 0;
-			else m_iLoyaltyMonthly += nChangeAmount;
-=======
 			if (GetZoneID() == ZONE_ARDREAM || GetZoneID() == ZONE_RONARK_LAND_BASE)
 				bIsAddLoyaltyMonthly = false;
 
@@ -639,7 +588,6 @@ void CUser::SendLoyaltyChange(int32 nChangeAmount /*= 0*/, bool bIsKillReward /*
 				else 
 					m_iLoyaltyMonthly += nChangeAmountLoyaltyMonthly;
 			}
->>>>>>> koserver2
 		}
 	}
 	// We're simply adding NP here.
@@ -648,25 +596,19 @@ void CUser::SendLoyaltyChange(int32 nChangeAmount /*= 0*/, bool bIsKillReward /*
 		// If you're using an NP modifying buff then add the bonus
 		nChangeAmount = m_bNPGainAmount * nChangeAmount / 100;
 
-<<<<<<< HEAD
-=======
 		// Add on any additional NP earned because of a global NP event.
 		// NOTE: They officially check to see if the NP is <= 100,000.
 		nChangeAmount = nChangeAmount * (100 + g_pMain->m_byNPEventAmount) / 100;
 
->>>>>>> koserver2
 		// We should only apply NP bonuses when NP was gained as a reward for killing a player.
 		if (bIsKillReward)
 		{
 			// Add on any additional NP gained from items/skills.
 			nChangeAmount += m_bItemNPBonus + m_bSkillNPBonus;
-<<<<<<< HEAD
-=======
 
 			// Add monument bonus.
 			if (isInPKZone() && GetPVPMonumentNation() == GetNation())
 				nChangeAmount += PVP_MONUMENT_NP_BONUS;
->>>>>>> koserver2
 		}
 
 		if (m_iLoyalty + nChangeAmount > LOYALTY_MAX)
@@ -674,68 +616,14 @@ void CUser::SendLoyaltyChange(int32 nChangeAmount /*= 0*/, bool bIsKillReward /*
 		else
 			m_iLoyalty += nChangeAmount;
 
-<<<<<<< HEAD
-		if (isInPKZone())
-		{
-			if (bIsKillReward)
-				if (g_pMain->m_nPVPMonumentNation[GetZoneID()] == GetNation())
-					nChangeAmount += PVP_MONUMENT_NP_BONUS;
-=======
 		if (isInPKZone() && !bIsBonusReward)
 		{
 			if (GetZoneID() == ZONE_ARDREAM || GetZoneID() == ZONE_RONARK_LAND_BASE)
 				bIsAddLoyaltyMonthly = false;
->>>>>>> koserver2
 
 			m_iLoyaltyDaily += nChangeAmount;
 			UpdatePlayerRank();
 		}
-<<<<<<< HEAD
-		//// We should only apply additional monthly NP when NP was gained as a reward for killing a player.
-		if (m_iLoyaltyMonthly + nChangeAmount > LOYALTY_MAX)
-			m_iLoyaltyMonthly = LOYALTY_MAX;
-		else
-			m_iLoyaltyMonthly += nChangeAmount;
-
-		if (bIsKillReward)
-		{
-			if (m_bPremiumType != 0)
-			{
-				m_iLoyalty += GetPremiumProperty(PremiumBonusLoyalty);
-				m_iLoyaltyMonthly += GetPremiumProperty(PremiumBonusLoyalty);
-
-				if (isInPKZone())
-					m_iLoyaltyPremiumBonus += GetPremiumProperty(PremiumBonusLoyalty);
-			}
-		}
-
-		if (m_bKnights != 0)
-		{
-			CKnights * pKnights = g_pMain->GetClanPtr(GetClanID());
-
-			if (pKnights != nullptr && pKnights->m_byFlag >= ClanTypeAccredited5 && pKnights->GetClanPointMethod() == 0)
-			{
-				if (pKnights->m_sMembers > 0 && pKnights->m_sMembers <= MAX_CLAN_USERS)
-				{
-					if (pKnights->m_sMembers <= 5)
-						nClanLoyaltyAmount = 1;
-					else if (pKnights->m_sMembers <= 10)
-						nClanLoyaltyAmount = 2;
-					else if (pKnights->m_sMembers <= 15)
-						nClanLoyaltyAmount = 3;
-					else if (pKnights->m_sMembers <= 20)
-						nClanLoyaltyAmount = 4;
-					else if (pKnights->m_sMembers <= 25)
-						nClanLoyaltyAmount = 5;
-					else if (pKnights->m_sMembers <= 30)
-						nClanLoyaltyAmount = 6;
-					else if (pKnights->m_sMembers > 30)
-						nClanLoyaltyAmount = 7;
-
-					m_iLoyalty -= nClanLoyaltyAmount;
-					CKnightsManager::AddUserDonatedNP(GetClanID(), m_strUserID, nClanLoyaltyAmount, true);
-				}
-=======
 
 		//// We should only apply additional monthly NP when NP was gained as a reward for killing a player.
 		if (!bIsBonusReward)
@@ -790,22 +678,15 @@ void CUser::SendLoyaltyChange(int32 nChangeAmount /*= 0*/, bool bIsKillReward /*
 
 				m_iLoyalty -= nClanLoyaltyAmount;
 				CKnightsManager::AddUserDonatedNP(GetClanID(), m_strUserID, nClanLoyaltyAmount, true);
->>>>>>> koserver2
 			}
 		}
 	}
 
-<<<<<<< HEAD
-	result	<< m_iLoyalty << m_iLoyaltyMonthly
-=======
 	result << m_iLoyalty << m_iLoyaltyMonthly
->>>>>>> koserver2
 		<< uint32(0) // Clan donations(? Donations made by this user? For the clan overall?)
 		<< nClanLoyaltyAmount; // Premium NP(? Additional NP gained?)
 
 	Send(&result);
-<<<<<<< HEAD
-=======
 
 	// Player is give first np, second exp and third meat dumpling etc.
 	if (bIsKillReward && nChangeAmount > 0)
@@ -817,7 +698,6 @@ void CUser::SendLoyaltyChange(int32 nChangeAmount /*= 0*/, bool bIsKillReward /*
 		if (isInPKZone())
 			GiveItem(ITEM_MEAT_DUMPLING);
 	}
->>>>>>> koserver2
 }
 
 /**
@@ -837,11 +717,7 @@ uint8 CUser::GetRankReward(bool isMonthly)
 	int8 nRank = -1;
 	int32 nGoldAmount = 0;
 
-<<<<<<< HEAD
-	FastGuard lock(g_pMain->m_userRankingsLock);
-=======
 	Guard lock(g_pMain->m_userRankingsLock);
->>>>>>> koserver2
 
 	string strUserID = GetName();
 	STRTOUPPER(strUserID);
@@ -1117,11 +993,7 @@ void CUser::SetMaxHp(int iFlag)
 
 	if (GetZoneID() == ZONE_SNOW_BATTLE && iFlag == 0)
 		m_iMaxHp = 100;
-<<<<<<< HEAD
-	else if (GetZoneID() == ZONE_CHAOS_DUNGEON)
-=======
 	else if (GetZoneID() == ZONE_CHAOS_DUNGEON && iFlag == 0)
->>>>>>> koserver2
 		m_iMaxHp = 10000 / 10;
 	else	
 	{
@@ -1132,15 +1004,10 @@ void CUser::SetMaxHp(int iFlag)
 		if (m_iMaxHp > MAX_PLAYER_HP && !isGM()) 
 			m_iMaxHp = MAX_PLAYER_HP;
 
-<<<<<<< HEAD
-		if( iFlag == 1 )	m_sHp = m_iMaxHp;
-		else if( iFlag == 2 )	m_iMaxHp = 100;
-=======
 		if (iFlag == 1)
 			m_sHp = m_iMaxHp;
 		else if (iFlag == 2)
 			m_iMaxHp = 100;
->>>>>>> koserver2
 	}
 
 	if(m_iMaxHp < m_sHp) {
@@ -1225,10 +1092,6 @@ void CUser::SetZoneAbilityChange(uint16 sNewZone)
 	if (!isGM())
 		PlayerRankingProcess(sNewZone,false);
 
-<<<<<<< HEAD
-	if (sNewZone == ZONE_RONARK_LAND || sNewZone ==  ZONE_BIFROST)
-		g_pMain->SendBifrostTime(this);
-=======
 	g_pMain->KillNpc(GetSocketID());
 
 	if (sNewZone == ZONE_BIFROST || sNewZone == ZONE_BATTLE4  || sNewZone ==  ZONE_RONARK_LAND)
@@ -1238,7 +1101,6 @@ void CUser::SetZoneAbilityChange(uint16 sNewZone)
 	m_RHitRepeatList.clear();
 	m_CoolDownList.clear();
 	m_MagicTypeCooldownList.clear();
->>>>>>> koserver2
 }
 
 /**
@@ -1331,11 +1193,7 @@ void CUser::SetSlotItemValue()
 
 	memset(m_sStatItemBonuses, 0, sizeof(uint16) * STAT_COUNT);
 	m_sFireR = m_sColdR = m_sLightningR = m_sMagicR = m_sDiseaseR = m_sPoisonR = 0;
-<<<<<<< HEAD
-	m_sDaggerR = m_sSwordR = m_sMaceR = m_sSpearR = m_sBowR = 0;
-=======
 	m_sDaggerR = m_sSwordR = m_sAxeR = m_sMaceR = m_sSpearR = m_sBowR = 0;
->>>>>>> koserver2
 
 	m_byAPBonusAmount = 0;
 	memset(&m_byAPClassBonusAmount, 0, sizeof(m_byAPClassBonusAmount));
@@ -1343,11 +1201,7 @@ void CUser::SetSlotItemValue()
 
 	m_bItemExpGainAmount = m_bItemNPBonus = m_bItemNoahGainAmount = 0;
 
-<<<<<<< HEAD
-	FastGuard lock(m_equippedItemBonusLock);
-=======
 	Guard lock(m_equippedItemBonusLock);
->>>>>>> koserver2
 	m_equippedItemBonuses.clear();
 
 	map<uint16, uint32> setItems;
@@ -1381,12 +1235,8 @@ void CUser::SetSlotItemValue()
 				&& (i == RIGHTHAND || i == LEFTHAND) 
 				&& !pTable->isShield())
 				// or items in magic bags.
-<<<<<<< HEAD
-				|| i >= INVENTORY_MBAG)
-=======
 				|| i >= INVENTORY_MBAG
 				|| pItem->isDuplicate())
->>>>>>> koserver2
 				continue;
 
 		item_ac = pTable->m_sAc;
@@ -1507,14 +1357,6 @@ void CUser::SetSlotItemValue()
 		m_sItemAc += m_sAddArmourAc;
 	else
 		m_sItemAc = m_sItemAc * m_bPctArmourAc / 100;
-<<<<<<< HEAD
-
-	// Update applicable weapon resistance amounts based on skill modifiers
-	// e.g. Eskrima
-	m_sDaggerR	+= m_byDaggerRAmount * m_sDaggerR / 100;
-	m_sBowR		+= m_byBowRAmount * m_sBowR / 100;
-=======
->>>>>>> koserver2
 }
 
 void CUser::ApplySetItemBonuses(_SET_ITEM * pItem)
@@ -1699,11 +1541,7 @@ void CUser::RecvUserExp(Packet & pkt)
 *
 * @param	iExp	The amount of experience points to adjust by.
 */
-<<<<<<< HEAD
-void CUser::ExpChange(int64 iExp)
-=======
 void CUser::ExpChange(int64 iExp, bool bIsBonusReward)
->>>>>>> koserver2
 {	
 	// Stop players level 5 or under from losing XP on death.
 	if ((GetLevel() < 6 && iExp < 0)
@@ -1717,17 +1555,6 @@ void CUser::ExpChange(int64 iExp, bool bIsBonusReward)
 
 	if (iExp > 0)
 	{
-<<<<<<< HEAD
-		// Adjust the exp gained based on the percent set by the buff
-		iExp = iExp * (m_sExpGainAmount + m_bItemExpGainAmount) / 100;
-
-		// Add on any additional XP earned because of a global XP event.
-		// NOTE: They officially check to see if the XP is <= 100,000.
-		iExp = iExp * (100 + g_pMain->m_byExpEventAmount) / 100;
-
-		if (m_bPremiumType != 0)
-			iExp = iExp * (100 + GetPremiumProperty(PremiumExpPercent)) / 100;
-=======
 		if (!bIsBonusReward)
 		{
 			// Adjust the exp gained based on the percent set by the buff
@@ -1740,7 +1567,6 @@ void CUser::ExpChange(int64 iExp, bool bIsBonusReward)
 			if (GetPremiumProperty(PremiumExpPercent) > 0)
 				iExp = iExp * (100 + GetPremiumProperty(PremiumExpPercent)) / 100;
 		}
->>>>>>> koserver2
 	}
 
 	bool bLevel = true;
@@ -1798,21 +1624,12 @@ void CUser::ExpChange(int64 iExp, bool bIsBonusReward)
 /**
 * @brief	Get premium properties.
 */
-<<<<<<< HEAD
-uint16 CUser::GetPremiumProperty(PremiumPropertyOpCodes type) {
-
-=======
 uint16 CUser::GetPremiumProperty(PremiumPropertyOpCodes type)
 {
->>>>>>> koserver2
 	if (m_bPremiumType <= 0)
 		return 0;
 
 	_PREMIUM_ITEM * pPremiumItem = g_pMain->m_PremiumItemArray.GetData(m_bPremiumType);
-<<<<<<< HEAD
-
-=======
->>>>>>> koserver2
 	if (pPremiumItem == nullptr)
 		return 0;
 
@@ -1832,19 +1649,6 @@ uint16 CUser::GetPremiumProperty(PremiumPropertyOpCodes type)
 		return pPremiumItem->ItemSellPercent;
 	case PremiumExpPercent:
 		{
-<<<<<<< HEAD
-			foreach_stlmap_nolock(itr, g_pMain->m_PremiumItemExpArray) {
-				_PREMIUM_ITEM_EXP *pPremiumItemExp = g_pMain->m_PremiumItemExpArray.GetData(itr->first);
-
-				if (pPremiumItemExp != nullptr)
-				{
-					if (m_bPremiumType == pPremiumItemExp->Type)
-					{
-						if (GetLevel() >= pPremiumItemExp->MinLevel && GetLevel() <= pPremiumItemExp->MaxLevel)
-							return pPremiumItemExp->sPercent;
-					}
-				}
-=======
 			foreach_stlmap (itr, g_pMain->m_PremiumItemExpArray)
 			{
 				_PREMIUM_ITEM_EXP *pPremiumItemExp = g_pMain->m_PremiumItemExpArray.GetData(itr->first);
@@ -1854,7 +1658,6 @@ uint16 CUser::GetPremiumProperty(PremiumPropertyOpCodes type)
 
 				if (m_bPremiumType == pPremiumItemExp->Type && GetLevel() >= pPremiumItemExp->MinLevel && GetLevel() <= pPremiumItemExp->MaxLevel)
 					return pPremiumItemExp->sPercent;
->>>>>>> koserver2
 			}
 		}
 	}
@@ -1869,18 +1672,11 @@ uint16 CUser::GetPremiumProperty(PremiumPropertyOpCodes type)
 * @param	level   	The level we've changed to.
 * @param	bLevelUp	true to level up, false for deleveling.
 */
-<<<<<<< HEAD
-void CUser::LevelChange(short level, bool bLevelUp /*= true*/)
-=======
 void CUser::LevelChange(uint8 level, bool bLevelUp /*= true*/)
->>>>>>> koserver2
 {
 	if (level < 1 || level > MAX_LEVEL)
 		return;
 
-<<<<<<< HEAD
-	if (bLevelUp)
-=======
 	if (bLevelUp && level > GetLevel() + 1)
 	{
 		int16 nStatTotal = 300 + (level - 1) * 3;
@@ -1894,7 +1690,6 @@ void CUser::LevelChange(uint8 level, bool bLevelUp /*= true*/)
 		m_bLevel = level;
 	}
 	else if (bLevelUp)
->>>>>>> koserver2
 	{
 		// On each level up, we should give 3 stat points for levels 1-60.
 		// For each level above that, we give an additional 2 stat points (so 5 stat points per level).
@@ -1995,21 +1790,10 @@ void CUser::HpChange(int amount, Unit *pAttacker /*= nullptr*/, bool bSendToAI /
 		if (isGM())
 			return;
 
-<<<<<<< HEAD
-		if (m_bInvisibilityType != INVIS_NONE)
-		{
-			CMagicProcess::RemoveStealth(this, INVIS_DISPEL_ON_MOVE);
-			CMagicProcess::RemoveStealth(this, INVIS_DISPEL_ON_ATTACK);
-		}
-
-		// Handle the mirroring of damage.
-		if (m_bMirrorDamage && isInParty())
-=======
 		RemoveStealth();
 
 		// Handle the mirroring of damage.
 		if (m_bMirrorDamage && isInParty() && GetZoneID() != ZONE_CHAOS_DUNGEON)
->>>>>>> koserver2
 		{
 			_PARTY_GROUP *pParty = nullptr;
 			CUser *pUser = nullptr;
@@ -2031,11 +1815,7 @@ void CUser::HpChange(int amount, Unit *pAttacker /*= nullptr*/, bool bSendToAI /
 		}
 
 		// Handle mana absorb skills
-<<<<<<< HEAD
-		if (m_bManaAbsorb > 0)
-=======
 		if (m_bManaAbsorb > 0 && GetZoneID() != ZONE_CHAOS_DUNGEON)
->>>>>>> koserver2
 		{
 			int toBeAbsorbed = 0;
 			toBeAbsorbed = (originalAmount*m_bManaAbsorb) / 100;
@@ -2048,11 +1828,7 @@ void CUser::HpChange(int amount, Unit *pAttacker /*= nullptr*/, bool bSendToAI /
 		}
 
 		// Handle mastery passives
-<<<<<<< HEAD
-		if (isMastered())
-=======
 		if (isMastered() && GetZoneID() != ZONE_CHAOS_DUNGEON)
->>>>>>> koserver2
 		{
 			// Matchless: [Passive]Decreases all damages received by 15%
 			if (CheckSkillPoint(SkillPointMaster, 10, MAX_LEVEL))
@@ -2080,11 +1856,7 @@ void CUser::HpChange(int amount, Unit *pAttacker /*= nullptr*/, bool bSendToAI /
 
 	if (GetHealth() > 0
 		&& isMastered()
-<<<<<<< HEAD
-		&& !isMage())
-=======
 		&& !isMage() && GetZoneID() != ZONE_CHAOS_DUNGEON)
->>>>>>> koserver2
 	{
 		const uint16 hp30Percent = (30 * GetMaxHealth()) / 100;
 		if ((oldHP >= hp30Percent && m_sHp < hp30Percent)
@@ -2106,11 +1878,7 @@ void CUser::HpChange(int amount, Unit *pAttacker /*= nullptr*/, bool bSendToAI /
 		Send_AIServer(&result);
 	}
 
-<<<<<<< HEAD
-	if (isInParty())
-=======
 	if (isInParty() && GetZoneID() != ZONE_CHAOS_DUNGEON)
->>>>>>> koserver2
 		SendPartyHPUpdate();
 
 	// Ensure we send the original damage (prior to passives) amount to the attacker 
@@ -2283,14 +2051,11 @@ void CUser::SetUserAbility(bool bSendPacket /*= true*/)
 		}
 	}
 
-<<<<<<< HEAD
-=======
 	if (m_sACAmount < 0)
 		m_sACAmount = 0;
 
 	m_sTotalHit = 0;
 
->>>>>>> koserver2
 	if (sItemDamage < 3)
 		sItemDamage = 3;
 
@@ -2491,11 +2256,7 @@ void CUser::BundleOpenReq(Packet & pkt)
 		|| isDead()) // yeah, we know people abuse this. We do not care!
 		return;
 
-<<<<<<< HEAD
-	FastGuard lock(pRegion->m_RegionItemArray.m_lock);
-=======
 	Guard lock(pRegion->m_RegionItemArray.m_lock);
->>>>>>> koserver2
 	_LOOT_BUNDLE *pBundle = pRegion->m_RegionItemArray.GetData(bundle_index);
 	if (pBundle == nullptr
 		|| !isInRange(pBundle->x, pBundle->z, MAX_LOOT_RANGE))
@@ -2540,11 +2301,7 @@ void CUser::ItemGet(Packet & pkt)
 
 	// Lock the array while we process this request
 	// to prevent any race conditions between getting/removing the items...
-<<<<<<< HEAD
-	FastGuard lock(pRegion->m_RegionItemArray.m_lock);
-=======
 	Guard lock(pRegion->m_RegionItemArray.m_lock);
->>>>>>> koserver2
 
 	// Are we in any region?
 	if (pRegion == nullptr
@@ -2586,11 +2343,7 @@ void CUser::ItemGet(Packet & pkt)
 			|| (pParty = g_pMain->GetPartyPtr(GetPartyID())) == nullptr)
 		{
 			// NOTE: Coins have been checked already.
-<<<<<<< HEAD
-			if (m_bPremiumType != 0)
-=======
 			if (GetPremiumProperty(PremiumNoahPercent) > 0)
->>>>>>> koserver2
 				pGold = pItem->sCount * (100 + GetPremiumProperty(PremiumNoahPercent)) / 100;
 			else
 				pGold = pItem->sCount;
@@ -2627,13 +2380,8 @@ void CUser::ItemGet(Packet & pkt)
 				// Give each party member coins relative to their level.
 				int coins = (int)(pItem->sCount * (float)((*itr)->GetLevel() / (float)sumOfLevels));
 
-<<<<<<< HEAD
-				if ((*itr)->m_bPremiumType != 0)
-					pGold = coins * (100 + GetPremiumProperty(PremiumNoahPercent)) / 100;
-=======
 				if ((*itr)->GetPremiumProperty(PremiumNoahPercent) > 0)
 					pGold = coins * (100 + (*itr)->GetPremiumProperty(PremiumNoahPercent)) / 100;
->>>>>>> koserver2
 				else
 					pGold = coins;
 
@@ -2684,6 +2432,8 @@ void CUser::ItemGet(Packet & pkt)
 			// will be broken here, but usual cases are typically only given in the PUS.
 			// Will need to revise this logic (rather, shift it out into its own method).
 			pDstItem->sDuration  = pTable->m_sDuration; 
+
+			pDstItem->nExpirationTime = get_expire_time(pTable->expiretime);
 		}
 
 		if (pDstItem->sCount > MAX_ITEM_COUNT)
@@ -2700,8 +2450,6 @@ void CUser::ItemGet(Packet & pkt)
 		pReceiver->SetUserAbility(false);
 		pReceiver->SendItemWeight();
 
-<<<<<<< HEAD
-=======
 		if(pTable->m_ItemType == 4)  //暗金物品
 		{
 			std::string  pickupstr;
@@ -2709,7 +2457,6 @@ void CUser::ItemGet(Packet & pkt)
 			g_pMain->SendNotice(pickupstr.c_str());
 		}
 
->>>>>>> koserver2
 		// Now notify the party that we've looted, if applicable.
 		if (isInParty())
 		{
@@ -2924,15 +2671,11 @@ void CUser::LoyaltyChange(int16 tid, uint16 bonusNP /*= 0*/)
 	short loyalty_source = 0, loyalty_target = 0;
 
 	// TODO: Rewrite this out, it shouldn't handle all cases so generally like this
-<<<<<<< HEAD
-	if (!GetMap()->isNationPVPZone()) 
-=======
 	if (!GetMap()->isNationPVPZone() 
 		|| GetZoneID() == ZONE_DESPERATION_ABYSS 
 		|| GetZoneID() == ZONE_HELL_ABYSS 
 		|| GetZoneID() == ZONE_DRAGON_CAVE 
 		|| GetZoneID() == ZONE_CAITHAROS_ARENA)
->>>>>>> koserver2
 		return;
 
 	CUser* pTUser = g_pMain->GetUserPtr(tid);  
@@ -2946,38 +2689,15 @@ void CUser::LoyaltyChange(int16 tid, uint16 bonusNP /*= 0*/)
 			loyalty_source = 0;
 			loyalty_target = 0;
 		}
-<<<<<<< HEAD
-		// Caitharos Arena
-		else if (pTUser->GetZoneID() == ZONE_CAITHAROS_ARENA)
-		{
-			loyalty_source = 0;
-			loyalty_target = 0;
-		}
-		// Ardream
-		else if (pTUser->GetZoneID() == ZONE_ARDREAM)
-		{
-			loyalty_source = ARDREAM_KILL_LOYALTY_SOURCE; 
-			loyalty_target = ARDREAM_KILL_LOYALTY_TARGET;
-=======
 		// Ardream
 		else if (pTUser->GetZoneID() == ZONE_ARDREAM)
 		{
 			loyalty_source = g_pMain->m_Loyalty_Ardream_Source; 
 			loyalty_target = g_pMain->m_Loyalty_Ardream_Target;
->>>>>>> koserver2
 		}
 		// Ronark Land Base
 		else if (pTUser->GetZoneID() == ZONE_RONARK_LAND_BASE)
 		{
-<<<<<<< HEAD
-			loyalty_source = RONARK_LAND_BASE_KILL_LOYALTY_SOURCE; 
-			loyalty_target = RONARK_LAND_BASE_KILL_LOYALTY_TARGET;
-		}
-		else if (pTUser->GetZoneID() == ZONE_RONARK_LAND) 
-		{
-			loyalty_source = RONARK_LAND_KILL_LOYALTY_SOURCE;
-			loyalty_target = RONARK_LAND_KILL_LOYALTY_TARGET;
-=======
 			loyalty_source = g_pMain->m_Loyalty_Ronark_Land_Base_Source; 
 			loyalty_target = g_pMain->m_Loyalty_Ronark_Land_Base_Target;
 		}
@@ -2985,18 +2705,12 @@ void CUser::LoyaltyChange(int16 tid, uint16 bonusNP /*= 0*/)
 		{
 			loyalty_source = g_pMain->m_Loyalty_Ronark_Land_Source;
 			loyalty_target = g_pMain->m_Loyalty_Ronark_Land_Target;
->>>>>>> koserver2
 		}
 		// Other zones
 		else 
 		{
-<<<<<<< HEAD
-			loyalty_source = OTHER_ZONE_KILL_LOYALTY_SOURCE;
-			loyalty_target = OTHER_ZONE_KILL_LOYALTY_TARGET;
-=======
 			loyalty_source = g_pMain->m_Loyalty_Other_Zone_Source;
 			loyalty_target = g_pMain->m_Loyalty_Other_Zone_Target;
->>>>>>> koserver2
 		}
 	}
 
@@ -3004,13 +2718,8 @@ void CUser::LoyaltyChange(int16 tid, uint16 bonusNP /*= 0*/)
 	loyalty_source += bonusNP;
 	loyalty_target -= bonusNP;
 
-<<<<<<< HEAD
-	SendLoyaltyChange(loyalty_source, true);
-	pTUser->SendLoyaltyChange(loyalty_target, true);
-=======
 	SendLoyaltyChange(loyalty_source, true, false, pTUser->GetMonthlyLoyalty() > 0 ? true : false);
 	pTUser->SendLoyaltyChange(loyalty_target, true, false, pTUser->GetMonthlyLoyalty() > 0 ? true : false);
->>>>>>> koserver2
 
 	// TODO: Move this to a better place (death handler, preferrably)
 	// If a war's running, and we died/killed in a war zone... (this method should NOT be so tied up in specifics( 
@@ -3026,15 +2735,6 @@ void CUser::LoyaltyChange(int16 tid, uint16 bonusNP /*= 0*/)
 
 void CUser::SpeedHackUser()
 {
-<<<<<<< HEAD
-	if (!isInGame())
-		return;
-
-	if( m_bAuthority != 0 )
-		m_bAuthority = -1;
-
-	Disconnect();
-=======
 	if (!isInGame() || isGM())
 		return;
 
@@ -3052,7 +2752,6 @@ void CUser::SpeedHackUser()
 		g_pMain->SendFormattedNotice("%s is currently disconnect for speed hack.",Nation::ALL,GetName().c_str());
 		g_pMain->WriteCheatLogFile(string_format("[ SpeedHack - %d:%d:%d ] %s is Disconnected.\n", time.GetHour(),time.GetMinute(),time.GetSecond(),GetName().c_str()));
 	}
->>>>>>> koserver2
 }
 
 void CUser::UserLookChange(int pos, int itemid, int durability)
@@ -3070,19 +2769,6 @@ void CUser::SendNotice()
 	Packet result(WIZ_NOTICE);
 	uint8 count = 0;
 
-<<<<<<< HEAD
-#if __VERSION < 1453 // NOTE: This is actually still supported if we wanted to use it.
-	result << count; // placeholder the count
-	result.SByte(); // only old-style notices use single byte lengths
-
-	for (int i = 0; i < 20; i++)
-		AppendNoticeEntry(result, count, g_ppMain->m_ppNotice[i]);
-
-	AppendExtraNoticeData(result, count);
-	result.put(0, count); // replace the placeholdered line count
-#else
-=======
->>>>>>> koserver2
 	result << uint8(2); // new-style notices (top-right of screen)
 	result << count; // placeholder the count
 
@@ -3093,36 +2779,17 @@ void CUser::SendNotice()
 
 	AppendExtraNoticeData(result, count);
 	result.put(1, count); // replace the placeholdered line count
-<<<<<<< HEAD
-#endif
-=======
->>>>>>> koserver2
 
 	Send(&result);
 }
 
 void CUser::AppendNoticeEntry(Packet & pkt, uint8 & elementCount, const char * message, const char * title)
 {
-<<<<<<< HEAD
-	if (message == nullptr || *message == '\0')
-		return;
-
-#if __VERSION < 1453
-	pkt << message;
-#else
-	if (title == nullptr || *title == '\0')
-		return;
-
-	pkt << title << message;
-#endif
-
-=======
 	if (message == nullptr || *message == '\0'
 		|| title == nullptr || *title == '\0')
 		return;
 
 	pkt << title << message;
->>>>>>> koserver2
 	elementCount++;
 }
 
@@ -3132,19 +2799,12 @@ void CUser::AppendExtraNoticeData(Packet & pkt, uint8 & elementCount)
 	if (g_pMain->m_byExpEventAmount > 0)
 	{
 		g_pMain->GetServerResource(IDS_EXP_REPAY_EVENT, &message, g_pMain->m_byExpEventAmount);
-<<<<<<< HEAD
-		AppendNoticeEntry(pkt, elementCount, message.c_str(), "EXP event"); 
-=======
 		AppendNoticeEntry(pkt, elementCount, message.c_str(), "EXP Event"); 
->>>>>>> koserver2
 	}
 
 	if (g_pMain->m_byCoinEventAmount > 0)
 	{
 		g_pMain->GetServerResource(IDS_MONEY_REPAY_EVENT, &message, g_pMain->m_byCoinEventAmount);
-<<<<<<< HEAD
-		AppendNoticeEntry(pkt, elementCount, message.c_str(), "Noah event"); 
-=======
 		AppendNoticeEntry(pkt, elementCount, message.c_str(), "Noah Event"); 
 	}
 
@@ -3152,7 +2812,6 @@ void CUser::AppendExtraNoticeData(Packet & pkt, uint8 & elementCount)
 	{
 		g_pMain->GetServerResource(IDS_NP_REPAY_EVENT, &message, g_pMain->m_byNPEventAmount);
 		AppendNoticeEntry(pkt, elementCount, message.c_str(), "NP Event"); 
->>>>>>> koserver2
 	}
 }
 
@@ -3206,16 +2865,9 @@ void CUser::UpdateGameWeather(Packet & pkt)
 
 void CUser::GetUserInfoForAI(Packet & result)
 {
-<<<<<<< HEAD
-	FastGuard lock(m_equippedItemBonusLock);
-
-	result.SByte(); 
-	//result	<< GetSocketID()
-=======
 	Guard lock(m_equippedItemBonusLock);
 
 	result.SByte(); 
->>>>>>> koserver2
 	result	<< GetSocketID()
 		<< GetName() << GetZoneID() << GetNation() << GetLevel()
 		<< m_sHp << m_sMp 
@@ -3241,20 +2893,12 @@ void CUser::CountConcurrentUser()
 		return;
 
 	uint16 count = 0;
-<<<<<<< HEAD
-	SessionMap & sessMap = g_pMain->m_socketMgr.GetActiveSessionMap();
-=======
 	SessionMap sessMap = g_pMain->m_socketMgr.GetActiveSessionMap();
->>>>>>> koserver2
 	foreach (itr, sessMap)
 	{
 		if (TO_USER(itr->second)->isInGame())
 			count++;
 	}
-<<<<<<< HEAD
-	g_pMain->m_socketMgr.ReleaseLock();
-=======
->>>>>>> koserver2
 
 	Packet result(WIZ_CONCURRENTUSER);
 	result << count;
@@ -3328,25 +2972,6 @@ void CUser::LoyaltyDivide(int16 tid, uint16 bonusNP /*= 0*/)
 	else 
 		return;
 
-<<<<<<< HEAD
-	if (m_bZone != m_bNation && m_bZone < 3)
-		loyalty_source = 2 * loyalty_source;
-
-	// Adds bonus NP to be divided up & rewarded to the entire party.
-	// e.g. in the case of rival kills (should it share this particular bonus though?)
-	loyalty_source += bonusNP;
-
-	for (int j = 0; j < MAX_PARTY_USERS; j++) // Distribute loyalty amongst party members.
-	{
-		CUser *pUser = g_pMain->GetUserPtr(pParty->uid[j]);
-		if (pUser == nullptr)
-			continue;
-
-		pUser->SendLoyaltyChange(loyalty_source, true);
-	}
-
-	pTUser->SendLoyaltyChange(loyalty_target, true);
-=======
 	for (int j = 0; j < MAX_PARTY_USERS; j++) // Distribute loyalty amongst party members.
 	{
 		bonusNP = 0;
@@ -3368,7 +2993,6 @@ void CUser::LoyaltyDivide(int16 tid, uint16 bonusNP /*= 0*/)
 	}
 
 	pTUser->SendLoyaltyChange(loyalty_target, true, false, pTUser->GetMonthlyLoyalty() > 0 ? true : false);
->>>>>>> koserver2
 }
 
 int16 CUser::GetLoyaltyDivideSource(uint8 totalmember)
@@ -3376,18 +3000,6 @@ int16 CUser::GetLoyaltyDivideSource(uint8 totalmember)
 	int16 nBaseLoyalty = 0;
 
 	if (GetZoneID() == ZONE_ARDREAM)
-<<<<<<< HEAD
-		nBaseLoyalty = ARDREAM_KILL_LOYALTY_SOURCE;
-	else if (GetZoneID() == ZONE_RONARK_LAND_BASE)
-		nBaseLoyalty = RONARK_LAND_BASE_KILL_LOYALTY_SOURCE;
-	else if (GetZoneID() == ZONE_RONARK_LAND)
-		nBaseLoyalty = RONARK_LAND_KILL_LOYALTY_SOURCE;
-	else
-		nBaseLoyalty = OTHER_ZONE_KILL_LOYALTY_SOURCE;
-
-
-	int16 nMaxLoyalty = (nBaseLoyalty * 2) - ((nBaseLoyalty * 2) / MAX_PARTY_USERS);
-=======
 		nBaseLoyalty = g_pMain->m_Loyalty_Ardream_Source;
 	else if (GetZoneID() == ZONE_RONARK_LAND_BASE)
 		nBaseLoyalty = g_pMain->m_Loyalty_Ronark_Land_Base_Source;
@@ -3399,62 +3011,21 @@ int16 CUser::GetLoyaltyDivideSource(uint8 totalmember)
 		nBaseLoyalty = g_pMain->m_Loyalty_Other_Zone_Source;
 
 	int16 nMaxLoyalty = (nBaseLoyalty * 3) - 2;
->>>>>>> koserver2
 	int16 nMinLoyalty = nMaxLoyalty / MAX_PARTY_USERS;
 	int16 nLoyaltySource = nMinLoyalty;
 
 	if (nLoyaltySource > 0)
 	{
-<<<<<<< HEAD
-		if (totalmember == 1)
-			nLoyaltySource = nBaseLoyalty;
-		else if (totalmember == 2)
-			nLoyaltySource = (nBaseLoyalty + MAX_PARTY_USERS) / 2;
-		else if (totalmember == 3)
-		{
-			nLoyaltySource = (nBaseLoyalty + MAX_PARTY_USERS) / 3;
-			for (int i = 0; i < totalmember - 1; i++)
-				nLoyaltySource += 2;
-		}
-		else if (totalmember >= 4 && totalmember <= MAX_PARTY_USERS)
-		{
-			nLoyaltySource = (nBaseLoyalty + MAX_PARTY_USERS) / 4;
-
-			if (totalmember == 4)
-				nLoyaltySource += 6;
-			else if (totalmember == 5)
-				nLoyaltySource += 4;
-			else if (totalmember == 6)
-				nLoyaltySource += 2;
-			else if (totalmember == 7)
-				nLoyaltySource = nLoyaltySource;
-			else if (totalmember == 8)
-				nLoyaltySource -= 2;
-		}
-	}
-
-	return nLoyaltySource;
-=======
 		for (int i = 0; i < (MAX_PARTY_USERS - totalmember); i++)
 			nLoyaltySource += 2;
 	}
 
 	return nLoyaltySource -1;
->>>>>>> koserver2
 }
 
 int16 CUser::GetLoyaltyDivideTarget()
 {
 	if (GetZoneID() == ZONE_ARDREAM)
-<<<<<<< HEAD
-		return ARDREAM_KILL_LOYALTY_TARGET;
-	else if (GetZoneID() == ZONE_RONARK_LAND_BASE)
-		return RONARK_LAND_BASE_KILL_LOYALTY_TARGET;
-	else if (GetZoneID() == ZONE_RONARK_LAND)
-		return RONARK_LAND_KILL_LOYALTY_TARGET;
-	else
-		return OTHER_ZONE_KILL_LOYALTY_TARGET;
-=======
 		return g_pMain->m_Loyalty_Ardream_Target;
 	else if (GetZoneID() == ZONE_RONARK_LAND_BASE)
 		return g_pMain->m_Loyalty_Ronark_Land_Base_Target;
@@ -3464,7 +3035,6 @@ int16 CUser::GetLoyaltyDivideTarget()
 		return (g_pMain->m_Loyalty_Other_Zone_Target / 100) * 20;
 	else
 		return g_pMain->m_Loyalty_Other_Zone_Target;
->>>>>>> koserver2
 
 	return 0;
 }
@@ -3477,11 +3047,7 @@ void CUser::ItemWoreOut(int type, int damage)
 	int worerate = (int)sqrt(damage / 10.0f);
 	if (worerate == 0) return;
 
-<<<<<<< HEAD
-	ASSERT(type == ATTACK || type == DEFENCE);
-=======
 	ASSERT(type == ATTACK || type == DEFENCE || type == REPAIR_ALL);
->>>>>>> koserver2
 
 	// Inflict damage on equipped weapons.
 	if (type == ATTACK)
@@ -3489,12 +3055,9 @@ void CUser::ItemWoreOut(int type, int damage)
 	// Inflict damage on equipped armour.
 	else if (type == DEFENCE)
 		totalSlots = sizeof(armourTypes) / sizeof(*armourTypes); // use all the slots.
-<<<<<<< HEAD
-=======
 	// Item repair all slots.
 	else if (type == REPAIR_ALL)
 		totalSlots = sizeof(armourTypes) / sizeof(*armourTypes); 
->>>>>>> koserver2
 
 	for (uint8 i = 0; i < totalSlots; i++) 
 	{
@@ -3512,8 +3075,6 @@ void CUser::ItemWoreOut(int type, int damage)
 			&& ((slot == LEFTHAND || slot == RIGHTHAND) && pTable->m_bSlot == ItemSlot1HLeftHand))) 
 			continue;
 
-<<<<<<< HEAD
-=======
 		if (type == REPAIR_ALL)
 		{
 			SendDurability(slot, pTable->m_sDuration); 
@@ -3521,7 +3082,6 @@ void CUser::ItemWoreOut(int type, int damage)
 			continue;
 		}
 
->>>>>>> koserver2
 		int beforepercent = (int)((pItem->sDuration / (double)pTable->m_sDuration) * 100);
 		int curpercent;
 
@@ -3702,11 +3262,7 @@ void CUser::HPTimeChangeType3()
 
 void CUser::Type4Duration()
 {
-<<<<<<< HEAD
-	FastGuard lock(m_buffLock);
-=======
 	Guard lock(m_buffLock);
->>>>>>> koserver2
 	if (m_buffMap.empty())
 		return;
 
@@ -3715,11 +3271,7 @@ void CUser::Type4Duration()
 		if (itr->second.m_tEndTime > UNIXTIME)
 			continue;
 
-<<<<<<< HEAD
-		CMagicProcess::RemoveType4Buff(itr->first, this);
-=======
 		CMagicProcess::RemoveType4Buff(itr->first, this, true, isLockableScroll(itr->second.m_bBuffType));
->>>>>>> koserver2
 		break; // only ever handle one at a time with the current logic
 	}
 
@@ -3753,21 +3305,13 @@ void CUser::OperatorCommand(Packet & pkt)
 	std::string strUserID;
 	uint8 opcode;
 	bool bIsOnline = false;
-<<<<<<< HEAD
-	std::string sNoticeMessage;
-=======
 	std::string sNoticeMessage, sOperatorCommandType;
->>>>>>> koserver2
 	pkt >> opcode >> strUserID;
 
 	if (strUserID.empty() || strUserID.size() > MAX_ID_SIZE)
 		return;
 
 	CUser *pUser = g_pMain->GetUserPtr(strUserID, TYPE_CHARACTER);
-<<<<<<< HEAD
-
-=======
->>>>>>> koserver2
 	if (pUser == nullptr)
 		bIsOnline = false;
 	else
@@ -3777,26 +3321,6 @@ void CUser::OperatorCommand(Packet & pkt)
 	{
 	case OPERATOR_ARREST:
 		if (bIsOnline)
-<<<<<<< HEAD
-			ZoneChange(pUser->GetZoneID(), pUser->m_curx, pUser->m_curz);
-		break;
-	case OPERATOR_SUMMON:
-		if (bIsOnline)
-			pUser->ZoneChange(GetZoneID(), m_curx, m_curz);
-		break;
-	case OPERATOR_CUTOFF:
-		if (bIsOnline)
-			pUser->Disconnect();
-		break;
-	case OPERATOR_BAN:
-	case OPERATOR_BAN_ACCOUNT: // ban account is meant to call a proc to do so
-		if (bIsOnline)  {
-			pUser->m_bAuthority = AUTHORITY_BANNED;
-			pUser->Disconnect();
-		} else {
-			g_DBAgent.UpdateUserAuthority(strUserID,AUTHORITY_BANNED);
-		}
-=======
 		{
 			ZoneChange(pUser->GetZoneID(), pUser->m_curx, pUser->m_curz);
 			sOperatorCommandType = "OPERATOR_ARREST";
@@ -3827,7 +3351,6 @@ void CUser::OperatorCommand(Packet & pkt)
 			g_DBAgent.UpdateUserAuthority(strUserID,AUTHORITY_BANNED);
 
 		sOperatorCommandType = "OPERATOR_BAN_ACCOUNT";
->>>>>>> koserver2
 		sNoticeMessage = string_format("%s is currently blocked for illegal activity.", strUserID.c_str());
 		break;
 	case OPERATOR_MUTE:
@@ -3835,69 +3358,48 @@ void CUser::OperatorCommand(Packet & pkt)
 			pUser->m_bAuthority = AUTHORITY_MUTED;
 		else
 			g_DBAgent.UpdateUserAuthority(strUserID,AUTHORITY_MUTED);
-<<<<<<< HEAD
-		sNoticeMessage = string_format("%s is currently muted for illegal activity.", strUserID.c_str());
-=======
 
 		sOperatorCommandType = "OPERATOR_MUTE";
 		sNoticeMessage = string_format("%s is currently muted.", strUserID.c_str());
->>>>>>> koserver2
 		break;
 	case OPERATOR_DISABLE_ATTACK:
 		if (bIsOnline) 
 			pUser->m_bAuthority = AUTHORITY_ATTACK_DISABLED;
 		else
 			g_DBAgent.UpdateUserAuthority(strUserID,AUTHORITY_ATTACK_DISABLED);
-<<<<<<< HEAD
-		sNoticeMessage = string_format("%s is currently disabled attack for illegal activity.", strUserID.c_str());
-=======
 		sOperatorCommandType = "OPERATOR_DISABLE_ATTACK";
 		sNoticeMessage = string_format("%s is currently attack disabled.", strUserID.c_str());
->>>>>>> koserver2
 		break;
 	case OPERATOR_ENABLE_ATTACK:
 		if (bIsOnline)
 			pUser->m_bAuthority = AUTHORITY_PLAYER;
 		else
 			g_DBAgent.UpdateUserAuthority(strUserID,AUTHORITY_PLAYER);
-<<<<<<< HEAD
-		sNoticeMessage = string_format("%s has been enabled attack.", strUserID.c_str());
-=======
 		sOperatorCommandType = "OPERATOR_ENABLE_ATTACK";
 		sNoticeMessage = string_format("%s is currently attack enabled.", strUserID.c_str());
->>>>>>> koserver2
 		break;
 	case OPERATOR_UNMUTE:
 		if (bIsOnline)
 			pUser->m_bAuthority = AUTHORITY_PLAYER;
 		else
 			g_DBAgent.UpdateUserAuthority(strUserID,AUTHORITY_PLAYER);
-<<<<<<< HEAD
-		sNoticeMessage = string_format("%s has been unmuted.", strUserID.c_str());
-=======
 		sOperatorCommandType = "OPERATOR_UNMUTE";
 		sNoticeMessage = string_format("%s is currently unmuted.", strUserID.c_str());
->>>>>>> koserver2
 		break;
 	}
 
 	if (!sNoticeMessage.empty())
 		g_pMain->SendNotice(sNoticeMessage.c_str(),Nation::ALL);
-<<<<<<< HEAD
-=======
 
 	if (!sOperatorCommandType.empty())
 	{
 		DateTime time;
 		g_pMain->WriteChatLogFile(string_format("[ GAME MASTER - %d:%d:%d ] %s : %s %s ( Zone=%d, X=%d, Z=%d )\n",time.GetHour(),time.GetMinute(),time.GetSecond(),GetName().c_str(),sOperatorCommandType.c_str(),strUserID.c_str(),GetZoneID(),uint16(GetX()),uint16(GetZ())));
 	}
->>>>>>> koserver2
 }
 
 void CUser::SpeedHackTime(Packet & pkt)
 {
-<<<<<<< HEAD
-=======
 	if (!isInGame() || isGM())
 		return;
 
@@ -3924,7 +3426,6 @@ void CUser::SpeedHackTime(Packet & pkt)
 		m_LastZ = GetZ();
 	}
 
->>>>>>> koserver2
 #if 0 // temporarily disabled
 	uint8 b_first;
 	float servertime = 0.0f, clienttime = 0.0f, client_gap = 0.0f, server_gap = 0.0f;
@@ -4066,8 +3567,6 @@ bool CUser::GetStartPosition(short & x, short & z, uint8 bZone /*= 0 */)
 	return true;
 }
 
-<<<<<<< HEAD
-=======
 bool CUser::GetStartPositionRandom(short & x, short & z, uint8 bZone)
 {
 	int nRandom = myrand(0, g_pMain->m_StartPositionRandomArray.GetSize() - 1);
@@ -4089,7 +3588,6 @@ GetPosition:
 	return GetStartPosition(x, z);
 }
 
->>>>>>> koserver2
 void CUser::ResetWindows()
 {
 	if (isTrading())
@@ -4109,12 +3607,9 @@ void CUser::ResetWindows()
 	if (m_sMerchantsSocketID >= 0)
 		CancelMerchant();
 
-<<<<<<< HEAD
-=======
 	if(isMining())
 		HandleMiningStop((Packet)(WIZ_MINING, MiningStop));
 
->>>>>>> koserver2
 	/*	if (isUsingBuyingMerchant())
 	BuyingMerchantClose();
 
@@ -4169,12 +3664,8 @@ void CUser::SendStatSkillDistribute()
 	Packet result(WIZ_CLASS_CHANGE,uint8(CLASS_CHANGE_REQ));
 	Send(&result); 
 }
-<<<<<<< HEAD
-void CUser::AllSkillPointChange()
-=======
 
 void CUser::AllSkillPointChange(bool bIsFree)
->>>>>>> koserver2
 {
 	Packet result(WIZ_CLASS_CHANGE, uint8(ALL_SKILLPT_CHANGE));
 	int index = 0, skill_point = 0, money = 0, temp_value = 0, old_money = 0;
@@ -4209,11 +3700,7 @@ void CUser::AllSkillPointChange(bool bIsFree)
 	}
 
 	// Not enough money.
-<<<<<<< HEAD
-	if (!GoldLose(temp_value, false))
-=======
 	if (!bIsFree & !GoldLose(temp_value, false))
->>>>>>> koserver2
 		goto fail_return;
 
 	// Reset skill points.
@@ -4230,28 +3717,13 @@ fail_return:
 	Send(&result);
 }
 
-<<<<<<< HEAD
-void CUser::AllPointChange()
-=======
 void CUser::AllPointChange(bool bIsFree)
->>>>>>> koserver2
 {
 	Packet result(WIZ_CLASS_CHANGE, uint8(ALL_POINT_CHANGE));
 	int temp_money;
 	uint16 statTotal;
 
-<<<<<<< HEAD
-	// NOTE: In newer versions (1453 is just a guess at this point)
-	// they send the stat points in two bytes, rather than one.
-	// The stat points themselves are always a byte.
-#if __VERSION >= 1453
 	uint16 byStr, bySta, byDex, byInt, byCha;
-#else
-	uint8 byStr, bySta, byDex, byInt, byCha;
-#endif
-=======
-	uint16 byStr, bySta, byDex, byInt, byCha;
->>>>>>> koserver2
 	uint8 bResult = 0;
 
 	if (GetLevel() > MAX_LEVEL)
@@ -4283,11 +3755,7 @@ void CUser::AllPointChange(bool bIsFree)
 	}
 
 	// Not enough coins
-<<<<<<< HEAD
-	if (!GoldLose(temp_money, false))
-=======
 	if (!bIsFree & !GoldLose(temp_money, false))
->>>>>>> koserver2
 		goto fail_return;
 
 	// TODO: Pull this from the database.
@@ -4399,17 +3867,10 @@ void CUser::GoldChange(short tid, int gold)
 		// Otherwise, if we're in a party, we need to divide it up.
 		_PARTY_GROUP* pParty = g_pMain->GetPartyPtr(GetPartyID());
 		if (pParty == nullptr)
-<<<<<<< HEAD
-			return;			
-
-		int userCount = 0, levelSum = 0, temp_gold = (pTUser->m_iGold * 4) / 10;	
-		pTUser->GoldLose(pTUser->m_iGold / 2);		
-=======
 			return;
 
 		int userCount = 0, levelSum = 0, temp_gold = (pTUser->m_iGold * 4) / 10;
 		pTUser->GoldLose(pTUser->m_iGold / 2);
->>>>>>> koserver2
 
 		// TODO: Clean up the party system. 
 		for (int i = 0; i < MAX_PARTY_USERS; i++)
@@ -4475,12 +3936,6 @@ void CUser::SelectWarpList(Packet & pkt)
 		return;
 
 	float rx = 0.0f, rz = 0.0f;
-<<<<<<< HEAD
-	rx = (float)myrand( 0, (int)pWarp->fR*2 );
-	if( rx < pWarp->fR ) rx = -rx;
-	rz = (float)myrand( 0, (int)pWarp->fR*2 );
-	if( rz < pWarp->fR ) rz = -rz;
-=======
 	rx = (float)myrand(0, (int)pWarp->fR * 2);
 	if (rx < pWarp->fR)
 		rx = -rx;
@@ -4488,7 +3943,6 @@ void CUser::SelectWarpList(Packet & pkt)
 	rz = (float)myrand(0, (int)pWarp->fR * 2);
 	if (rz < pWarp->fR)
 		rz = -rz;
->>>>>>> koserver2
 
 	if (m_bZone == pWarp->sZone) 
 	{
@@ -4500,40 +3954,22 @@ void CUser::SelectWarpList(Packet & pkt)
 	}
 
 	ZoneChange(pWarp->sZone, pWarp->fX + rx, pWarp->fZ + rz);
-<<<<<<< HEAD
-=======
 
 	if (GetZoneID() == pWarp->sZone && pWarp->dwPay > 0 && hasCoins(pWarp->dwPay))
 		GoldLose(pWarp->dwPay);
->>>>>>> koserver2
 }
 
 void CUser::ServerChangeOk(Packet & pkt)
 {
-<<<<<<< HEAD
-	uint16 warpid = pkt.read<uint16>();
-	C3DMap* pMap = GetMap();
-	float rx = 0.0f, rz = 0.0f;
-	if (pMap == nullptr)
-		return;
-
-=======
 	C3DMap* pMap = GetMap();
 	if (pMap == nullptr)
 		return;
 
 	uint16 warpid = pkt.read<uint16>();
->>>>>>> koserver2
 	_WARP_INFO* pWarp = pMap->GetWarp(warpid);
 	if (pWarp == nullptr)
 		return;
 
-<<<<<<< HEAD
-	rx = (float)myrand(0, (int)pWarp->fR * 2);
-	if (rx < pWarp->fR) rx = -rx;
-	rz = (float)myrand(0, (int)pWarp->fR * 2);
-	if (rz < pWarp->fR) rz = -rz;
-=======
 	float rx = 0.0f, rz = 0.0f;
 	rx = (float)myrand(0, (int)pWarp->fR * 2);
 	if (rx < pWarp->fR)
@@ -4542,7 +3978,6 @@ void CUser::ServerChangeOk(Packet & pkt)
 	rz = (float)myrand(0, (int)pWarp->fR * 2);
 	if (rz < pWarp->fR)
 		rz = -rz;
->>>>>>> koserver2
 
 	ZoneChange(pWarp->sZone, pWarp->fX + rx, pWarp->fZ + rz);
 }
@@ -4565,13 +4000,6 @@ bool CUser::GetWarpList(int warp_group)
 		if (pDstMap == nullptr)
 			continue;
 
-<<<<<<< HEAD
-		if (g_pMain->isWarOpen()) 
-			if ((*itr)->sZone == ZONE_ARDREAM
-				|| (*itr)->sZone == ZONE_RONARK_LAND_BASE
-				|| (*itr)->sZone == ZONE_RONARK_LAND)
-				continue;
-=======
 		if (g_pMain->isWarOpen() 
 			&& ((g_pMain->m_byBattleZoneType != ZONE_ARDREAM 
 			&& ((*itr)->sZone == ZONE_ARDREAM 
@@ -4580,7 +4008,6 @@ bool CUser::GetWarpList(int warp_group)
 			|| (g_pMain->m_byBattleZoneType == ZONE_ARDREAM 
 			&& (*itr)->sZone == ZONE_ARDREAM)))
 			continue;
->>>>>>> koserver2
 
 		result	<< (*itr)->sWarpID 
 			<< (*itr)->strWarpName << (*itr)->strAnnounce
@@ -4617,11 +4044,7 @@ bool CUser::GateLeverObjectEvent(_OBJECT_EVENT *pEvent, int nid)
 		// Does the corresponding gate object event exist?
 			|| (pGateEvent = GetMap()->GetObjectEvent(pEvent->sControlNpcID)) == nullptr
 			// Does the corresponding gate (object) NPC exist?
-<<<<<<< HEAD
-			|| (pGateNpc = g_pMain->GetNpcPtr(pEvent->sControlNpcID)) == nullptr
-=======
 			|| (pGateNpc = g_pMain->FindNpcInZone(pEvent->sControlNpcID,GetZoneID())) == nullptr
->>>>>>> koserver2
 			// Is it even a gate?
 			|| !pGateNpc->isGate()
 			// If the gate's closed (i.e. the lever is down), we can't open it unless the lever isn't nation-specific
@@ -4701,17 +4124,7 @@ void CUser::ObjectEvent(Packet & pkt)
 	{
 		switch (pEvent->sType)
 		{
-<<<<<<< HEAD
-		case OBJECT_GATE: // TODO : Geçici Lever Gelene Kadar :)
-			{
-				CNpc *pNpc = g_pMain->GetNpcPtr(nid);
-				if (pNpc && pNpc->GetNation() == GetNation())
-					pNpc->SendGateFlag(OBJECT_GATE,!pNpc->m_byGateOpen);
-			}
-			break;
-=======
 		case OBJECT_GATE:
->>>>>>> koserver2
 		case OBJECT_BIND:
 		case OBJECT_REMOVE_BIND:
 			bSuccess = BindObjectEvent(pEvent);
@@ -4903,12 +4316,9 @@ void CUser::TrapProcess()
 	// If the time interval has passed
 	if ((UNIXTIME - m_tLastTrapAreaTime) >= ZONE_TRAP_INTERVAL)
 	{
-<<<<<<< HEAD
-=======
 		if(GetZoneID() == ZONE_BIFROST)
 			SendUserStatusUpdate(USER_STATUS_BLIND,USER_STATUS_INFLICT);
 
->>>>>>> koserver2
 		HpChange(-ZONE_TRAP_DAMAGE, this);
 		m_tLastTrapAreaTime = UNIXTIME;
 	}
@@ -4954,31 +4364,14 @@ void CUser::KickOutZoneUser(bool home, uint8 nZoneID)
 
 void CUser::NativeZoneReturn()
 {
-<<<<<<< HEAD
-	_HOME_INFO* pHomeInfo = nullptr;	// Send user back home in case it was the battlezone.
-	pHomeInfo = g_pMain->m_HomeArray.GetData(m_bNation);
-	if (pHomeInfo == nullptr) 
-=======
 	_START_POSITION *pStartPosition = g_pMain->m_StartPositionArray.GetData(m_bNation);
 	if (pStartPosition == nullptr) 
->>>>>>> koserver2
 		return; 
 
 	m_bZone = m_bNation;
 
-<<<<<<< HEAD
-	if (m_bNation == KARUS) {
-		m_curx = (float)(pHomeInfo->KarusZoneX + myrand(0, pHomeInfo->KarusZoneLX));
-		m_curz = (float)(pHomeInfo->KarusZoneZ + myrand(0, pHomeInfo->KarusZoneLZ)); 
-	}
-	else {
-		m_curx = (float)(pHomeInfo->ElmoZoneX + myrand(0, pHomeInfo->ElmoZoneLX));
-		m_curz = (float)(pHomeInfo->ElmoZoneZ + myrand(0, pHomeInfo->ElmoZoneLZ)); 
-	}
-=======
 	m_curx = (float)((m_bNation == KARUS ? pStartPosition->sKarusX : pStartPosition->sElmoradX) + myrand(0, pStartPosition->bRangeX));
 	m_curz = (float)((m_bNation == KARUS ? pStartPosition->sKarusZ : pStartPosition->sElmoradZ) + myrand(0, pStartPosition->bRangeZ)); 
->>>>>>> koserver2
 }
 
 /**
@@ -4989,11 +4382,7 @@ void CUser::NativeZoneReturn()
 * @param	pkt		   	The packet.
 * @param	pExceptUser	User to except. If specified, will ignore this user.
 */
-<<<<<<< HEAD
-void CUser::SendToRegion(Packet *pkt, CUser *pExceptUser /*= nullptr*/, int16 nEventRoom /*-1*/)
-=======
 void CUser::SendToRegion(Packet *pkt, CUser *pExceptUser /*= nullptr*/, uint16 nEventRoom /*-1*/)
->>>>>>> koserver2
 {
 	g_pMain->Send_Region(pkt, GetMap(), GetRegionX(), GetRegionZ(), pExceptUser, nEventRoom);
 }
@@ -5005,15 +4394,9 @@ void CUser::SendToRegion(Packet *pkt, CUser *pExceptUser /*= nullptr*/, uint16 n
 * @param	pkt		   	The packet.
 * @param	pExceptUser	User to except. If specified, will ignore this user.
 */
-<<<<<<< HEAD
-void CUser::SendToZone(Packet *pkt, CUser *pExceptUser /*= nullptr*/, int16 nEventRoom /*-1*/)
-{
-	g_pMain->Send_Zone(pkt, GetZoneID(), pExceptUser, 0, nEventRoom);
-=======
 void CUser::SendToZone(Packet *pkt, CUser *pExceptUser /*= nullptr*/, uint16 nEventRoom /*-1*/, float fRange)
 {
 	g_pMain->Send_Zone(pkt, GetZoneID(), pExceptUser, 0, nEventRoom, fRange);
->>>>>>> koserver2
 }
 
 void CUser::OnDeath(Unit *pKiller)
@@ -5023,18 +4406,11 @@ void CUser::OnDeath(Unit *pKiller)
 
 	m_bResHpType = USER_DEAD;
 
-<<<<<<< HEAD
-	if (GetFame() == COMMAND_CAPTAIN)
-	{
-		ChangeFame(CHIEF);
-
-=======
 	// Player is dead stop other process.
 	ResetWindows();
 
 	if (GetFame() == COMMAND_CAPTAIN)
 	{
->>>>>>> koserver2
 		if (GetNation() == KARUS)
 			g_pMain->Announcement(KARUS_CAPTAIN_DEPRIVE_NOTIFY, KARUS, 8, this);
 		else
@@ -5044,27 +4420,18 @@ void CUser::OnDeath(Unit *pKiller)
 	InitType3();
 	InitType4();
 
-<<<<<<< HEAD
-=======
 	DateTime time;
 
->>>>>>> koserver2
 	if (pKiller != nullptr)
 	{
 		DeathNoticeType noticeType = DeathNoticeNone;
 
 		if (pKiller->isNPC())
 		{
-<<<<<<< HEAD
-			int64 nExpLost = 0;
-
-			CNpc *pNpc = TO_NPC(pKiller);
-=======
 			CNpc *pNpc = TO_NPC(pKiller);
 
 			int64 nExpLost = 0;
 
->>>>>>> koserver2
 			if (pNpc->GetType() == NPC_PATROL_GUARD || (GetZoneID() != GetNation() && GetZoneID() <= ELMORAD))
 				nExpLost = m_iMaxExp / 100;
 			else
@@ -5073,12 +4440,6 @@ void CUser::OnDeath(Unit *pKiller)
 			if ((pNpc->GetType() == NPC_GUARD_TOWER1 || pNpc->GetType() == NPC_GUARD_TOWER2) && isInPKZone())
 				noticeType = DeathNotice;
 
-<<<<<<< HEAD
-			if (m_bPremiumType != 0)
-				nExpLost = nExpLost * (GetPremiumProperty(PremiumExpRestorePercent)) / 100;
-
-			ExpChange(-nExpLost);
-=======
 			if (GetPremiumProperty(PremiumExpRestorePercent) > 0)
 				nExpLost = nExpLost * (GetPremiumProperty(PremiumExpRestorePercent)) / 100;
 
@@ -5090,7 +4451,6 @@ void CUser::OnDeath(Unit *pKiller)
 				KickOutZoneUser(true);
 				return;
 			}
->>>>>>> koserver2
 		}
 		else
 		{
@@ -5104,31 +4464,6 @@ void CUser::OnDeath(Unit *pKiller)
 			// Someone else killed us? Need to clean this up.
 			else
 			{
-<<<<<<< HEAD
-				// Did we get killed in the snow war? Handle appropriately.
-				if (GetZoneID() == ZONE_SNOW_BATTLE
-					&& g_pMain->m_byBattleOpen == SNOW_BATTLE)
-				{
-					pUser->GoldGain(SNOW_EVENT_MONEY);
-
-					if (GetNation() == KARUS)
-						g_pMain->m_sKarusDead++;
-					else
-						g_pMain->m_sElmoradDead++;
-				}
-				// All zones other than the snow war.
-				else
-				{
-					if (isInArena())
-					{
-						// Show death notices in the arena
-						noticeType = DeathNoticeCoordinates;
-					}
-					else
-					{
-						// In PVP and War zones
-						if (isInPKZone() || GetMap()->isWarZone() || g_pMain->m_byBattleOpen == NATION_BATTLE)
-=======
 				if (GetZoneID() == ZONE_CHAOS_DUNGEON)
 				{
 					noticeType = DeathNoticeCoordinates;
@@ -5161,7 +4496,6 @@ void CUser::OnDeath(Unit *pKiller)
 							noticeType = DeathNoticeCoordinates;
 						}
 						else
->>>>>>> koserver2
 						{
 							uint16 bonusNP = 0;
 							bool bKilledByRival = false;
@@ -5193,59 +4527,6 @@ void CUser::OnDeath(Unit *pKiller)
 							}
 
 							// Loyalty should be awarded on kill.
-<<<<<<< HEAD
-							// Additionally, we should receive a "Meat dumpling"
-							if (!pUser->isInParty())
-							{
-								pUser->LoyaltyChange(GetID(), bonusNP);
-								if (!GetMap()->isWarZone() && !GetMap()->isNationPVPZone())
-									pUser->GiveItem(ITEM_MEAT_DUMPLING);
-							}
-							// In parties, the loyalty should be divided up across the party.
-							// Each party member in range should also receive a "Meat Dumpling".
-							else
-							{
-								pUser->LoyaltyDivide(GetID(), bonusNP);
-
-								_PARTY_GROUP * pParty = g_pMain->GetPartyPtr(GetPartyID());
-								if (pParty) 
-								{
-									for (uint8 i = 0; i < MAX_PARTY_USERS; i++)
-									{
-										CUser * pPartyUser = g_pMain->GetUserPtr(pParty->uid[i]);
-										if (pPartyUser && !GetMap()->isWarZone() && !GetMap()->isNationPVPZone())
-											pPartyUser->GiveItem(ITEM_MEAT_DUMPLING);
-									}
-								}
-							}
-						}
-
-						if (!pUser->GetMap()->isWarZone())
-							pUser->GoldChange(GetID(), 0);
-
-						if (GetZoneID() != GetNation() && GetZoneID() <= ELMORAD)
-						{
-							int64 nExpLost = m_iMaxExp / 100;
-
-							if (m_bPremiumType != 0)
-								nExpLost = nExpLost * (GetPremiumProperty(PremiumExpRestorePercent)) / 100;
-
-							ExpChange(-nExpLost);
-						}
-
-						// If we don't have a rival, this player is now our rival for 3 minutes.
-						if (isInPKZone()
-							&& !hasRival())
-							SetRival(pUser);
-					}
-
-					// Send a death notice where applicable
-
-				}
-
-				m_sWhoKilledMe = pUser->GetID();
-			}
-=======
 							if (!pUser->isInParty())
 								pUser->LoyaltyChange(GetID(), bonusNP);
 							// In parties, the loyalty should be divided up across the party.
@@ -5320,7 +4601,6 @@ void CUser::OnDeath(Unit *pKiller)
 				g_pMain->WriteDeathUserLogFile(string_format("[ USER - %d:%d:%d ] Killer=%s,KillerParty=%s,Target=%s,Zone=%d,X=%d,Z=%d,LoyaltyKiller=%d,LoyaltyMonthlyKiller=%d,LoyaltyTarget=%d,LoyaltyMonthlyTarget=%d\n",time.GetHour(),time.GetMinute(),time.GetSecond(),pKiller->GetName().c_str(),pKillerPartyUsers.c_str(),GetName().c_str(),GetZoneID(),uint16(GetX()),uint16(GetZ()),TO_USER(pKiller)->GetLoyalty(),TO_USER(pKiller)->GetMonthlyLoyalty(),GetLoyalty(),GetMonthlyLoyalty()));
 			else if (!pKillerPartyUsers.empty() && !pTargetPartyUsers.empty())
 				g_pMain->WriteDeathUserLogFile(string_format("[ USER - %d:%d:%d ] Killer=%s,KillerParty=%s,Target=%s,TargetParty=%s,Zone=%d,X=%d,Z=%d,LoyaltyKiller=%d,LoyaltyMonthlyKiller=%d,LoyaltyTarget=%d,LoyaltyMonthlyTarget=%d\n",time.GetHour(),time.GetMinute(),time.GetSecond(),pKiller->GetName().c_str(),pKillerPartyUsers.c_str(),GetName().c_str(), pTargetPartyUsers.c_str(),GetZoneID(),uint16(GetX()),uint16(GetZ()),TO_USER(pKiller)->GetLoyalty(),TO_USER(pKiller)->GetMonthlyLoyalty(),GetLoyalty(),GetMonthlyLoyalty()));
->>>>>>> koserver2
 		}
 
 		if (noticeType != DeathNoticeNone)
@@ -5477,11 +4757,7 @@ bool CUser::CanUseItem(uint32 nItemID, uint16 sCount /*= 1*/)
 	{
 		// Various NPC transformations ("Transform Scrolls") are exempt from this rule -- it's just monsters.
 		// Also, siege transformations can use their own buff scrolls.
-<<<<<<< HEAD
-		if (isMonsterTransformation())
-=======
 		if (isNPCTransformation() && isSiegeTransformation())
->>>>>>> koserver2
 			return false;
 	}
 
@@ -5539,11 +4815,7 @@ _ITEM_TABLE* CUser::GetItemPrototype(uint8 pos, _ITEM_DATA *& pItem)
 */
 void CUser::CheckSavedMagic()
 {
-<<<<<<< HEAD
-	FastGuard lock(m_savedMagicLock);
-=======
 	Guard lock(m_savedMagicLock);
->>>>>>> koserver2
 	if (m_savedMagicMap.empty())
 		return;
 
@@ -5566,11 +4838,7 @@ void CUser::CheckSavedMagic()
 */
 void CUser::InsertSavedMagic(uint32 nSkillID, uint16 sDuration)
 {
-<<<<<<< HEAD
-	FastGuard lock(m_savedMagicLock);
-=======
 	Guard lock(m_savedMagicLock);
->>>>>>> koserver2
 	UserSavedMagicMap::iterator itr = m_savedMagicMap.find(nSkillID);
 
 	// If the buff is already in the savedBuffMap there's no need to add it again!
@@ -5587,11 +4855,7 @@ void CUser::InsertSavedMagic(uint32 nSkillID, uint16 sDuration)
 */
 void CUser::RemoveSavedMagic(uint32 nSkillID)
 {
-<<<<<<< HEAD
-	FastGuard lock(m_savedMagicLock);
-=======
 	Guard lock(m_savedMagicLock);
->>>>>>> koserver2
 	m_savedMagicMap.erase(nSkillID);
 }
 
@@ -5605,11 +4869,7 @@ void CUser::RemoveSavedMagic(uint32 nSkillID)
 */
 bool CUser::HasSavedMagic(uint32 nSkillID)
 {
-<<<<<<< HEAD
-	FastGuard lock(m_savedMagicLock);
-=======
 	Guard lock(m_savedMagicLock);
->>>>>>> koserver2
 	return m_savedMagicMap.find(nSkillID) != m_savedMagicMap.end();
 }
 
@@ -5623,11 +4883,7 @@ bool CUser::HasSavedMagic(uint32 nSkillID)
 */
 int16 CUser::GetSavedMagicDuration(uint32 nSkillID)
 {
-<<<<<<< HEAD
-	FastGuard lock(m_savedMagicLock);
-=======
 	Guard lock(m_savedMagicLock);
->>>>>>> koserver2
 	auto itr = m_savedMagicMap.find(nSkillID);
 	if (itr == m_savedMagicMap.end())
 		return 0;
@@ -5638,15 +4894,9 @@ int16 CUser::GetSavedMagicDuration(uint32 nSkillID)
 /**
 * @brief	Recasts any saved skills on login/zone change.
 */
-<<<<<<< HEAD
-void CUser::RecastSavedMagic(bool bFillToMaxHealth)
-{
-	FastGuard lock(m_savedMagicLock);
-=======
 void CUser::RecastSavedMagic(uint8 buffType /* = 0*/)
 {
 	Guard lock(m_savedMagicLock);
->>>>>>> koserver2
 	UserSavedMagicMap castSet;
 	foreach (itr, m_savedMagicMap)
 	{
@@ -5659,10 +4909,6 @@ void CUser::RecastSavedMagic(uint8 buffType /* = 0*/)
 
 	foreach (itr, castSet)
 	{
-<<<<<<< HEAD
-		MagicInstance instance;			
-
-=======
 		if (buffType > 0)
 		{
 			_MAGIC_TYPE4 * pType = g_pMain->m_Magictype4Array.GetData(itr->first);
@@ -5675,7 +4921,6 @@ void CUser::RecastSavedMagic(uint8 buffType /* = 0*/)
 		}
 
 		MagicInstance instance;
->>>>>>> koserver2
 		instance.sCasterID = GetID();
 		instance.sTargetID = GetID();
 		instance.nSkillID = itr->first;
@@ -5683,13 +4928,6 @@ void CUser::RecastSavedMagic(uint8 buffType /* = 0*/)
 
 		instance.Run();
 	}
-<<<<<<< HEAD
-
-	if (bFillToMaxHealth)
-		HpChange(GetMaxHealth());
-}
-
-=======
 }
 
 /**
@@ -5702,7 +4940,6 @@ void CUser::RecastLockableScrolls(uint8 buffType)
 }
 
 
->>>>>>> koserver2
 /**
 * @brief	Displays the player rankings board in PK zones, 
 * 			when left-ALT is held.
@@ -5711,118 +4948,6 @@ void CUser::RecastLockableScrolls(uint8 buffType)
 */
 void CUser::HandlePlayerRankings(Packet & pkt)
 {
-<<<<<<< HEAD
-	uint8 RankType = 0;
-	pkt >> RankType;
-
-	Packet result(WIZ_RANK, RankType);
-
-	uint16 MyRank = 0;
-	uint16 sClanID = 0;
-	uint16 sMarkVersion = 0;
-	std::string strClanName;
-
-	std::vector<_USER_RANKING> UserRankingSorted[2];
-
-	for (int nation = KARUS_ARRAY; nation <= ELMORAD_ARRAY; nation++)
-	{
-		uint16 sCount = 0;
-		size_t wpos = result.wpos();
-		result << sCount;
-
-		if (g_pMain->m_UserRankingArray[nation].GetSize() > 0)
-		{
-			foreach_stlmap(itr, g_pMain->m_UserRankingArray[nation])
-				UserRankingSorted[nation].push_back(*itr->second);
-
-			if (GetZoneID() == ZONE_CHAOS_DUNGEON)
-				std::sort(UserRankingSorted[nation].begin(),UserRankingSorted[nation].end(),[](_USER_RANKING const &a, _USER_RANKING const &b){ return a.m_KillCount > b.m_KillCount; });
-			else
-				std::sort(UserRankingSorted[nation].begin(),UserRankingSorted[nation].end(),[](_USER_RANKING const &a, _USER_RANKING const &b){ return a.m_iLoyaltyDaily > b.m_iLoyaltyDaily; });
-		}
-
-		if (isInPKZone())
-		{
-			if ((nation + 1) == GetNation())
-			{
-				for (int i = 0; i < (int32)UserRankingSorted[nation].size(); i++)
-				{
-					if (UserRankingSorted[nation][i].m_socketID != GetSocketID())
-						continue;
-
-					MyRank = i+1;
-					break;
-				}
-			}
-		}
-
-		for (int i = 0; i < (int32)UserRankingSorted[nation].size(); i++)
-		{
-			if (isInPKZone() && sCount > 10)
-				break;
-			else
-			{
-				if (GetZoneID() == ZONE_BORDER_DEFENSE_WAR && sCount > 8)
-					break;
-				else if (GetZoneID() == ZONE_CHAOS_DUNGEON && sCount > 20)
-					break;
-			}
-
-			_USER_RANKING * pPlayerRankInfo = &UserRankingSorted[nation][i];
-
-			if (pPlayerRankInfo == nullptr)
-				continue; 
-
-			CUser *pUser = g_pMain->GetUserPtr(pPlayerRankInfo->m_socketID);
-
-			if( pUser == nullptr)
-				continue;
-
-			if (GetZoneID() != pPlayerRankInfo->m_bZone)
-				continue;
-
-			if (GetZoneID() == ZONE_CHAOS_DUNGEON)
-				result << uint8(i+1) << pUser->m_strUserID << true;
-			else
-				result << pUser->m_strUserID << true;
-
-			if (GetZoneID() == ZONE_BORDER_DEFENSE_WAR || isInPKZone())
-			{
-				CKnights * pKnights = g_pMain->GetClanPtr(pUser->m_bKnights);
-
-				if (pKnights != nullptr) {
-					sClanID = pKnights->m_sIndex;
-					sMarkVersion = pKnights->m_sMarkVersion;
-					strClanName = pKnights->m_strName;
-				} else {
-					sClanID = 0;
-					sMarkVersion = 0;
-					strClanName = "";
-				}
-
-				result	<< sClanID << sMarkVersion << strClanName;
-				result << pPlayerRankInfo->m_iLoyaltyDaily;
-
-				if(isInPKZone())
-					result << pPlayerRankInfo->m_iLoyaltyPremiumBonus;
-
-			} else 	if (GetZoneID() == ZONE_CHAOS_DUNGEON)
-				result << pPlayerRankInfo->m_KillCount << pPlayerRankInfo->m_DeathCount;
-
-			sCount++;
-		}
-
-		result.put(wpos, sCount);
-		wpos = result.wpos();
-	}
-
-	if (isInPKZone())
-		result  << MyRank << m_iLoyaltyDaily << m_iLoyaltyPremiumBonus;
-	else if (GetZoneID() == ZONE_BORDER_DEFENSE_WAR)
-		result << int32(100000) << int32(50000);
-	else if (GetZoneID() == ZONE_CHAOS_DUNGEON)
-		result << int32(0) << int32(0);
-=======
 	if (g_pMain->m_IsPlayerRankingUpdateProcess)
 		return;
 
@@ -5969,13 +5094,10 @@ void CUser::HandlePlayerRankings(Packet & pkt)
 			<< m_KillCount << m_DeathCount
 			<< nGainedExp << nPremiumGainedExp;
 	}
->>>>>>> koserver2
 
 	Send(&result);
 }
 
-<<<<<<< HEAD
-=======
 uint16 CUser::GetPlayerRank(uint8 nRankType)
 {
 	uint16 nMyRank = 0;
@@ -6024,7 +5146,6 @@ uint16 CUser::GetPlayerRank(uint8 nRankType)
 	return nMyRank;
 }
 
->>>>>>> koserver2
 /**
 * @brief	Handles packets related to the mining system.
 * 			Also handles soccer-related packets (yuck).
@@ -6133,11 +5254,7 @@ void CUser::HandleMiningAttempt(Packet & pkt)
 	{
 		int rate = myrand(1, 100), random = myrand(1, 10000);
 
-<<<<<<< HEAD
-		if (m_bPremiumType != 0)
-=======
 		if (GetPremiumProperty(PremiumDropPercent) > 0)
->>>>>>> koserver2
 		{
 			rate += (rate / 100) * GetPremiumProperty(PremiumDropPercent);
 			random += (rate / 100) * GetPremiumProperty(PremiumDropPercent);
@@ -6177,10 +5294,6 @@ void CUser::HandleMiningAttempt(Packet & pkt)
 		{
 			resultCode = MiningResultNothingFound;
 		}
-<<<<<<< HEAD
-
-=======
->>>>>>> koserver2
 		m_tLastMiningAttempt = UNIXTIME;
 	}
 
@@ -6401,11 +5514,7 @@ uint32 CUser::GetEventTrigger()
 	if (pNpc == nullptr)
 		return 0;
 
-<<<<<<< HEAD
-	foreach_stlmap_nolock(itr, g_pMain->m_EventTriggerArray) {
-=======
 	foreach_stlmap (itr, g_pMain->m_EventTriggerArray) {
->>>>>>> koserver2
 		_EVENT_TRIGGER *pEventTrigger = g_pMain->m_EventTriggerArray.GetData(itr->first);
 
 		if (pEventTrigger == nullptr)
@@ -6421,28 +5530,6 @@ uint32 CUser::GetEventTrigger()
 	return 0;
 }
 
-<<<<<<< HEAD
-
-bool CUser::GetStartPositionRandom_CHAOS(short & x, short & z)
-{
-	const static int  position_num = 10;
-	const static short addr[position_num][2] = {
-		{174,146},
-		{174,129},
-		{174,112},
-		{77,146},
-		{77,130},
-		{77,112},
-		{142,184},
-		{110,184},
-		{126,97},
-		{112,159},
-	};
-	int nRandom = myrand(0, position_num - 1);
-	x = addr[nRandom][0];
-	z = addr[nRandom][1];
-	return true;
-=======
 void CUser::RemoveStealth()
 {
 	if (this->m_bInvisibilityType != INVIS_NONE)
@@ -6485,7 +5572,7 @@ void CUser::check_expire_item()
 		_ITEM_DATA *pItem = &(m_sItemArray[i]);
 		if(pItem->nExpirationTime <= UNIXTIME && 0 != pItem->nExpirationTime){
 			RobItem(pItem->nNum, 1);
+
 		}
 	}
->>>>>>> koserver2
 }

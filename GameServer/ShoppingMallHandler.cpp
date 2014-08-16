@@ -102,11 +102,9 @@ void CUser::ReqLoadWebItemMall()
 			<< pItem->sDuration
 			<< pItem->sCount
 			<< pItem->bFlag // item type flag (e.g. rented)
-			<< pItem->sRemainingRentalTime; // remaining time
+			<< pItem->sRemainingRentalTime // remaining time
+			<< uint32(0) // unknown
+			<< pItem->nExpirationTime; // expiration date in unix time
 	}
-<<<<<<< HEAD
-
-=======
->>>>>>> koserver2
 	Send(&result);
 }

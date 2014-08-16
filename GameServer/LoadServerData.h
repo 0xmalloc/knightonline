@@ -2,11 +2,6 @@
 
 class C3DMap;
 
-<<<<<<< HEAD
-#include <unordered_map>
-
-=======
->>>>>>> koserver2
 #include "../shared/types.h"
 #include "../shared/STLMap.h"
 #include "GameDefine.h"
@@ -36,10 +31,6 @@ typedef CSTLMap <_KNIGHTS_RATING>			KnightsRatingArray;
 typedef CSTLMap <_KNIGHTS_ALLIANCE>			KnightsAllianceArray;
 typedef CSTLMap <_ZONE_SERVERINFO>			ServerArray;
 typedef CSTLMap <_KNIGHTS_CAPE>				KnightsCapeArray;
-<<<<<<< HEAD
-typedef CSTLMap <_HOME_INFO>				HomeArray;
-=======
->>>>>>> koserver2
 typedef CSTLMap <_START_POSITION>			StartPositionArray;
 typedef	CSTLMap	<_SERVER_RESOURCE>			ServerResourceArray;
 typedef	CSTLMap	<_QUEST_HELPER>				QuestHelperArray;
@@ -51,28 +42,6 @@ typedef CSTLMap <_ITEM_OP>					ItemOpArray;
 typedef CSTLMap <CKingSystem>				KingSystemArray;
 typedef CSTLMap <_SET_ITEM>					SetItemArray;
 
-<<<<<<< HEAD
-typedef std::unordered_map<std::string, _USER_RANK *>		UserNameRankMap; 
-typedef std::map<uint8, _USER_RANK *>		UserRankMap;
-
-typedef std::vector<_QUEST_HELPER *>		QuestHelperList;
-typedef std::map<uint16, QuestHelperList>	QuestNpcList;
-
-typedef std::vector<_MONSTER_SUMMON_LIST>	MonsterSummonList;
-typedef CSTLMap <MonsterSummonList>			MonsterSummonListArray;
-typedef CSTLMap <_MONSTER_SUMMON_LIST_ZONE>	MonsterSummonListZoneArray;
-typedef CSTLMap <_MONSTER_RESPAWN_LIST>	MonsterRespawnListArray;
-
-typedef CSTLMap <_PREMIUM_ITEM>			PremiumItemArray;
-typedef CSTLMap <_PREMIUM_ITEM_EXP>		PremiumItemExpArray;
-
-typedef CSTLMap <_USER_RANKING>			UserRankingArray;
-typedef std::unordered_map<std::string, _USER_DAILY_OP *>		UserDailyOpMap; 
-
-typedef CSTLMap <_TEMPLE_EVENT_USER>			TempleEventUserArray;
-
-typedef CSTLMap <_EVENT_TRIGGER>			EventTriggerArray;
-=======
 typedef std::map<std::string, _USER_RANK *>			UserNameRankMap; 
 typedef std::map<uint8, _USER_RANK *>				UserRankMap;
 
@@ -100,4 +69,3 @@ typedef CSTLMap <_MONSTER_CHALLENGE_SUMMON_LIST>	MonsterChallengeSummonListArray
 typedef CSTLMap <_START_POSITION_RANDOM>			StartPositionRandomArray;
 typedef CSTLMap <_USER_ITEM>						UserItemArray;
 typedef CSTLMap <_OBJECT_EVENT>						ObjectEventArray;
->>>>>>> koserver2

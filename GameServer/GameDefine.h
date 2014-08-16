@@ -96,17 +96,6 @@ enum ItemSlotType
 #define WEAPON_LONGBOW			8
 #define WEAPON_LAUNCHER			10
 #define WEAPON_STAFF			11
-<<<<<<< HEAD
-#define WEAPON_ARROW			12	// 
-#define WEAPON_JAVELIN			13	//
-#define WEAPON_MACE2			18
-#define WEAPON_WORRIOR_AC		21	//
-#define WEAPON_LOG_AC			22	// 
-#define WEAPON_WIZARD_AC		23	//
-#define WEAPON_PRIEST_AC		24	//
-#define WEAPON_PICKAXE			61	// Unlike the others, this is just the Kind field as-is (not / 10).
-
-=======
 #define WEAPON_ARROW			12	
 #define WEAPON_JAVELIN			13	
 #define WEAPON_MACE2			18
@@ -121,7 +110,6 @@ enum ItemSlotType
 #define ACCESSORY_RING			93
 #define ACCESSORY_BELT			94
 
->>>>>>> koserver2
 #define ITEM_KIND_COSPRE		252
 
 ////////////////////////////////////////////////////////////
@@ -135,10 +123,7 @@ enum ItemSlotType
 // Durability Type
 #define ATTACK				0x01
 #define DEFENCE				0x02
-<<<<<<< HEAD
-=======
 #define REPAIR_ALL			0x03
->>>>>>> koserver2
 ////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////
 // Knights Authority Type
@@ -150,37 +135,22 @@ enum ItemSlotType
 //#define TRAINEE				0x02
 #define PUNISH				0x01	
 
-<<<<<<< HEAD
-#define CHIEF				0x01	//
-#define VICECHIEF			0x02	// 
-#define TRAINEE				0x05	//
-#define COMMAND_CAPTAIN		100		// 
-=======
 #define CHIEF				0x01	
 #define VICECHIEF			0x02	
 #define TRAINEE				0x05	
 #define COMMAND_CAPTAIN		100		
->>>>>>> koserver2
 ////////////////////////////////////////////////////////////
 
 #define CLAN_COIN_REQUIREMENT	500000
 #define CLAN_LEVEL_REQUIREMENT	20
 
-<<<<<<< HEAD
-#define ITEM_GOLD			900000000	//
-=======
 #define ITEM_GOLD			900000000	
->>>>>>> koserver2
 #define ITEM_NO_TRADE		900000001	// Cannot be traded, sold or stored.
 
 ////////////////////////////////////////////////////////////
 // EVENT MISCELLANOUS DATA DEFINE
 #define ZONE_TRAP_INTERVAL	   1		// Interval is one second (in seconds) right now.
-<<<<<<< HEAD
-#define ZONE_TRAP_DAMAGE	   10		// HP Damage is 10 for now :)
-=======
 #define ZONE_TRAP_DAMAGE	   400		// HP Damage is 10 for now :)
->>>>>>> koserver2
 
 ////////////////////////////////////////////////////////////
 
@@ -383,15 +353,12 @@ struct _ITEM_TABLE
 	int16	m_bMagicR;
 	int16	m_bPoisonR;
 	int16	m_bCurseR;
+	uint32	expiretime;
 
 	INLINE bool isStackable() { return m_bCountable != 0; }
 
 	INLINE uint8 GetKind() { return m_bKind; }
-<<<<<<< HEAD
-	INLINE uint8 GetItemGroup() { return m_bKind / 10; }
-=======
 	INLINE uint8 GetItemGroup() { return uint8(m_bKind / 10); }
->>>>>>> koserver2
 
 	INLINE bool isDagger() { return GetItemGroup() == WEAPON_DAGGER; }
 	INLINE bool isSword() { return GetItemGroup() == WEAPON_SWORD; }
@@ -407,15 +374,12 @@ struct _ITEM_TABLE
 	INLINE bool isBow() { return GetItemGroup() == WEAPON_BOW || GetItemGroup() == WEAPON_LONGBOW; }
 	INLINE bool isPickaxe() { return GetKind() == WEAPON_PICKAXE; }
 
-<<<<<<< HEAD
-=======
 	INLINE bool isAccessory() { return GetKind() == ACCESSORY_EARRING || GetKind() == ACCESSORY_NECKLACE || GetKind() == ACCESSORY_RING || GetKind() == ACCESSORY_BELT; }
 	INLINE bool isEarring() { return GetKind() == ACCESSORY_EARRING; }
 	INLINE bool isNecklace() { return GetKind() == ACCESSORY_NECKLACE; }
 	INLINE bool isRing() { return GetKind() == ACCESSORY_RING; }
 	INLINE bool isBelt() { return GetKind() == ACCESSORY_BELT; }
 	
->>>>>>> koserver2
 	INLINE bool is2Handed() { return m_bSlot == ItemSlot2HLeftHand || m_bSlot == ItemSlot2HRightHand; }
 };
 
@@ -425,50 +389,6 @@ struct _ZONE_SERVERINFO
 	std::string	strServerIP;
 };
 
-<<<<<<< HEAD
-struct _HOME_INFO
-{
-	uint8	bNation;
-	uint32	ElmoZoneX;
-	uint32	ElmoZoneZ;
-	uint8	ElmoZoneLX;
-	uint8	ElmoZoneLZ;
-	uint32	KarusZoneX;
-	uint32	KarusZoneZ;
-	uint8	KarusZoneLX;
-	uint8	KarusZoneLZ;
-	uint32	FreeZoneX;
-	uint32	FreeZoneZ;
-	uint8	FreeZoneLX;
-	uint8	FreeZoneLZ;
-	uint32	BattleZoneX;
-	uint32	BattleZoneZ;
-	uint8	BattleZoneLX;
-	uint8	BattleZoneLZ;
-	uint32  BattleZone2X;
-	uint32  BattleZone2Z;
-	uint8   BattleZone2LX;
-	uint8   BattleZone2LZ;
-	uint32  BattleZone3X;
-	uint32  BattleZone3Z;
-	uint8   BattleZone3LX;
-	uint8   BattleZone3LZ;
-	uint32  BattleZone4X;
-	uint32  BattleZone4Z;
-	uint8   BattleZone4LX;
-	uint8   BattleZone4LZ;
-	uint32  BattleZone5X;
-	uint32  BattleZone5Z;
-	uint8   BattleZone5LX;
-	uint8   BattleZone5LZ;
-	uint32  BattleZone6X;
-	uint32  BattleZone6Z;
-	uint8   BattleZone6LX;
-	uint8   BattleZone6LZ; 
-};
-
-=======
->>>>>>> koserver2
 struct _KNIGHTS_CAPE
 {
 	uint16	sCapeIndex;
@@ -688,46 +608,27 @@ struct _USER_RANKING
 	uint8 m_bNation;
 	uint32 m_iLoyaltyDaily;
 	uint16 m_iLoyaltyPremiumBonus;
-<<<<<<< HEAD
-	uint8 m_KillCount; // Chaos
-	uint8 m_DeathCount; // Chaos
-=======
 	uint16 m_KillCount; // Chaos Dungeon
 	uint16 m_DeathCount; // Chaos Dungeon
->>>>>>> koserver2
 };
 
 struct _EVENT_STATUS
 {
-<<<<<<< HEAD
-	bool isActive;
-	int16 ActiveEvent;
-=======
 	int16 ActiveEvent;
 	int8 ZoneID;
 	uint8 LastEventRoom;
->>>>>>> koserver2
 	uint32 StartTime;
 	uint16 AllUserCount;
 	uint16 ElMoradUserCount;
 	uint16 KarusUserCount;
-<<<<<<< HEAD
-=======
 	bool isAttackable;
 	bool isActive;
->>>>>>> koserver2
 };
 
 struct _TEMPLE_EVENT_USER
 {
 	uint16 m_socketID;
-<<<<<<< HEAD
-	int16 m_bEventRoom;
-	uint16 m_bZone;
-	uint8 m_bNation;
-=======
 	uint16 m_bEventRoom;
->>>>>>> koserver2
 };
 
 struct _EVENT_TRIGGER
@@ -751,8 +652,6 @@ struct _USER_DAILY_OP
 	int32 UserLoyaltyWingRewardTime;
 };
 
-<<<<<<< HEAD
-=======
 struct _MONUMENT_INFORMATION
 {
 	uint16 sSid;
@@ -799,7 +698,6 @@ struct _USER_ITEM
 	std::vector<uint64> nItemSerial;
 };
 
->>>>>>> koserver2
 enum BuffType
 {
 	BUFF_TYPE_NONE					= 0,

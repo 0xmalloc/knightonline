@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-#include "stdafx.h"
-=======
 ﻿#include "stdafx.h"
->>>>>>> koserver2
 #include "KingSystem.h"
 #include "../shared/DateTime.h"
 #include "Map.h"
@@ -219,11 +215,7 @@ void CKingSystem::UpdateElectionStatus(uint8 byElectionStatus)
 */
 void CKingSystem::UpdateElectionList(uint8 byElectionListType, bool bDeleteList, uint16 sClanID, std::string & strUserID, CUser * pUser /*= nullptr*/)
 {
-<<<<<<< HEAD
-	FastGuard lock(m_lock);
-=======
 	Guard lock(m_lock);
->>>>>>> koserver2
 	// byElectionListType:
 	// 3 = senator
 	Packet result(WIZ_KING, uint8(KING_ELECTION));
@@ -338,11 +330,7 @@ void CKingSystem::CheckSpecialEvent()
 */
 void CKingSystem::LoadRecommendList()
 {
-<<<<<<< HEAD
-	FastGuard lock(m_lock);
-=======
 	Guard lock(m_lock);
->>>>>>> koserver2
 	m_top10ClanSet.clear();
 	for (int i = 1; i <= 10; i++)
 	{
@@ -573,12 +561,6 @@ void CKingSystem::ElectionScheduleConfirmation(CUser * pUser, Packet & pkt)
 				<< byImpeachmentMonth
 				<< m_byImDay << m_byImHour << m_byImMinute;
 		} break;
-<<<<<<< HEAD
-
-	default:
-		return;
-=======
->>>>>>> koserver2
 	}
 
 	pUser->Send(&result);
@@ -610,11 +592,7 @@ void CKingSystem::CandidacyRecommend(CUser * pUser, Packet & pkt)
 		return;
 	}
 
-<<<<<<< HEAD
-	FastGuard lock(m_lock);
-=======
 	Guard lock(m_lock);
->>>>>>> koserver2
 
 	// Make sure the user nominating a King is a clan leader
 	if (!pUser->isClanLeader()
@@ -640,11 +618,7 @@ void CKingSystem::CandidacyRecommend(CUser * pUser, Packet & pkt)
 */
 void CKingSystem::InsertNominee(std::string & strNominee)
 {
-<<<<<<< HEAD
-	FastGuard lock(m_lock);
-=======
 	Guard lock(m_lock);
->>>>>>> koserver2
 
 	// All nominees must be senators.
 	// No need to create duplicate data, so just find & reuse the same data.
@@ -755,11 +729,7 @@ void CKingSystem::CandidacyNoticeBoard(CUser * pUser, Packet & pkt)
 			// List candidates
 			if (opcode == 1)
 			{
-<<<<<<< HEAD
-				FastGuard lock(m_lock);
-=======
 				Guard lock(m_lock);
->>>>>>> koserver2
 				result	<< int16(1) // success
 					<< uint8(m_noticeBoardMap.size());
 
@@ -857,11 +827,7 @@ void CKingSystem::ElectionPoll(CUser * pUser, Packet & pkt)
 		return;
 	}
 
-<<<<<<< HEAD
-	FastGuard lock(m_lock);
-=======
 	Guard lock(m_lock);
->>>>>>> koserver2
 	switch (opcode)
 	{
 		// Show candidate list
@@ -936,11 +902,7 @@ void CKingSystem::CandidacyResign(CUser * pUser, Packet & pkt)
 		return;
 	}
 
-<<<<<<< HEAD
-	FastGuard lock(m_lock);
-=======
 	Guard lock(m_lock);
->>>>>>> koserver2
 	KingElectionList::iterator itr = m_candidateList.find(pUser->m_strUserID);
 
 	// Do we even exist in the candidate list?
@@ -1071,11 +1033,8 @@ void CKingSystem::KingTaxSystem(CUser * pUser, Packet & pkt)
 	{
 		// Collect King's fund
 	case 2:
-<<<<<<< HEAD
-=======
 		pUser->GoldGain(m_nTerritoryTax);
 		/* Veritabanı Update Eklenecek / Satılan Eşyalar İçin Vergi Oranı Eklenecek ve Veritabanı Update Eklenecek. */
->>>>>>> koserver2
 		break;
 
 		// Lookup the tariff
@@ -1129,10 +1088,7 @@ void CKingSystem::KingTaxSystem(CUser * pUser, Packet & pkt)
 			else
 			{
 				pUser->GiveItem(KING_SCEPTER);
-<<<<<<< HEAD
-=======
 				pUser->GiveItem(KING_SCEPTER);
->>>>>>> koserver2
 				result << int16(1);
 			}
 			pUser->Send(&result);
@@ -1163,11 +1119,7 @@ void CKingSystem::KingSpecialEvent(CUser * pUser, Packet & pkt)
 	{
 	case KING_EVENT_NOAH: // Noah event
 		{
-<<<<<<< HEAD
-			FastGuard lock(m_lock);
-=======
 			Guard lock(m_lock);
->>>>>>> koserver2
 
 			uint8 bAmount = pkt.read<uint8>();
 			if (bAmount < 1 || bAmount > 3)
@@ -1204,11 +1156,7 @@ void CKingSystem::KingSpecialEvent(CUser * pUser, Packet & pkt)
 
 	case KING_EVENT_EXP: // EXP event
 		{
-<<<<<<< HEAD
-			FastGuard lock(m_lock);
-=======
 			Guard lock(m_lock);
->>>>>>> koserver2
 
 			uint8 bAmount = pkt.read<uint8>();
 			if (bAmount != 10 && bAmount != 30 && bAmount != 50)
@@ -1245,11 +1193,7 @@ void CKingSystem::KingSpecialEvent(CUser * pUser, Packet & pkt)
 
 	case KING_EVENT_PRIZE:
 		{
-<<<<<<< HEAD
-			FastGuard lock(m_lock);
-=======
 			Guard lock(m_lock);
->>>>>>> koserver2
 
 			uint32 nCoins;
 			std::string strUserID;
@@ -1299,11 +1243,7 @@ void CKingSystem::KingSpecialEvent(CUser * pUser, Packet & pkt)
 
 	case KING_EVENT_WEATHER: // Weather
 		{
-<<<<<<< HEAD
-			FastGuard lock(m_lock);
-=======
 			Guard lock(m_lock);
->>>>>>> koserver2
 
 			uint8 bType, bAmount;
 			pkt >> bType >> bAmount;
@@ -1353,11 +1293,8 @@ void CKingSystem::KingSpecialEvent(CUser * pUser, Packet & pkt)
 			result.SByte();
 			result << int16(1) << strMessage;
 			g_pMain->Send_All(&result, nullptr, m_byNation);
-<<<<<<< HEAD
-=======
 			DateTime time;
 			g_pMain->WriteChatLogFile(string_format("[ KING - %d:%d:%d ] %s : %s ( Zone=%d, X=%d, Z=%d )\n",time.GetHour(),time.GetMinute(),time.GetSecond(),pUser->GetName().c_str(),strMessage.c_str(),pUser->GetZoneID(),uint16(pUser->GetX()),uint16(pUser->GetZ())));
->>>>>>> koserver2
 		} break;
 	}
 }
@@ -1367,11 +1304,7 @@ void CKingSystem::KingSpecialEvent(CUser * pUser, Packet & pkt)
 */
 void CKingSystem::ResetElectionLists()
 {
-<<<<<<< HEAD
-	FastGuard lock(m_lock);
-=======
 	Guard lock(m_lock);
->>>>>>> koserver2
 
 	foreach (itr, m_senatorList)
 		delete itr->second;

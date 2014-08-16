@@ -1,15 +1,8 @@
 #pragma once
 
 #include "../shared/types.h"
-<<<<<<< HEAD
-#include <unordered_map>
-
-#	define LUA_ENGINE_MODE						"offical"
-#	define LUA_SCRIPT_DIRECTORY					"./official_quests/"
-=======
 
 #	define LUA_SCRIPT_DIRECTORY					"./Quests/"
->>>>>>> koserver2
 #	define LUA_SCRIPT_BUFFER_SIZE				20000
 
 // If defined, scripts are not cached. This is for testing/development purposes only.
@@ -18,29 +11,17 @@
 #endif
 
 extern "C" {
-<<<<<<< HEAD
-#	include "../scripting/Lua/lualib.h"
-#	include "../scripting/Lua/lauxlib.h"
-=======
 #	include <lualib.h>
 #	include <lauxlib.h>
->>>>>>> koserver2
 }
 
 #include "../scripting/lua_helpers.h"
 #include "lua_bindings.h"
 
 typedef std::vector<uint8> BytecodeBuffer;
-<<<<<<< HEAD
-typedef std::unordered_map<std::string, BytecodeBuffer> ScriptBytecodeMap;
-class CUser;
-class CNpc;
-class FastMutex;
-=======
 typedef std::map<std::string, BytecodeBuffer> ScriptBytecodeMap;
 class CUser;
 class CNpc;
->>>>>>> koserver2
 class CLuaScript
 {
 public:
@@ -64,11 +45,7 @@ public:
 
 private:
 	lua_State * m_luaState;
-<<<<<<< HEAD
-	FastMutex * m_lock;
-=======
 	std::recursive_mutex m_lock;
->>>>>>> koserver2
 };
 
 class RWLock;

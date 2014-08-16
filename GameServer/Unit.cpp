@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-#include "stdafx.h"
-=======
 ﻿#include "stdafx.h"
->>>>>>> koserver2
 #include "Map.h"
 #ifdef GAMESERVER
 #	include "GameServerDlg.h"
@@ -39,11 +35,7 @@ void Unit::Initialize()
 	m_sDaggerR = m_sSwordR = m_sAxeR = m_sMaceR = m_sSpearR = m_sBowR = 0;		
 	m_byDaggerRAmount = m_byBowRAmount = 100;
 
-<<<<<<< HEAD
-	FastGuard lock(m_equippedItemBonusLock);
-=======
 	Guard lock(m_equippedItemBonusLock);
->>>>>>> koserver2
 	m_equippedItemBonuses.clear();
 
 	m_bCanStealth = true;
@@ -75,11 +67,8 @@ void Unit::Initialize()
 	m_bManaAbsorb = 0;
 	m_bRadiusAmount = 0;
 	m_buffCount = 0;
-<<<<<<< HEAD
-=======
 
 	m_oSocketID = -1;
->>>>>>> koserver2
 	m_bEventRoom = 0;
 
 	InitType3();
@@ -392,11 +381,7 @@ short CUser::GetDamage(Unit *pTarget, _MAGIC_TABLE *pSkill /*= nullptr*/, bool b
 		if (GetMap()->isWarZone())
 			damage /= 2;
 		else
-<<<<<<< HEAD
-			damage /= 3;
-=======
 			damage /= 2;
->>>>>>> koserver2
 	}
 
 	// Enforce damage cap
@@ -606,11 +591,7 @@ short Unit::GetMagicDamage(int damage, Unit *pTarget, bool bPreviewOnly /*= fals
 	if (pTarget->isDead())
 		return 0;
 
-<<<<<<< HEAD
-	FastGuard lock(m_equippedItemBonusLock);
-=======
 	Guard lock(m_equippedItemBonusLock);
->>>>>>> koserver2
 	int16 sReflectDamage = 0;
 
 	// Check each item that has a bonus effect.
@@ -695,13 +676,6 @@ short Unit::GetACDamage(int damage, Unit *pTarget)
 	if (pUser->isWeaponsDisabled())
 		return damage;
 
-<<<<<<< HEAD
-	uint8 weaponSlots[] = { RIGHTHAND, LEFTHAND };
-
-	foreach_array (slot, weaponSlots)
-	{
-		_ITEM_TABLE * pWeapon = pUser->GetItemPrototype(slot);
-=======
 	uint8 weaponSlots[] = { LEFTHAND, RIGHTHAND };
 
 	int firstdamage = damage;
@@ -709,7 +683,6 @@ short Unit::GetACDamage(int damage, Unit *pTarget)
 	foreach_array (slot, weaponSlots)
 	{
 		_ITEM_TABLE * pWeapon = pUser->GetItemPrototype(weaponSlots[slot]);
->>>>>>> koserver2
 		if (pWeapon == nullptr)
 			continue;
 
@@ -840,30 +813,19 @@ void Unit::InitType3()
 	m_bType3Flag = false;
 }
 
-<<<<<<< HEAD
-void Unit::InitType4(bool bRemoveSavedMagic /*= false*/)
-{
-	// Remove all buffs that should not be recast.
-	FastGuard lock(m_buffLock);
-=======
 void Unit::InitType4(bool bRemoveSavedMagic /*= false*/, uint8 buffType /* = 0 */)
 {
 	// Remove all buffs that should not be recast.
 	Guard lock(m_buffLock);
->>>>>>> koserver2
 	Type4BuffMap buffMap = m_buffMap; // copy the map
 
 	for (auto itr = buffMap.begin(); itr != buffMap.end(); itr++)
 	{
 #ifdef GAMESERVER
-<<<<<<< HEAD
-		CMagicProcess::RemoveType4Buff(itr->first, this, bRemoveSavedMagic);
-=======
 		if (buffType > 0 && itr->second.m_bBuffType != buffType)
 			continue;
 
 		CMagicProcess::RemoveType4Buff(itr->first, this, bRemoveSavedMagic, buffType > 0 ? true : false);
->>>>>>> koserver2
 #endif
 	}
 }
@@ -929,11 +891,7 @@ bool Unit::isAttackable(Unit * pTarget)
 					return (g_pMain->m_bAttackBifrostMonument);
 				else if (pNpc->GetType() == NPC_PVP_MONUMENT)
 				{
-<<<<<<< HEAD
-					if ((GetNation() == KARUS && pNpc->m_sPid == PVP_MONUMENT_KARUS_SPID) || (GetNation() == ELMORAD && pNpc->m_sPid == PVP_MONUMENT_ELMORAD_SPID))
-=======
 					if ((GetNation() == KARUS && pNpc->m_sPid == MONUMENT_KARUS_SPID) || (GetNation() == ELMORAD && pNpc->m_sPid == MONUMENT_ELMORAD_SPID))
->>>>>>> koserver2
 						return false;
 				}
 				else if (pNpc->GetType() == NPC_GUARD_TOWER1 
@@ -941,11 +899,8 @@ bool Unit::isAttackable(Unit * pTarget)
 					|| pNpc->GetType() == NPC_GATE2 
 					|| pNpc->GetType() == NPC_VICTORY_GATE)
 					return false;
-<<<<<<< HEAD
-=======
 				else if (pNpc->m_sSid == 8850 && !GetMap()->canAttackOtherNation())
 					return false;
->>>>>>> koserver2
 #endif
 			}
 		}
@@ -965,11 +920,7 @@ bool Unit::CanCastRHit(uint16 m_socketID)
 	if (pUser->m_RHitRepeatList.find(m_socketID) != pUser->m_RHitRepeatList.end())
 	{
 		RHitRepeatList::iterator itr = pUser->m_RHitRepeatList.find(m_socketID);
-<<<<<<< HEAD
-		if ((UNIXTIME - itr->second) < PLAYER_R_HIT_REQUEST_INTERVAL)
-=======
 		if (float(UNIXTIME - itr->second) < PLAYER_R_HIT_REQUEST_INTERVAL)
->>>>>>> koserver2
 			return false;
 		else
 		{
@@ -1004,11 +955,7 @@ void Unit::SendDeathAnimation(Unit * pKiller /*= nullptr*/)
 
 void Unit::AddType4Buff(uint8 bBuffType, _BUFF_TYPE4_INFO & pBuffInfo)
 {
-<<<<<<< HEAD
-	FastGuard lock(m_buffLock);
-=======
 	Guard lock(m_buffLock);
->>>>>>> koserver2
 	m_buffMap.insert(std::make_pair(bBuffType, pBuffInfo));
 
 	if (pBuffInfo.isBuff())
@@ -1035,26 +982,20 @@ void KOMap::SetZoneAttributes(int zoneNumber)
 	switch (zoneNumber)
 	{
 	case ZONE_KARUS:
-<<<<<<< HEAD
-=======
 		m_zoneType = ZoneAbilityPVP;
 		m_zoneFlags = ZF_ATTACK_OTHER_NATION | ZF_CLAN_UPDATE;
 		m_byMinLevel = MIN_LEVEL_NATION_BASE, m_byMaxLevel = MAX_LEVEL;
 		break;
->>>>>>> koserver2
 	case ZONE_ELMORAD:
 		m_zoneType = ZoneAbilityPVP;
 		m_zoneFlags = ZF_ATTACK_OTHER_NATION | ZF_CLAN_UPDATE;
 		m_byMinLevel = MIN_LEVEL_NATION_BASE, m_byMaxLevel = MAX_LEVEL;
 		break;
 	case ZONE_KARUS_ESLANT:
-<<<<<<< HEAD
-=======
 		m_zoneType = ZoneAbilityPVP;
 		m_zoneFlags = ZF_ATTACK_OTHER_NATION;
 		m_byMinLevel = MIN_LEVEL_ESLANT, m_byMaxLevel = MAX_LEVEL;
 		break;
->>>>>>> koserver2
 	case ZONE_ELMORAD_ESLANT:
 		m_zoneType = ZoneAbilityPVP;
 		m_zoneFlags = ZF_ATTACK_OTHER_NATION;
@@ -1075,9 +1016,6 @@ void KOMap::SetZoneAttributes(int zoneNumber)
 		m_byMinLevel = MIN_LEVEL_BIFROST, m_byMaxLevel = MAX_LEVEL;
 		break;
 	case ZONE_DESPERATION_ABYSS:
-<<<<<<< HEAD
-	case ZONE_HELL_ABYSS:
-=======
 		m_zoneType = ZoneAbilityPVPNeutralNPCs;
 		m_zoneFlags = ZF_TALK_OTHER_NATION | ZF_ATTACK_OTHER_NATION | ZF_FRIENDLY_NPCS;
 		m_byMinLevel = MIN_LEVEL_NATION_BASE, m_byMaxLevel = MAX_LEVEL;
@@ -1087,7 +1025,6 @@ void KOMap::SetZoneAttributes(int zoneNumber)
 		m_zoneFlags = ZF_TALK_OTHER_NATION | ZF_ATTACK_OTHER_NATION | ZF_FRIENDLY_NPCS;
 		m_byMinLevel = MIN_LEVEL_NATION_BASE, m_byMaxLevel = MAX_LEVEL;
 		break;
->>>>>>> koserver2
 	case ZONE_DRAGON_CAVE:
 		m_zoneType = ZoneAbilityPVPNeutralNPCs;
 		m_zoneFlags = ZF_TALK_OTHER_NATION | ZF_ATTACK_OTHER_NATION | ZF_FRIENDLY_NPCS;
@@ -1098,11 +1035,6 @@ void KOMap::SetZoneAttributes(int zoneNumber)
 		m_zoneFlags = ZF_TALK_OTHER_NATION | ZF_ATTACK_OTHER_NATION | ZF_ATTACK_SAME_NATION | ZF_FRIENDLY_NPCS;
 		break;
 	case ZONE_ORC_ARENA:
-<<<<<<< HEAD
-	case ZONE_BLOOD_DON_ARENA:
-	case ZONE_GOBLIN_ARENA:
-	case ZONE_FORGOTTEN_TEMPLE:
-=======
 		m_zoneType = ZoneAbilityNeutral;
 		m_zoneFlags = ZF_TRADE_OTHER_NATION | ZF_TALK_OTHER_NATION | ZF_FRIENDLY_NPCS;
 		break;
@@ -1111,7 +1043,6 @@ void KOMap::SetZoneAttributes(int zoneNumber)
 		m_zoneFlags = ZF_TRADE_OTHER_NATION | ZF_TALK_OTHER_NATION | ZF_FRIENDLY_NPCS;
 		break;
 	case ZONE_GOBLIN_ARENA:
->>>>>>> koserver2
 		m_zoneType = ZoneAbilityNeutral;
 		m_zoneFlags = ZF_TRADE_OTHER_NATION | ZF_TALK_OTHER_NATION | ZF_FRIENDLY_NPCS;
 		break;
@@ -1119,35 +1050,6 @@ void KOMap::SetZoneAttributes(int zoneNumber)
 		m_zoneType = ZoneAbilityCaitharosArena;
 		m_zoneFlags = ZF_TALK_OTHER_NATION | ZF_ATTACK_OTHER_NATION | ZF_FRIENDLY_NPCS;
 		break;
-<<<<<<< HEAD
-	case ZONE_BATTLE:
-	case ZONE_BATTLE2:
-	case ZONE_BATTLE3:
-	case ZONE_BATTLE4:
-	case ZONE_BATTLE5:
-	case ZONE_BATTLE6:
-	case ZONE_SNOW_BATTLE:
-		m_zoneType = ZoneAbilityPVP;
-		m_zoneFlags = ZF_ATTACK_OTHER_NATION | ZF_WAR_ZONE;
-
-		if (zoneNumber == ZONE_BATTLE3)
-			m_byMinLevel = MIN_LEVEL_NIEDS_TRIANGLE, m_byMaxLevel = MAX_LEVEL_NIEDS_TRIANGLE;
-		else
-			m_byMinLevel = MIN_LEVEL_WAR_ZONE, m_byMaxLevel = MAX_LEVEL;
-		break;
-	case ZONE_RONARK_LAND:
-	case ZONE_ARDREAM:
-	case ZONE_RONARK_LAND_BASE:
-		m_zoneType = ZoneAbilityPVP;
-		m_zoneFlags = ZF_ATTACK_OTHER_NATION;
-
-		if (zoneNumber == ZONE_RONARK_LAND)
-			m_byMinLevel = MIN_LEVEL_RONARK_LAND, m_byMaxLevel = MAX_LEVEL;
-		else if (zoneNumber == ZONE_ARDREAM)
-			m_byMinLevel = MIN_LEVEL_ARDREAM, m_byMaxLevel = MAX_LEVEL_ARDREAM;
-		else if (zoneNumber == ZONE_RONARK_LAND_BASE)
-			m_byMinLevel = MIN_LEVEL_RONARK_LAND_BASE, m_byMaxLevel = MAX_LEVEL_RONARK_LAND_BASE;
-=======
 	case ZONE_FORGOTTEN_TEMPLE:
 		m_zoneType = ZoneAbilityNeutral;
 		m_zoneFlags = ZF_TRADE_OTHER_NATION | ZF_TALK_OTHER_NATION | ZF_FRIENDLY_NPCS;
@@ -1195,7 +1097,6 @@ void KOMap::SetZoneAttributes(int zoneNumber)
 		m_zoneType = ZoneAbilityPVP;
 		m_zoneFlags = ZF_ATTACK_OTHER_NATION;
 		m_byMinLevel = MIN_LEVEL_RONARK_LAND_BASE, m_byMaxLevel = MAX_LEVEL_RONARK_LAND_BASE;
->>>>>>> koserver2
 		break;
 	case ZONE_KROWAZ_DOMINION:
 		m_zoneType = ZoneAbilityPVPNeutralNPCs;
@@ -1204,11 +1105,7 @@ void KOMap::SetZoneAttributes(int zoneNumber)
 		break;
 	case ZONE_BORDER_DEFENSE_WAR:
 		m_zoneType = ZoneAbilityPVP;
-<<<<<<< HEAD
-		m_zoneFlags = ZF_ATTACK_OTHER_NATION;
-=======
 		m_zoneFlags = ZF_ATTACK_OTHER_NATION | ZF_FRIENDLY_NPCS;
->>>>>>> koserver2
 		break;
 	case ZONE_CHAOS_DUNGEON:
 		m_zoneType = ZoneAbilityPVP;
@@ -1219,9 +1116,6 @@ void KOMap::SetZoneAttributes(int zoneNumber)
 		m_zoneFlags = ZF_ATTACK_OTHER_NATION | ZF_FRIENDLY_NPCS;
 		m_byMinLevel = MIN_LEVEL_JURAD_MOUNTAIN, m_byMaxLevel = MAX_LEVEL;
 		break;
-<<<<<<< HEAD
-	case ZONE_ISILOON_ARENA:
-=======
 	case ZONE_PRISON:
 		m_zoneType = ZoneAbilityPVPNeutralNPCs;
 		m_zoneFlags = ZF_ATTACK_OTHER_NATION | ZF_FRIENDLY_NPCS;
@@ -1229,7 +1123,6 @@ void KOMap::SetZoneAttributes(int zoneNumber)
 	case ZONE_ISILOON_ARENA:
 		m_zoneType = ZoneAbilityPVPNeutralNPCs;
 		m_zoneFlags = ZF_TALK_OTHER_NATION | ZF_ATTACK_OTHER_NATION | ZF_FRIENDLY_NPCS;
->>>>>>> koserver2
 	case ZONE_FELANKOR_ARENA:
 		m_zoneType = ZoneAbilityPVPNeutralNPCs;
 		m_zoneFlags = ZF_TALK_OTHER_NATION | ZF_ATTACK_OTHER_NATION | ZF_FRIENDLY_NPCS;
@@ -1310,12 +1203,9 @@ bool CUser::isHostileTo(Unit * pTarget)
 		&& isInPVPZone())
 		return true;
 
-<<<<<<< HEAD
-=======
 	if (isInTempleEventZone())
 		return true;
 
->>>>>>> koserver2
 	// Players cannot attack other players in any other circumstance.
 	return false;
 }
@@ -1391,8 +1281,6 @@ bool CUser::isInSafetyArea()
 	case ZONE_KARUS:
 		if (GetNation() == KARUS)
 			return ((GetX() < 1876.0f && GetX() > 1820.0f) && ((GetZ() < 212.0f && GetZ() > 136.0f)));
-<<<<<<< HEAD
-=======
 	case ZONE_BATTLE:
 		if (GetNation() == KARUS)
 			return ((GetX() < 125.0f && GetX() > 98.0f) && ((GetZ() < 780.0f && GetZ() > 755.0f)));
@@ -1403,7 +1291,6 @@ bool CUser::isInSafetyArea()
 			return ((GetX() < 977.0f && GetX() > 942.0f) && ((GetZ() < 904.0f && GetZ() > 863.0f)));
 		else if (GetNation() == ELMORAD)
 			return ((GetX() < 80.0f && GetX() > 46.0f) && ((GetZ() < 174.0f && GetZ() > 142.0f)));
->>>>>>> koserver2
 	}
 
 

@@ -1,0 +1,352 @@
+﻿Merge branch 'koserver2'
+
+Conflicts:
+	.gitignore
+	AIServer/AIUser.cpp
+	AIServer/Define.h
+	AIServer/Extern.h
+	AIServer/GameSocket.cpp
+	AIServer/GameSocket.h
+	AIServer/MAP.cpp
+	AIServer/MAP.h
+	AIServer/Npc.cpp
+	AIServer/Npc.h
+	AIServer/NpcTable.h
+	AIServer/NpcThread.cpp
+	AIServer/NpcThread.h
+	AIServer/ServerDlg.cpp
+	AIServer/ServerDlg.h
+	AIServer/main.cpp
+	AIServer/proj-AIServer.vcxproj
+	AIServer/proj-AIServer.vcxproj.filters
+	AIServer/resource.h
+	GameServer/AISocket.cpp
+	GameServer/AttackHandler.cpp
+	GameServer/CharacterMovementHandler.cpp
+	GameServer/CharacterSelectionHandler.cpp
+	GameServer/ChatHandler.cpp
+	GameServer/ConsoleInputThread.cpp
+	GameServer/DBAgent.cpp
+	GameServer/DBAgent.h
+	GameServer/DatabaseThread.cpp
+	GameServer/DatabaseThread.h
+	GameServer/Define.h
+	GameServer/EventHandler.cpp
+	GameServer/FriendHandler.cpp
+	GameServer/GameDefine.h
+	GameServer/GameServerDlg.cpp
+	GameServer/GameServerDlg.h
+	GameServer/ItemHandler.cpp
+	GameServer/KingSystem.cpp
+	GameServer/KingSystem.h
+	GameServer/Knights.cpp
+	GameServer/KnightsManager.cpp
+	GameServer/LetterHandler.cpp
+	GameServer/LoadServerData.cpp
+	GameServer/LoadServerData.h
+	GameServer/LuaEngine.cpp
+	GameServer/LuaEngine.h
+	GameServer/MagicInstance.cpp
+	GameServer/MagicInstance.h
+	GameServer/MagicProcess.cpp
+	GameServer/MagicProcess.h
+	GameServer/Map.cpp
+	GameServer/Map.h
+	GameServer/MerchantHandler.cpp
+	GameServer/NPCHandler.cpp
+	GameServer/Npc.cpp
+	GameServer/Npc.h
+	GameServer/PartyHandler.cpp
+	GameServer/QuestHandler.cpp
+	GameServer/Region.cpp
+	GameServer/Region.h
+	GameServer/ShoppingMallHandler.cpp
+	GameServer/TradeHandler.cpp
+	GameServer/Unit.cpp
+	GameServer/Unit.h
+	GameServer/UpgradeHandler.cpp
+	GameServer/User.cpp
+	GameServer/User.h
+	GameServer/lua_bindings.cpp
+	GameServer/lua_bindings.h
+	GameServer/main.cpp
+	GameServer/proj-GameServer.vcxproj
+	GameServer/proj-GameServer.vcxproj.filters
+	GameServer/resource.h
+	LogInServer/DBProcess.cpp
+	LogInServer/DBProcess.h
+	LogInServer/Define.h
+	LogInServer/LoginServer.cpp
+	LogInServer/LoginServer.h
+	LogInServer/LoginSession.cpp
+	LogInServer/LoginSession.h
+	LogInServer/main.cpp
+	LogInServer/proj-LogInServer.vcxproj
+	N3BASE/N3ShapeMgr.cpp
+	N3BASE/N3ShapeMgr.h
+	shared/Atomic.h
+	shared/ByteBuffer.h
+	shared/Condition.cpp
+	shared/Condition.h
+	shared/JvCryption.cpp
+	shared/JvCryption.h
+	shared/KOSocket.cpp
+	shared/KOSocket.h
+	shared/KOSocketMgr.h
+	shared/ListenSocketWin32.h
+	shared/Network.h
+	shared/RWLock.h
+	shared/SMDFile.cpp
+	shared/SMDFile.h
+	shared/STLMap.h
+	shared/Socket.cpp
+	shared/Socket.h
+	shared/SocketDefines.h
+	shared/SocketMgr.cpp
+	shared/SocketMgr.h
+	shared/SocketOps.h
+	shared/SocketOpsWin32.cpp
+	shared/SocketWin32.cpp
+	shared/Thread.cpp
+	shared/Thread.h
+	shared/crc32.h
+	shared/database/KingElectionListSet.h
+	shared/database/MagicTableSet.h
+	shared/database/MonsterRespawnListSet.h
+	shared/database/NpcPosSet.h
+	shared/database/OdbcConnection.cpp
+	shared/database/OdbcConnection.h
+	shared/database/OdbcRecordset.h
+	shared/database/structs.h
+	shared/globals.cpp
+	shared/globals.h
+	shared/packets.h
+	shared/shared.vcxproj
+	shared/shared.vcxproj.filters
+	shared/signal_handler.cpp
+	shared/stdafx.h
+	shared/tstring.cpp
+	shared/types.h
+#
+# It looks like you may be committing a merge.
+# If this is not correct, please remove the file
+#	.git/MERGE_HEAD
+# and try again.
+
+
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+# On branch master
+# All conflicts fixed but you are still merging.
+#   (use "git commit" to conclude merge)
+#
+# Changes to be committed:
+#
+#	modified:   .gitignore
+#	modified:   AIServer/AIUser.cpp
+#	modified:   AIServer/Define.h
+#	modified:   AIServer/Extern.h
+#	modified:   AIServer/GameSocket.cpp
+#	modified:   AIServer/GameSocket.h
+#	modified:   AIServer/MAP.cpp
+#	modified:   AIServer/MAP.h
+#	modified:   AIServer/Npc.cpp
+#	modified:   AIServer/Npc.h
+#	modified:   AIServer/NpcTable.h
+#	modified:   AIServer/NpcThread.cpp
+#	modified:   AIServer/NpcThread.h
+#	modified:   AIServer/ServerDlg.cpp
+#	modified:   AIServer/ServerDlg.h
+#	modified:   AIServer/main.cpp
+#	modified:   AIServer/proj-AIServer.vcxproj
+#	modified:   AIServer/proj-AIServer.vcxproj.filters
+#	modified:   AIServer/resource.h
+#	modified:   GameServer/AISocket.cpp
+#	modified:   GameServer/AttackHandler.cpp
+#	new file:   GameServer/CharacterHandler.cpp
+#	modified:   GameServer/CharacterMovementHandler.cpp
+#	modified:   GameServer/CharacterSelectionHandler.cpp
+#	modified:   GameServer/ChatHandler.cpp
+#	modified:   GameServer/ConsoleInputThread.cpp
+#	modified:   GameServer/DBAgent.cpp
+#	modified:   GameServer/DBAgent.h
+#	modified:   GameServer/DatabaseThread.cpp
+#	modified:   GameServer/DatabaseThread.h
+#	modified:   GameServer/Define.h
+#	modified:   GameServer/EventHandler.cpp
+#	modified:   GameServer/FriendHandler.cpp
+#	modified:   GameServer/GameDefine.h
+#	modified:   GameServer/GameServerDlg.cpp
+#	modified:   GameServer/GameServerDlg.h
+#	modified:   GameServer/ItemHandler.cpp
+#	modified:   GameServer/KingSystem.cpp
+#	modified:   GameServer/KingSystem.h
+#	modified:   GameServer/Knights.cpp
+#	modified:   GameServer/KnightsManager.cpp
+#	modified:   GameServer/LetterHandler.cpp
+#	modified:   GameServer/LoadServerData.cpp
+#	modified:   GameServer/LoadServerData.h
+#	modified:   GameServer/LuaEngine.cpp
+#	modified:   GameServer/LuaEngine.h
+#	modified:   GameServer/MagicInstance.cpp
+#	modified:   GameServer/MagicInstance.h
+#	modified:   GameServer/MagicProcess.cpp
+#	modified:   GameServer/MagicProcess.h
+#	modified:   GameServer/Map.cpp
+#	modified:   GameServer/Map.h
+#	modified:   GameServer/MerchantHandler.cpp
+#	modified:   GameServer/NPCHandler.cpp
+#	modified:   GameServer/Npc.cpp
+#	modified:   GameServer/Npc.h
+#	modified:   GameServer/PartyHandler.cpp
+#	modified:   GameServer/QuestHandler.cpp
+#	new file:   GameServer/RES/GameServer.rc
+#	modified:   GameServer/Region.cpp
+#	modified:   GameServer/Region.h
+#	modified:   GameServer/ShoppingMallHandler.cpp
+#	modified:   GameServer/TradeHandler.cpp
+#	modified:   GameServer/Unit.cpp
+#	modified:   GameServer/Unit.h
+#	modified:   GameServer/UpgradeHandler.cpp
+#	modified:   GameServer/User.cpp
+#	modified:   GameServer/User.h
+#	modified:   GameServer/lua_bindings.cpp
+#	modified:   GameServer/lua_bindings.h
+#	modified:   GameServer/main.cpp
+#	modified:   GameServer/proj-GameServer.vcxproj
+#	modified:   GameServer/proj-GameServer.vcxproj.filters
+#	modified:   GameServer/resource.h
+#	modified:   KnightOnlineServer.sln
+#	modified:   LogInServer/DBProcess.cpp
+#	modified:   LogInServer/DBProcess.h
+#	modified:   LogInServer/Define.h
+#	modified:   LogInServer/LoginServer.cpp
+#	modified:   LogInServer/LoginServer.h
+#	modified:   LogInServer/LoginSession.cpp
+#	modified:   LogInServer/LoginSession.h
+#	modified:   LogInServer/main.cpp
+#	modified:   LogInServer/proj-LogInServer.vcxproj
+#	modified:   N3BASE/N3ShapeMgr.cpp
+#	modified:   N3BASE/N3ShapeMgr.h
+#	new file:   ipch/shared-132c220b/shared-a6a5c463.ipch
+#	new file:   scripting/Lua.vcxproj
+#	new file:   scripting/Lua.vcxproj.filters
+#	new file:   scripting/Lua.vcxproj.user
+#	new file:   scripting/Lua/src/Lua.vcxproj
+#	new file:   scripting/Lua/src/Lua.vcxproj.filters
+#	new file:   scripting/Lua/src/Lua.vcxproj.user
+#	new file:   scripting/Lua/src/Makefile
+#	new file:   scripting/Lua/src/lapi.c
+#	new file:   scripting/Lua/src/lapi.h
+#	new file:   scripting/Lua/src/lauxlib.c
+#	new file:   scripting/Lua/src/lauxlib.h
+#	new file:   scripting/Lua/src/lbaselib.c
+#	new file:   scripting/Lua/src/lbitlib.c
+#	new file:   scripting/Lua/src/lcode.c
+#	new file:   scripting/Lua/src/lcode.h
+#	new file:   scripting/Lua/src/lcorolib.c
+#	new file:   scripting/Lua/src/lctype.c
+#	new file:   scripting/Lua/src/lctype.h
+#	new file:   scripting/Lua/src/ldblib.c
+#	new file:   scripting/Lua/src/ldebug.c
+#	new file:   scripting/Lua/src/ldebug.h
+#	new file:   scripting/Lua/src/ldo.c
+#	new file:   scripting/Lua/src/ldo.h
+#	new file:   scripting/Lua/src/ldump.c
+#	new file:   scripting/Lua/src/lfunc.c
+#	new file:   scripting/Lua/src/lfunc.h
+#	new file:   scripting/Lua/src/lgc.c
+#	new file:   scripting/Lua/src/lgc.h
+#	new file:   scripting/Lua/src/linit.c
+#	new file:   scripting/Lua/src/liolib.c
+#	new file:   scripting/Lua/src/llex.c
+#	new file:   scripting/Lua/src/llex.h
+#	new file:   scripting/Lua/src/llimits.h
+#	new file:   scripting/Lua/src/lmathlib.c
+#	new file:   scripting/Lua/src/lmem.c
+#	new file:   scripting/Lua/src/lmem.h
+#	new file:   scripting/Lua/src/loadlib.c
+#	new file:   scripting/Lua/src/lobject.c
+#	new file:   scripting/Lua/src/lobject.h
+#	new file:   scripting/Lua/src/lopcodes.c
+#	new file:   scripting/Lua/src/lopcodes.h
+#	new file:   scripting/Lua/src/loslib.c
+#	new file:   scripting/Lua/src/lparser.c
+#	new file:   scripting/Lua/src/lparser.h
+#	new file:   scripting/Lua/src/lstate.c
+#	new file:   scripting/Lua/src/lstate.h
+#	new file:   scripting/Lua/src/lstring.c
+#	new file:   scripting/Lua/src/lstring.h
+#	new file:   scripting/Lua/src/lstrlib.c
+#	new file:   scripting/Lua/src/ltable.c
+#	new file:   scripting/Lua/src/ltable.h
+#	new file:   scripting/Lua/src/ltablib.c
+#	new file:   scripting/Lua/src/ltm.c
+#	new file:   scripting/Lua/src/ltm.h
+#	new file:   scripting/Lua/src/lua.c
+#	new file:   scripting/Lua/src/lua.h
+#	new file:   scripting/Lua/src/lua.hpp
+#	new file:   scripting/Lua/src/luac.c
+#	new file:   scripting/Lua/src/luaconf.h
+#	new file:   scripting/Lua/src/lualib.h
+#	new file:   scripting/Lua/src/lundump.c
+#	new file:   scripting/Lua/src/lundump.h
+#	new file:   scripting/Lua/src/lvm.c
+#	new file:   scripting/Lua/src/lvm.h
+#	new file:   scripting/Lua/src/lzio.c
+#	new file:   scripting/Lua/src/lzio.h
+#	modified:   shared/Atomic.h
+#	modified:   shared/ByteBuffer.h
+#	modified:   shared/Condition.cpp
+#	modified:   shared/Condition.h
+#	new file:   shared/HardwareInformation.cpp
+#	new file:   shared/HardwareInformation.h
+#	modified:   shared/JvCryption.cpp
+#	modified:   shared/JvCryption.h
+#	modified:   shared/KOSocket.cpp
+#	modified:   shared/KOSocket.h
+#	modified:   shared/KOSocketMgr.h
+#	modified:   shared/ListenSocketWin32.h
+#	modified:   shared/Network.h
+#	modified:   shared/RWLock.h
+#	modified:   shared/SMDFile.cpp
+#	modified:   shared/SMDFile.h
+#	modified:   shared/STLMap.h
+#	modified:   shared/Socket.cpp
+#	modified:   shared/Socket.h
+#	modified:   shared/SocketDefines.h
+#	modified:   shared/SocketMgr.cpp
+#	modified:   shared/SocketMgr.h
+#	modified:   shared/SocketOps.h
+#	modified:   shared/SocketOpsWin32.cpp
+#	modified:   shared/SocketWin32.cpp
+#	modified:   shared/Thread.cpp
+#	modified:   shared/Thread.h
+#	new file:   shared/crc32.c
+#	modified:   shared/crc32.h
+#	modified:   shared/database/KingElectionListSet.h
+#	modified:   shared/database/MagicTableSet.h
+#	new file:   shared/database/MonsterChallenge.h
+#	new file:   shared/database/MonsterChallengeSummonList.h
+#	new file:   shared/database/MonsterRespawnListInformationSet.h
+#	modified:   shared/database/MonsterRespawnListSet.h
+#	modified:   shared/database/NpcPosSet.h
+#	new file:   shared/database/ObjectPosSet.h
+#	modified:   shared/database/OdbcConnection.cpp
+#	modified:   shared/database/OdbcConnection.h
+#	modified:   shared/database/OdbcRecordset.h
+#	new file:   shared/database/StartPositionRandomSet.h
+#	new file:   shared/database/UserItemSet.h
+#	modified:   shared/database/structs.h
+#	modified:   shared/globals.cpp
+#	modified:   shared/globals.h
+#	new file:   shared/lzf.c
+#	modified:   shared/packets.h
+#	modified:   shared/shared.vcxproj
+#	modified:   shared/shared.vcxproj.filters
+#	modified:   shared/signal_handler.cpp
+#	modified:   shared/stdafx.h
+#	modified:   shared/tstring.cpp
+#	modified:   shared/types.h
+#
+

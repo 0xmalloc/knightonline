@@ -28,11 +28,7 @@ void CUser::PartyProcess(Packet & pkt)
 	case PARTY_PERMIT:
 		if (pkt.read<uint8>()) 
 			PartyInsert();
-<<<<<<< HEAD
-		else							
-=======
 		else
->>>>>>> koserver2
 			PartyCancel();
 		break;
 
@@ -61,13 +57,6 @@ void CUser::PartyCancel()
 		return;
 
 	_PARTY_GROUP *pParty = g_pMain->GetPartyPtr(GetPartyID());
-<<<<<<< HEAD
-
-	m_sPartyIndex = -1;
-	m_bInParty = false;
-
-=======
->>>>>>> koserver2
 	if (pParty == nullptr)
 		return;
 
@@ -76,25 +65,17 @@ void CUser::PartyCancel()
 	if (pUser == nullptr)
 		return;
 
-<<<<<<< HEAD
-	for (int i = 0; i < 8; i++)
-=======
 	m_bInParty = false;
 	m_sPartyIndex = -1;
 
 	for (int i = 0; i < MAX_PARTY_USERS; i++)
->>>>>>> koserver2
 	{		
 		if (pParty->uid[i] >= 0)
 			count++;
 	}
 
 	if (count == 1)
-<<<<<<< HEAD
-		pUser->PartyDelete();			
-=======
 		pUser->PartyDelete();
->>>>>>> koserver2
 
 	Packet result(WIZ_PARTY, uint8(PARTY_INSERT));
 	result << int16(-1);
@@ -130,13 +111,8 @@ void CUser::PartyRequest(int memberid, bool bCreate)
 		if (!isInClan() 
 			|| GetClanID() != pUser->GetClanID())
 		{
-<<<<<<< HEAD
-			if ( !(   ( pUser->GetLevel() <= (int)(GetLevel() * 1.5) && pUser->GetLevel() >= (int)(GetLevel() * 1.5)) 
-				|| ( pUser->GetLevel() <= (GetLevel() + 8) && pUser->GetLevel() >= ((int)(GetLevel()) - 8))))
-=======
 			if (!((pUser->GetLevel() <= (int)(GetLevel() * 1.5) && pUser->GetLevel() >= (int)(GetLevel() * 2 / 3))
 				|| (pUser->GetLevel() <= (GetLevel() + 8) && pUser->GetLevel() >= ((int)(GetLevel()) - 8))))
->>>>>>> koserver2
 			{
 				errorCode = -2;
 				goto fail_return;
@@ -195,10 +171,7 @@ void CUser::PartyInsert()
 	CUser* pUser = nullptr;
 	_PARTY_GROUP* pParty = nullptr;
 	uint8 byIndex = 0xFF;
-<<<<<<< HEAD
-=======
 	int leader_id = -1;
->>>>>>> koserver2
 
 	if (!isInParty())
 		return;
@@ -211,8 +184,6 @@ void CUser::PartyInsert()
 		return;
 	}
 
-<<<<<<< HEAD
-=======
 	leader_id = pParty->uid[0];
 	pUser = g_pMain->GetUserPtr(leader_id);
 	if (pUser == nullptr)
@@ -225,7 +196,6 @@ void CUser::PartyInsert()
 		return;
 	}
 
->>>>>>> koserver2
 	// make sure user isn't already in the array...
 	// kind of slow, but it works for the moment
 	foreach_array (i, pParty->uid)
@@ -422,14 +392,10 @@ void CUser::PartyRemove(int memberid)
 	g_pMain->Send_PartyMember(m_sPartyIndex, &result);
 
 	if (memberPos >= 0)
-<<<<<<< HEAD
-		pUser->m_sPartyIndex = pParty->uid[memberPos] = -1;
-=======
 	{
 		pUser->m_bInParty = false;
 		pUser->m_sPartyIndex = pParty->uid[memberPos] = -1;
 	}
->>>>>>> koserver2
 
 	// AI Server
 	result.Initialize(AG_USER_PARTY);
@@ -513,11 +479,7 @@ void CUser::PartyBBSRegister(Packet & pkt)
 	StateChangeServerDirect(2, 2); // seeking a party
 
 	// TODO: Make this a more localised map
-<<<<<<< HEAD
-	SessionMap & sessMap = g_pMain->m_socketMgr.GetActiveSessionMap();
-=======
 	SessionMap sessMap = g_pMain->m_socketMgr.GetActiveSessionMap();
->>>>>>> koserver2
 	foreach (itr, sessMap)
 	{
 		CUser *pUser = TO_USER(itr->second);
@@ -525,16 +487,6 @@ void CUser::PartyBBSRegister(Packet & pkt)
 			|| pUser->m_bNeedParty == 1) 
 			continue;
 
-<<<<<<< HEAD
-		if( !(   ( pUser->GetLevel() <= (int)(GetLevel() * 1.5) && pUser->GetLevel() >= (int)(GetLevel() * 1.5)) 
-			|| ( pUser->GetLevel() <= (GetLevel() + 8) && pUser->GetLevel() >= ((int)(GetLevel()) - 8))))
-			continue;
-
-		if (pUser->GetSocketID() == GetSocketID()) break;
-		counter++;		
-	}
-	g_pMain->m_socketMgr.ReleaseLock();
-=======
 		if(!((pUser->GetLevel() <= (int)(GetLevel() * 1.5) && pUser->GetLevel() >= (int)(GetLevel() * 1.5)) 
 			|| (pUser->GetLevel() <= (GetLevel() + 8) && pUser->GetLevel() >= ((int)(GetLevel()) - 8))))
 			continue;
@@ -542,7 +494,6 @@ void CUser::PartyBBSRegister(Packet & pkt)
 		if (pUser->GetSocketID() == GetSocketID()) break;
 		counter++;
 	}
->>>>>>> koserver2
 
 	SendPartyBBSNeeded(counter / MAX_BBS_PAGE, PARTY_BBS_LIST);
 }
@@ -587,11 +538,7 @@ void CUser::SendPartyBBSNeeded(uint16 page_index, uint8 bType)
 	result << bType << uint8(1) << page_index << uint8(0) << uint8(0); //Not sure what the last 2 bytes are.
 
 	// TODO: Make this a more localised map
-<<<<<<< HEAD
-	SessionMap & sessMap = g_pMain->m_socketMgr.GetActiveSessionMap();
-=======
 	SessionMap sessMap = g_pMain->m_socketMgr.GetActiveSessionMap();
->>>>>>> koserver2
 	int i = -1; // start at -1, first iteration gets us to 0.
 	foreach (itr, sessMap)
 	{
@@ -602,15 +549,6 @@ void CUser::SendPartyBBSNeeded(uint16 page_index, uint8 bType)
 		uint16 sClass = pUser->m_sClass;
 		i++;
 
-<<<<<<< HEAD
-		if ((GetNation() != pUser->GetNation() 
-			&& GetZoneID() != ZONE_MORADON
-			&& GetZoneID() != ZONE_FORGOTTEN_TEMPLE
-			&& GetZoneID() != pUser->GetZoneID())
-			|| (pUser->m_bNeedParty == 1 && !pUser->m_bPartyLeader)
-			|| !(  ( pUser->GetLevel() <= (int)(GetLevel() * 1.5) && pUser->GetLevel() >= (int)(GetLevel() * 2 / 3)) 
-			|| ( pUser->GetLevel() <= (GetLevel() + 8) && pUser->GetLevel() >= ((int)(GetLevel()) - 8))))
-=======
 		if (GetZoneID() != pUser->GetZoneID()
 			|| (GetNation() != pUser->GetNation() 
 			&& GetZoneID() != ZONE_MORADON
@@ -618,7 +556,6 @@ void CUser::SendPartyBBSNeeded(uint16 page_index, uint8 bType)
 			|| (pUser->m_bNeedParty == 1 && !pUser->m_bPartyLeader)
 			|| !((pUser->GetLevel() <= (int)(GetLevel() * 1.5) && pUser->GetLevel() >= (int)(GetLevel() * 2 / 3)) 
 			|| (pUser->GetLevel() <= (GetLevel() + 8) && pUser->GetLevel() >= ((int)(GetLevel()) - 8))))
->>>>>>> koserver2
 			continue;
 
 		BBS_Counter++;
@@ -649,10 +586,6 @@ void CUser::SendPartyBBSNeeded(uint16 page_index, uint8 bType)
 			<< uint8(0);
 		valid_counter++;
 	}
-<<<<<<< HEAD
-	g_pMain->m_socketMgr.ReleaseLock();
-=======
->>>>>>> koserver2
 
 	// You still need to fill up ten slots.
 	if (valid_counter < MAX_BBS_PAGE)
@@ -692,11 +625,7 @@ uint8 CUser::GetPartyMemberAmount(_PARTY_GROUP *pParty)
 		return 0;
 
 	uint8 PartyMembers = 0;
-<<<<<<< HEAD
-	for( int i = 0; i < MAX_PARTY_USERS; i++)
-=======
 	for (int i = 0; i < MAX_PARTY_USERS; i++)
->>>>>>> koserver2
 	{
 		if(pParty->uid[i] >= 0)
 			PartyMembers++;

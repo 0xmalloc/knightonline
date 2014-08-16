@@ -1,12 +1,9 @@
 #include "stdafx.h"
 #include "Map.h"
 #include "MagicInstance.h"
-<<<<<<< HEAD
-=======
 #include "../shared/DateTime.h"
 
 using namespace std;
->>>>>>> koserver2
 
 CNpc::CNpc() : Unit(UnitNPC)
 {
@@ -29,20 +26,6 @@ void CNpc::Initialize()
 	m_sPid = 0;				// MONSTER(NPC) Picture ID
 	m_sSize = 100;				// MONSTER(NPC) Size
 	m_strName.clear();			// MONSTER(NPC) Name
-<<<<<<< HEAD
-	m_iMaxHP = 0;				// ÃÖ´ë HP
-	m_iHP = 0;					// ÇöÀç HP
-	//m_byState = 0;			// ¸ó½ºÅÍ (NPC) »óÅÂÀÌ»ó
-	m_tNpcType = 0;				// NPC Type
-	// 0 : Normal Monster
-	// 1 : NPC
-	// 2 : °¢ ÀÔ±¸,Ãâ±¸ NPC
-	// 3 : °æºñº´
-	m_iSellingGroup = 0;
-	//	m_dwStepDelay = 0;		
-
-	m_byDirection = 0;			// npcÀÇ ¹æÇâ,,
-=======
 	m_iMaxHP = 0;				// ï¿½Ö´ï¿½ HP
 	m_iHP = 0;					// ï¿½ï¿½ï¿½ï¿½ HP
 	//m_byState = 0;			// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ (NPC) ï¿½ï¿½ï¿½ï¿½ï¿½Ì»ï¿½
@@ -55,7 +38,6 @@ void CNpc::Initialize()
 	//	m_dwStepDelay = 0;		
 
 	m_byDirection = 0;			// npcï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½,,
->>>>>>> koserver2
 	m_iWeapon_1 = 0;
 	m_iWeapon_2 = 0;
 	m_NpcState = NPC_LIVE;
@@ -63,11 +45,8 @@ void CNpc::Initialize()
 	m_byObjectType = NORMAL_OBJECT;
 
 	m_byTrapNumber = 0;
-<<<<<<< HEAD
-=======
 	m_oSocketID = -1;
 	m_bEventRoom = 0;
->>>>>>> koserver2
 }
 
 /**
@@ -114,12 +93,9 @@ void CNpc::GetInOut(Packet & result, uint8 bType)
 	result << bType << GetID();
 	if (bType != INOUT_OUT)
 		GetNpcInfo(result);
-<<<<<<< HEAD
-=======
 
 	if (bType == INOUT_IN)
 		OnRespawn();
->>>>>>> koserver2
 }
 
 /**
@@ -185,11 +161,6 @@ void CNpc::GetNpcInfo(Packet & pkt)
 * @param	bFlag  	The flag (open or shut).
 * @param	bSendAI	true to update the AI server.
 */
-<<<<<<< HEAD
-void CNpc::SendGateFlag(uint8 objectType,uint8 bFlag /*= -1*/, bool bSendAI /*= true*/)
-{
-	Packet result(WIZ_OBJECT_EVENT, uint8(objectType));
-=======
 void CNpc::SendGateFlag(uint8 bFlag /*= -1*/, bool bSendAI /*= true*/)
 {
 	uint8 objectType = OBJECT_FLAG_LEVER;
@@ -200,7 +171,6 @@ void CNpc::SendGateFlag(uint8 bFlag /*= -1*/, bool bSendAI /*= true*/)
 		objectType = (uint8)pObjectEvent->sType;
 
 	Packet result(WIZ_OBJECT_EVENT, objectType);
->>>>>>> koserver2
 
 	// If there's a flag to set, set it now.
 	if (bFlag >= 0)
@@ -214,11 +184,7 @@ void CNpc::SendGateFlag(uint8 bFlag /*= -1*/, bool bSendAI /*= true*/)
 	if (bSendAI)
 	{
 		result.Initialize(AG_NPC_GATE_OPEN);
-<<<<<<< HEAD
-		result << GetID() << m_byGateOpen;
-=======
 		result << GetID() << GetProtoID() << m_byGateOpen;
->>>>>>> koserver2
 		Send_AIServer(&result);
 	}
 }
@@ -381,44 +347,6 @@ void CNpc::OnDeath(Unit *pKiller)
 */
 void CNpc::OnDeathProcess(Unit *pKiller)
 {
-<<<<<<< HEAD
-	CUser * pUser = TO_USER(pKiller);
-
-	if (TO_NPC(this) != nullptr && pUser != nullptr)
-	{
-		if (pUser->isPlayer())
-		{
-			if (!m_bMonster)
-			{
-				switch (m_tNpcType)
-				{
-				case NPC_BIFROST_MONUMENT:
-					pUser->BifrostProcess(pUser);
-					break;
-				case NPC_PVP_MONUMENT:
-					PVPMonumentProcess(pUser);
-					break;
-				default:
-					break;
-				}
-			}
-			else if (m_bMonster)
-			{
-				if (m_sSid == 700 || m_sSid == 750)
-				{
-					if (pUser->CheckExistEvent(STARTER_SEED_QUEST, 1))
-						pUser->SaveEvent(STARTER_SEED_QUEST, 2);
-				}
-				else if (g_pMain->m_MonsterRespawnListArray.GetData(m_sSid) != nullptr) {
-					if (pUser->isInPKZone() || GetZoneID() == ZONE_JURAD_MOUNTAIN)
-						g_pMain->SpawnEventNpc(g_pMain->m_MonsterRespawnListArray.GetData(m_sSid)->sSid, true, GetZoneID(), GetX(), GetY(), GetZ(), g_pMain->m_MonsterRespawnListArray.GetData(m_sSid)->sCount);
-				} else if (m_tNpcType == NPC_CHAOS_STONE && pUser->isInPKZone()) {
-					ChaosStoneProcess(pUser,5);
-				}
-			}
-		}
-	}
-=======
 	if (TO_NPC(this) == nullptr && !pKiller->isPlayer())
 		return;
 
@@ -527,7 +455,6 @@ void CNpc::OnRespawn()
 	}
 	else if (g_pMain->m_bForgettenTempleIsActive && GetZoneID() == ZONE_FORGOTTEN_TEMPLE)
 		g_pMain->m_ForgettenTempleMonsterList.insert(std::make_pair(m_sNid, GetProtoID()));
->>>>>>> koserver2
 }
 
 /**
@@ -550,10 +477,6 @@ void CNpc::ChaosStoneProcess(CUser *pUser, uint16 MonsterCount)
 	for (uint8 i = 0; i < MonsterCount;i++)
 	{
 		uint32 nMonsterNum = myrand(0, g_pMain->m_MonsterSummonListZoneArray.GetSize());
-<<<<<<< HEAD
-
-=======
->>>>>>> koserver2
 		_MONSTER_SUMMON_LIST_ZONE * pMonsterSummonListZone = g_pMain->m_MonsterSummonListZoneArray.GetData(nMonsterNum);
 
 		if (pMonsterSummonListZone != nullptr)
@@ -564,11 +487,7 @@ void CNpc::ChaosStoneProcess(CUser *pUser, uint16 MonsterCount)
 				{
 					if (std::find(MonsterSpawnedFamily.begin(),MonsterSpawnedFamily.end(),pMonsterSummonListZone->byFamily) == MonsterSpawnedFamily.end())
 					{
-<<<<<<< HEAD
-						g_pMain->SpawnEventNpc(pMonsterSummonListZone->sSid, true,GetZoneID(), GetX(), GetY(), GetZ(), 1, CHAOS_STONE_MONSTER_RESPAWN_RADIUS);
-=======
 						g_pMain->SpawnEventNpc(pMonsterSummonListZone->sSid, true,GetZoneID(), GetX(), GetY(), GetZ(), 1, CHAOS_STONE_MONSTER_RESPAWN_RADIUS, CHAOS_STONE_MONSTER_LIVE_TIME);
->>>>>>> koserver2
 						MonsterSpawned.push_back(nMonsterNum);
 						MonsterSpawnedFamily.push_back(pMonsterSummonListZone->byFamily);
 						bLoopBack = false;
@@ -578,13 +497,6 @@ void CNpc::ChaosStoneProcess(CUser *pUser, uint16 MonsterCount)
 		}
 
 		if (bLoopBack)
-<<<<<<< HEAD
-			i--;			
-	}
-}
-
-/**
-=======
 			i--;
 		else
 			bLoopBack = true;
@@ -592,7 +504,6 @@ void CNpc::ChaosStoneProcess(CUser *pUser, uint16 MonsterCount)
 }
 
 /*
->>>>>>> koserver2
 * @brief	Executes the pvp monument process.
 *
 * @param	pUser	The User.
@@ -607,10 +518,6 @@ void CNpc::PVPMonumentProcess(CUser *pUser)
 	g_pMain->Send_Zone(&result, GetZoneID(), nullptr, Nation::ALL);
 
 	g_pMain->m_nPVPMonumentNation[GetZoneID()] = pUser->GetNation();
-<<<<<<< HEAD
-	g_pMain->NpcUpdate(m_sSid, m_bMonster, pUser->GetNation() == KARUS ? KARUS : ELMORAD, pUser->GetNation() == KARUS ? PVP_MONUMENT_KARUS_SPID : PVP_MONUMENT_ELMORAD_SPID);
-}
-=======
 	g_pMain->NpcUpdate(GetProtoID(), m_bMonster, pUser->GetNation(), pUser->GetNation() == KARUS ? MONUMENT_KARUS_SPID : MONUMENT_ELMORAD_SPID);
 }
 
@@ -673,4 +580,3 @@ void CNpc::NationMonumentProcess(CUser *pUser)
 			g_pMain->m_NationMonumentInformationArray.DeleteData(sSid);
 	}
 }
->>>>>>> koserver2

@@ -2,32 +2,13 @@
 #include "../shared/Condition.h"
 #include "ConsoleInputThread.h"
 #include "../shared/signal_handler.h"
-<<<<<<< HEAD
-=======
 #include <iostream>
 #include "time.h"
 #include <windows.h> 
->>>>>>> koserver2
 
 CGameServerDlg * g_pMain;
 static Condition s_hEvent;
 
-<<<<<<< HEAD
-#ifdef WIN32
-BOOL WINAPI _ConsoleHandler(DWORD dwCtrlType);
-#endif
-
-bool g_bRunning = true;
-
-int main()
-{
-	SetConsoleTitle("Game Server for Knight Online v" STRINGIFY(__VERSION));
-
-#ifdef WIN32
-	// Override the console handler
-	SetConsoleCtrlHandler(_ConsoleHandler, TRUE);
-#endif
-=======
 BOOL WINAPI _ConsoleHandler(DWORD dwCtrlType);
 
 bool g_bRunning = true;
@@ -128,7 +109,6 @@ int main()
 
 	// Override the console handler
 	SetConsoleCtrlHandler(_ConsoleHandler, TRUE);
->>>>>>> koserver2
 
 	HookSignals(&s_hEvent);
 
@@ -143,12 +123,9 @@ int main()
 	// Start up server
 	if (g_pMain->Startup())
 	{
-<<<<<<< HEAD
-=======
 		// Reset Battle Zone Variables.
 		g_pMain->ResetBattleZone();
 
->>>>>>> koserver2
 		printf("\nServer started up successfully!\n");
 
 		// Wait until console's signaled as closing
@@ -156,13 +133,7 @@ int main()
 	}
 	else
 	{
-<<<<<<< HEAD
-#ifdef WIN32
 		system("pause");
-#endif
-=======
-		system("pause");
->>>>>>> koserver2
 	}
 
 	printf("Server shutting down, please wait...\n");
@@ -180,10 +151,6 @@ int main()
 	return 0;
 }
 
-<<<<<<< HEAD
-#ifdef WIN32
-=======
->>>>>>> koserver2
 BOOL WINAPI _ConsoleHandler(DWORD dwCtrlType)
 {
 	s_hEvent.BeginSynchronized();
@@ -192,7 +159,3 @@ BOOL WINAPI _ConsoleHandler(DWORD dwCtrlType)
 	sleep(10000); // Win7 onwards allows 10 seconds before it'll forcibly terminate
 	return TRUE;
 }
-<<<<<<< HEAD
-#endif
-=======
->>>>>>> koserver2

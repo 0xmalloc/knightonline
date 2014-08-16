@@ -81,10 +81,7 @@ DEFINE_LUA_CLASS
 	MAKE_LUA_METHOD(isPartyLeader)
 	MAKE_LUA_METHOD(isKing)
 
-<<<<<<< HEAD
-=======
 
->>>>>>> koserver2
 	// Shortcuts for lazy people
 	MAKE_LUA_METHOD(hasCoins)
 	MAKE_LUA_METHOD(hasInnCoins)
@@ -139,8 +136,6 @@ DEFINE_LUA_CLASS
 	MAKE_LUA_METHOD(GetEventTrigger)
 	MAKE_LUA_METHOD(GetPremium)
 	MAKE_LUA_METHOD(GetWarVictory)
-<<<<<<< HEAD
-=======
 	MAKE_LUA_METHOD(CheckMiddleStatueCapture)
 	MAKE_LUA_METHOD(MoveMiddleStatue)
 	MAKE_LUA_METHOD(LevelChange)
@@ -152,7 +147,6 @@ DEFINE_LUA_CLASS
 	MAKE_LUA_METHOD(GetRace)
 	MAKE_LUA_METHOD(GenderChange)
 	MAKE_LUA_METHOD(JobChange)
->>>>>>> koserver2
 	);
 #undef LUA_CLASS
 
@@ -261,10 +255,7 @@ LUA_FUNCTION(CheckSkillPoint)
 #define LUA_WRAPPER_USER_FUNCTION(name) \
 	_LUA_WRAPPER_USER_FUNCTION(name, name)
 
-<<<<<<< HEAD
-=======
 /* 1:1 mappings */
->>>>>>> koserver2
 LUA_WRAPPER_USER_FUNCTION(ShowMap);
 LUA_WRAPPER_USER_FUNCTION(SaveEvent);
 LUA_WRAPPER_USER_FUNCTION(CheckExchange);
@@ -273,63 +264,6 @@ LUA_WRAPPER_USER_FUNCTION(SearchQuest);
 LUA_WRAPPER_USER_FUNCTION(NpcMsg);
 LUA_WRAPPER_USER_FUNCTION(ShowEffect);
 LUA_WRAPPER_USER_FUNCTION(ShowNpcEffect);
-<<<<<<< HEAD
-_LUA_WRAPPER_USER_FUNCTION(ExistMonsterQuestSub, GetActiveQuestID);
-_LUA_WRAPPER_USER_FUNCTION(PromoteKnight, PromoteClan);
-_LUA_WRAPPER_USER_FUNCTION(GetName, GetName);
-_LUA_WRAPPER_USER_FUNCTION(GetAccountName, GetAccountName);
-_LUA_WRAPPER_USER_FUNCTION(GetZoneID, GetZoneID);
-_LUA_WRAPPER_USER_FUNCTION(GetX, GetX);
-_LUA_WRAPPER_USER_FUNCTION(GetY, GetY);
-_LUA_WRAPPER_USER_FUNCTION(GetZ, GetZ);
-_LUA_WRAPPER_USER_FUNCTION(GetNation, GetNation);
-_LUA_WRAPPER_USER_FUNCTION(GetLevel, GetLevel);
-_LUA_WRAPPER_USER_FUNCTION(GetClass, GetClass);
-_LUA_WRAPPER_USER_FUNCTION(GetInnCoins, GetInnCoins);
-_LUA_WRAPPER_USER_FUNCTION(GetCoins, GetCoins);
-_LUA_WRAPPER_USER_FUNCTION(GetLoyalty, GetLoyalty);
-_LUA_WRAPPER_USER_FUNCTION(GetMonthlyLoyalty, GetMonthlyLoyalty);
-_LUA_WRAPPER_USER_FUNCTION(GetManner, GetManner);
-_LUA_WRAPPER_USER_FUNCTION(GetActiveQuestID, GetActiveQuestID);
-_LUA_WRAPPER_USER_FUNCTION(isWarrior, isWarrior);
-_LUA_WRAPPER_USER_FUNCTION(isRogue, isRogue);
-_LUA_WRAPPER_USER_FUNCTION(isMage, isMage);
-_LUA_WRAPPER_USER_FUNCTION(isPriest, isPriest);
-_LUA_WRAPPER_USER_FUNCTION(isInClan, isInClan);
-_LUA_WRAPPER_USER_FUNCTION(isClanLeader, isClanLeader);
-_LUA_WRAPPER_USER_FUNCTION(isInParty, isInParty);
-_LUA_WRAPPER_USER_FUNCTION(isPartyLeader, isPartyLeader);
-_LUA_WRAPPER_USER_FUNCTION(isKing, isKing);
-_LUA_WRAPPER_USER_FUNCTION(hasCoins, hasCoins);
-_LUA_WRAPPER_USER_FUNCTION(hasInnCoins, hasInnCoins);
-_LUA_WRAPPER_USER_FUNCTION(hasLoyalty, hasLoyalty);
-_LUA_WRAPPER_USER_FUNCTION(hasMonthlyLoyalty, hasMonthlyLoyalty);
-_LUA_WRAPPER_USER_FUNCTION(hasManner, hasManner);
-_LUA_WRAPPER_USER_FUNCTION(GiveItem, GiveItem);
-_LUA_WRAPPER_USER_FUNCTION(RobItem, RobItem);
-_LUA_WRAPPER_USER_FUNCTION(CheckExistItem, CheckExistItem);
-_LUA_WRAPPER_USER_FUNCTION(GoldGain, GoldGain);
-_LUA_WRAPPER_USER_FUNCTION(GoldLose, GoldLose);
-_LUA_WRAPPER_USER_FUNCTION(ExpChange, ExpChange);
-_LUA_WRAPPER_USER_FUNCTION(GiveLoyalty, GiveLoyalty);
-_LUA_WRAPPER_USER_FUNCTION(RobLoyalty, RobLoyalty);
-_LUA_WRAPPER_USER_FUNCTION(NpcSay, NpcSay);
-_LUA_WRAPPER_USER_FUNCTION(CheckWeight, CheckWeight);
-_LUA_WRAPPER_USER_FUNCTION(isRoomForItem, isRoomForItem);
-_LUA_WRAPPER_USER_FUNCTION(SendNameChange, SendNameChange);
-_LUA_WRAPPER_USER_FUNCTION(SendStatSkillDistribute, SendStatSkillDistribute);
-_LUA_WRAPPER_USER_FUNCTION(ResetSkillPoints, ResetSkillPoints);
-_LUA_WRAPPER_USER_FUNCTION(ResetStatPoints, ResetStatPoints);
-_LUA_WRAPPER_USER_FUNCTION(PromoteUserNovice, PromoteUserNovice);
-_LUA_WRAPPER_USER_FUNCTION(PromoteUser, PromoteUser);
-_LUA_WRAPPER_USER_FUNCTION(RobAllItemParty, RobAllItemParty);
-_LUA_WRAPPER_USER_FUNCTION(ZoneChange, ZoneChange);
-_LUA_WRAPPER_USER_FUNCTION(ZoneChangeParty, ZoneChangeParty);
-_LUA_WRAPPER_USER_FUNCTION(ZoneChangeClan, ZoneChangeClan);
-_LUA_WRAPPER_USER_FUNCTION(KissUser, KissUser);
-_LUA_WRAPPER_USER_FUNCTION(ChangeManner, ChangeManner);
-_LUA_WRAPPER_USER_FUNCTION(PromoteClan, PromoteClan);
-=======
 LUA_WRAPPER_USER_FUNCTION(GetName);
 LUA_WRAPPER_USER_FUNCTION(GetAccountName);
 LUA_WRAPPER_USER_FUNCTION(GetZoneID);
@@ -403,27 +337,11 @@ LUA_WRAPPER_USER_FUNCTION(GenderChange);
 LUA_WRAPPER_USER_FUNCTION(JobChange);
 
 /* method aliases */
->>>>>>> koserver2
 _LUA_WRAPPER_USER_FUNCTION(CheckClanGrade, GetClanGrade);
 _LUA_WRAPPER_USER_FUNCTION(CheckClanPoint, GetClanPoint);
 _LUA_WRAPPER_USER_FUNCTION(CheckLoyalty, GetLoyalty);
 _LUA_WRAPPER_USER_FUNCTION(CheckKnight, GetClanRank);
 _LUA_WRAPPER_USER_FUNCTION(CheckStatPoint, GetStat); 
-<<<<<<< HEAD
-_LUA_WRAPPER_USER_FUNCTION(RobClanPoint, RobClanPoint);
-_LUA_WRAPPER_USER_FUNCTION(CheckBeefRoastVictory, GetBeefRoastVictory);
-_LUA_WRAPPER_USER_FUNCTION(RequestPersonalRankReward, RequestPersonalRankReward);
-_LUA_WRAPPER_USER_FUNCTION(RequestReward, RequestReward);
-_LUA_WRAPPER_USER_FUNCTION(RunCountExchange, RunCountExchange);
-_LUA_WRAPPER_USER_FUNCTION(GetMaxExchange, GetMaxExchange);
-_LUA_WRAPPER_USER_FUNCTION(PartyCountMembers, GetPartyMemberAmount);
-_LUA_WRAPPER_USER_FUNCTION(GetUserDailyOp, GetUserDailyOp);
-_LUA_WRAPPER_USER_FUNCTION(CountMonsterQuestSub, CountMonsterQuestSub);
-_LUA_WRAPPER_USER_FUNCTION(CountMonsterQuestMain, CountMonsterQuestMain);
-_LUA_WRAPPER_USER_FUNCTION(GetEventTrigger, GetEventTrigger);
-_LUA_WRAPPER_USER_FUNCTION(GetPremium, GetPremium);
-_LUA_WRAPPER_USER_FUNCTION(CheckWarVictory, GetWarVictory);
-=======
 _LUA_WRAPPER_USER_FUNCTION(CheckWarVictory, GetWarVictory);
 _LUA_WRAPPER_USER_FUNCTION(CheckBeefRoastVictory, GetBeefRoastVictory);
 _LUA_WRAPPER_USER_FUNCTION(PartyCountMembers, GetPartyMemberAmount);
@@ -432,7 +350,6 @@ _LUA_WRAPPER_USER_FUNCTION(PromoteKnight, PromoteClan);
 _LUA_WRAPPER_USER_FUNCTION(SendStatSkillDistribute, SendStatSkillDistribute);
 _LUA_WRAPPER_USER_FUNCTION(CheckMonsterChallengeTime, GetMonsterChallengeTime);
 _LUA_WRAPPER_USER_FUNCTION(CheckMonsterChallengeUserCount,GetMonsterChallengeUserCount);
->>>>>>> koserver2
 
 LUA_FUNCTION(SelectMsg)
 {
@@ -473,10 +390,7 @@ LUA_FUNCTION(CastSkill)
 	}
 	return bResult;
 }
-<<<<<<< HEAD
-=======
 
 LUA_FUNCTION(RollDice) {
 	LUA_RETURN(myrand(0, LUA_ARG(uint16, 2)));
 }
->>>>>>> koserver2
